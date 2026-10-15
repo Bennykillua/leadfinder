@@ -102,7 +102,7 @@ Contact priority on every card: WhatsApp confirmed → likely WhatsApp → email
 
 ## Login and data
 
-- **Auth.js (NextAuth) with Google sign-in.** Every lead, reminder and note belongs to a user; nobody sees anyone else's board.
+- **Email + password sign-up and sign-in.** Passwords are hashed with scrypt; the session is a signed JWT (HS256, signed with `AUTH_SECRET`) in an httpOnly cookie, valid 30 days. Sign out deletes the cookie. Every lead, reminder and note belongs to a user; nobody sees anyone else's board.
 - First sign-in asks one question: "What do you sell?" (video editing / websites / social media / other + free text). Editable in settings.
 - A **demo account** with sample leads for judges, linked from the post.
 - SQLite (Drizzle) on the droplet, every table keyed by `user_id`.
@@ -122,7 +122,7 @@ Contact priority on every card: WhatsApp confirmed → likely WhatsApp → email
 
 ## Stack
 
-Next.js (App Router), TypeScript strict, Tailwind, shadcn/ui, Motion, zod, chrono-node, Auth.js, SQLite (Drizzle), dnd-kit for the board. Crawl with `fetch` + cheerio.
+Next.js (App Router), TypeScript strict, Tailwind, shadcn/ui, Motion, zod, chrono-node, jose (JWT sessions), SQLite (Drizzle), dnd-kit for the board. Crawl with `fetch` + cheerio.
 
 ## Numbers to measure for the post
 
@@ -137,7 +137,7 @@ Next.js (App Router), TypeScript strict, Tailwind, shadcn/ui, Motion, zod, chron
 
 1. ~~Cards + morph animation with fake data~~ (done)
 2. **Restructure:** home page = box with Search and Audit cards only. Remove Pitch, Status and Reminder cards from the box. Add the Board page with columns, drag-and-drop, and the detail drawer (pitch, reminder, notes) — fake data, but reminders and notes fully editable. Save lead moves a card into Saved.
-3. **Database + login:** SQLite, Auth.js Google sign-in, offer question, per-user data. Replace fake data with real storage.
+3. **Database + login:** SQLite, email + password sign-in with JWT sessions, offer question, per-user data. Replace fake data with real storage.
 4. **Real search:** SerpApi Google Maps into the Search card, with caching.
 5. **Real audit:** code checks, then name → SerpApi lookup → audit.
 6. **Gemma in:** intent, audit scoring, pitch writing. Log valid-JSON rate from day one.
