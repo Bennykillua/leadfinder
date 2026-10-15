@@ -78,7 +78,8 @@ export const leads = sqliteTable(
     reviews: integer("reviews").notNull(),
     website: text("website"),
     email: text("email"),
-    score: integer("score").notNull(),
+    // Null until the audit runs (step 5).
+    score: integer("score"),
     topReason: text("top_reason").notNull(),
     evidence: text("evidence", { mode: "json" }).$type<Evidence[]>().notNull(),
     status: text("status").$type<Column>().notNull().default("saved"),
@@ -92,4 +93,31 @@ export const leads = sqliteTable(
       .$defaultFn(() => new Date()),
   },
   (t) => [primaryKey({ columns: [t.userId, t.id] }), index("lead_user_reminder").on(t.userId, t.reminderAt)],
+);
+
+// --- SerpApi quota ---
+
+// Shared across users on purpose: business listings are public, and one cached
+// response for "salons in Yaba" saves a credit for everyone. Not user data.
+export const serpCache = sqliteTable("serp_cache", {
+  queryKey: text("query_key").primaryKey(),
+  query: text("query").notNull(),
+  response: text("response", { mode: "json" }).notNull(),
+  fetchedAt: integer("fetched_at", { mode: "timestamp_ms" }).notNull(),
+});
+
+// One row per live SerpApi call (cache hits and fixtures are not calls).
+export const serpUsage = sqliteTable(
+  "serp_usage",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+    engine: text("engine").notNull(),
+    query: text("query").notNull(),
+    ok: integer("ok", { mode: "boolean" }).notNull(),
+    at: integer("at", { mode: "timestamp_ms" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [index("serp_usage_at").on(t.at)],
 );

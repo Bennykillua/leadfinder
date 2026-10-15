@@ -32,7 +32,9 @@ export function CardHeading({
   );
 }
 
-export function ScoreDots({ score, className }: { score: number; className?: string }) {
+// Null score = not audited yet (fresh search results until step 5): render nothing.
+export function ScoreDots({ score, className }: { score: number | null; className?: string }) {
+  if (score === null) return null;
   return (
     <div className={cn("flex items-center gap-0.5", className)} aria-label={`Lead score ${score} of 5`}>
       {[1, 2, 3, 4, 5].map((n) => (
@@ -59,6 +61,7 @@ const CONTACT_LABEL: Record<ContactKind, string> = {
   likely: "Likely WhatsApp",
   email: "Email from website",
   call: "Call only",
+  none: "No contact",
 };
 
 export function ContactBadge({ business }: { business: Business }) {
@@ -70,7 +73,7 @@ export function ContactBadge({ business }: { business: Business }) {
         kind === "confirmed" && "border-emerald-500/30 bg-emerald-500/10 text-emerald-700",
         kind === "likely" && "border-emerald-500/20 text-emerald-700/80",
         kind === "email" && "border-sky-500/30 bg-sky-500/10 text-sky-700",
-        kind === "call" && "text-muted-foreground",
+        (kind === "call" || kind === "none") && "text-muted-foreground",
       )}
     >
       {kind === "email" && <Mail />}

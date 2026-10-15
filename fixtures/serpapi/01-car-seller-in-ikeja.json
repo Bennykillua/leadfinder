@@ -1,0 +1,874 @@
+{
+  "query": "car seller in ikeja",
+  "savedAt": "2026-10-15T19:38:07.424Z",
+  "response": {
+    "search_metadata": {
+      "id": "6ad12b9ea3f730475d696b33",
+      "status": "Success",
+      "json_endpoint": "https://serpapi.com/searches/PmV17UQFxmA6P5Vyt24eV_9kBAfgJ1AUDAHpraM92po/6ad12b9ea3f730475d696b33.json",
+      "markdown_endpoint": "https://serpapi.com/searches/PmV17UQFxmA6P5Vyt24eV_9kBAfgJ1AUDAHpraM92po/6ad12b9ea3f730475d696b33.md",
+      "created_at": "2026-10-15 19:38:06 UTC",
+      "processed_at": "2026-10-15 19:38:06 UTC",
+      "google_maps_url": "https://www.google.com/maps/search/car+seller+in+ikeja/@6.5244,3.3792,11z/data=!3m1!4b1!4m2!2m1!6e5?hl=en&gl=ng",
+      "raw_html_file": "https://serpapi.com/searches/PmV17UQFxmA6P5Vyt24eV_9kBAfgJ1AUDAHpraM92po/6ad12b9ea3f730475d696b33.html",
+      "prettify_html_file": "https://serpapi.com/searches/PmV17UQFxmA6P5Vyt24eV_9kBAfgJ1AUDAHpraM92po/6ad12b9ea3f730475d696b33.prettify",
+      "total_time_taken": 0.6
+    },
+    "search_parameters": {
+      "engine": "google_maps",
+      "type": "search",
+      "q": "car seller in ikeja",
+      "ll": "@6.5244,3.3792,11z",
+      "google_domain": "google.com",
+      "hl": "en",
+      "gl": "ng"
+    },
+    "search_information": {
+      "local_results_state": "Results for exact spelling",
+      "query_displayed": "car seller in ikeja"
+    },
+    "local_results": [
+      {
+        "position": 1,
+        "title": "Vehiclespot",
+        "place_id": "ChIJ9-s_0G6TOxARAetFGmLp3kM",
+        "data_id": "0x103b936ed03febf7:0x43dee9621a45eb01",
+        "data_cid": "4890602852927793921",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b936ed03febf7%3A0x43dee9621a45eb01&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b936ed03febf7%3A0x43dee9621a45eb01&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.6153433999999995,
+          "longitude": 3.3570444
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ9-s_0G6TOxARAetFGmLp3kM",
+        "provider_id": "/g/11l5qz_l31",
+        "rating": 5,
+        "reviews": 57,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer",
+          "Auto accessories wholesaler",
+          "Auto market",
+          "Auto parts store",
+          "Motor vehicle dealer",
+          "Smart Car dealer"
+        ],
+        "address": "Obafemi Awolowo Wy, Oregun, Ikeja 101233, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closes soon · 9 pm · Opens 8 am Fri",
+        "hours": "Closes soon · 9 pm · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–9 pm",
+          "friday": "8 am–9 pm",
+          "saturday": "8 am–9 pm",
+          "sunday": "Closed",
+          "monday": "8 am–9 pm",
+          "tuesday": "8 am–9 pm",
+          "wednesday": "8 am–9 pm"
+        },
+        "phone": "0803 397 1669",
+        "website": "https://vehiclespot.ng/",
+        "unsupported_extensions": [
+          {
+            "accessibility": [
+              "Assistive hearing loop",
+              "Wheelchair-accessible seating",
+              "Wheelchair-accessible toilet"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLeg-FnjN6YJ3-eJzwKfz4aJCAzwAAAyaRMC9GyEAEIgT4VsAWiGDKdsN8QFnNUxu8fRU2knEdiqsVJV6Y75DL_JOh452qAkGomXSz7ubGyKIRgOYBX7v9X2V0UEH-Bx_BWJFJw=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/W8ELr3icHcRREoFAGADgE20lJcx4-KNiIyNKPTXJtpF2sSV1QHdwGzO-h-_7Ker6LqayfCuGEuWc3kgjyDPjrCasljJeyfSZCoEyIQOYZbUmFNns6o1iPEQE962b91qK59C3ANCl_mY-cToLrBU9aKGA48VZuGfhjXc284J3M879QC2Zdb48RIjDUWzoi3WCt4Wmqw8oHV5F-95oTk7nrny6jc3IeE0iNVQCa4nMd2IesY3bWTtQFAUV_zPEftPCQvk"
+      },
+      {
+        "position": 2,
+        "title": "Carlots.ng",
+        "place_id": "ChIJWUzscMuNOxARcAAp94ysI70",
+        "data_id": "0x103b8dcb70ec4c59:0xbd23ac8cf7290070",
+        "data_cid": "13628926618795311216",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b8dcb70ec4c59%3A0xbd23ac8cf7290070&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b8dcb70ec4c59%3A0xbd23ac8cf7290070&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5285642,
+          "longitude": 3.3642024999999998
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJWUzscMuNOxARcAAp94ysI70",
+        "provider_id": "/g/11wfm_bxyv",
+        "rating": 4.9,
+        "reviews": 13,
+        "type": "Used car dealer",
+        "types": [
+          "Used car dealer"
+        ],
+        "address": "12 Adesina St, ikeja, Ikeja 102215, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open 24 hours",
+        "hours": "Open 24 hours",
+        "operating_hours": {
+          "thursday": "Open 24 hours",
+          "friday": "Open 24 hours",
+          "saturday": "Open 24 hours",
+          "sunday": "Closed",
+          "monday": "Open 24 hours",
+          "tuesday": "Open 24 hours",
+          "wednesday": "Open 24 hours"
+        },
+        "website": "https://carlots.ng/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLfoL9ERNwrZJwgVl-6fzbWNV-djT4GlbohuP9IHDMf6NgRo2PPQHqvZ44aCXKgQERgOaj0mDaSJs7g5xLQpji6ts9NmgMo6KToiRqicSkfjcTFz8TrwYzHFdJaYKzveiE7JiLVt=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/TXAoR3icHcTdEoFAGADQJ1qFRGZcoEgllSY_d2vV16b6aJdML-gZvI0Z5-J8P7mUdzFVlDIf9gARyvQp0oZhLdNa9hhWCjRUCMKEMp8vbpWXoWdYkd82Z6eFpCR61l0OfkKuRaytywvmz8DY2OY2032IcBAEof14nTWNLo8uhFYEO1qolUn3jhjD6O2F94LrUhh-BVvU3Rh59OBsf8sKFq-6Sdy0p85eXR16crtXyq2xw71Eztq-qqok_89I_QO24kX6"
+      },
+      {
+        "position": 3,
+        "title": "Affordable Cars Ltd",
+        "place_id": "ChIJg0LxOWqSOxARCTkyo17R9y8",
+        "data_id": "0x103b926a39f14283:0x2ff7d15ea3323909",
+        "data_cid": "3456461443425253641",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b926a39f14283%3A0x2ff7d15ea3323909&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b926a39f14283%3A0x2ff7d15ea3323909&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.586623899999999,
+          "longitude": 3.3630636
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJg0LxOWqSOxARCTkyo17R9y8",
+        "provider_id": "/g/119vg8r_t",
+        "rating": 4.3,
+        "reviews": 186,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer",
+          "Auto body shop",
+          "Auto bodywork mechanic",
+          "Auto electrical service",
+          "Auto parts store",
+          "Auto repair shop",
+          "Auto tune up service"
+        ],
+        "address": "3RD Floor, 76 Opebi Rd, Opebi, Ikeja 100001, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–6 pm",
+          "friday": "8 am–6 pm",
+          "saturday": "9 am–4 pm",
+          "sunday": "Closed",
+          "monday": "8 am–6 pm",
+          "tuesday": "8 am–6 pm",
+          "wednesday": "8 am–6 pm"
+        },
+        "phone": "0817 460 0567",
+        "website": "https://affordablecarsng.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLedqfbU2ZHHmfaLn_VVo0otVdz9OomDgF_DZjWdvgv95jvONYO6T3pMnZDZJUVVoOjVYM9G8xZMWODgl2BBbgBA94oD2N4vXmHx4s_DVvC8i_KNlDebVxCZ2KApbWuMaqa4Og=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/8ROrcHicHco7DoIwAADQEyGIaMDEAWiUKNBFi3QhfEoRaYu2VuL9PIS30bi86X3enVKjXJvm0C1mVAg6kIck91pwRbia1YKZ9F5KadTS9P3gymLS3NrqZOMoYm0Z8wIhYQmFmpcHBQN0WwDcZ42m2lv2GqY5XB0XY8IxwPvT78Ie5Ym3cyecZBDQwQ6Ciga-5whgp44-s2hyZAGQDt1LcUgHQCo0hdg--GOVPZLyVjqQbp5zy7KM7m9t8C83l0Rv"
+      },
+      {
+        "position": 4,
+        "title": "Classic Motors NG (Auto De Classic)",
+        "place_id": "ChIJF--w7oKTOxARIcBVzPo9K7I",
+        "data_id": "0x103b9382eeb0ef17:0xb22b3dfacc55c021",
+        "data_cid": "12838423310129020961",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b9382eeb0ef17%3A0xb22b3dfacc55c021&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b9382eeb0ef17%3A0xb22b3dfacc55c021&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.586078499999999,
+          "longitude": 3.3468253999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJF--w7oKTOxARIcBVzPo9K7I",
+        "provider_id": "/g/11zy6vjhbc",
+        "rating": 5,
+        "reviews": 60,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "172 Oba Akinjobi Way, opp. Arch Bishop Vining Church, Ikeja GRA, Ikeja 100001, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 9 am Fri",
+        "hours": "Closed · Opens 9 am Fri",
+        "operating_hours": {
+          "thursday": "9 am–5 pm",
+          "friday": "9 am–5 pm",
+          "saturday": "10 am–4 pm",
+          "sunday": "Closed",
+          "monday": "9 am–5 pm",
+          "tuesday": "9 am–5 pm",
+          "wednesday": "9 am–5 pm"
+        },
+        "phone": "0805 655 5638",
+        "website": "https://classicmotors.ng/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLe6KP3rnUuSG0WuySoUAlTCDeEVMaiIAUbrenk7ut6vZlhg-Z2wi9t0YlaAhaU3BAQDU8BlKu0e3ryiOobXqj-sWWfmSEngU5PD5-kKdsvXXq0X6UOXhLYDr1JgIYdhr4cjG5BhqWo_dMAQ=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/OJsc-3icHcRLjoIwAADQE1WqCDomLooYo2jUYKW4MVhqi5R26EfjKV17m0nmLd73I5z7tbMgkCIccK25ZN4yQ7VyTLkB1V3ATWUtoDZAKGm7LYuzQ2gU9vkKFv6da4zkaZGy5XlXNWuEb4apduJd_LxIwcFl9Gp-HCxlhUSFwwQdUzxNZOYhC8272esb6R_AFsW9y5eK4-iQRqDNavskpIckxnsitmVqhhu-LmthxvSxihLRF_pa79Bx_hpCCIH4nwL1B_gtR_c"
+      },
+      {
+        "position": 5,
+        "title": "Skymit Motors Limited",
+        "place_id": "ChIJLx__GTqSOxAR6e6cjEUqJqE",
+        "data_id": "0x103b923a19ff1f2f:0xa1262a458c9ceee9",
+        "data_cid": "11612015167421607657",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b923a19ff1f2f%3A0xa1262a458c9ceee9&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b923a19ff1f2f%3A0xa1262a458c9ceee9&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5844701,
+          "longitude": 3.3594738
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJLx__GTqSOxAR6e6cjEUqJqE",
+        "provider_id": "/g/1q5blq0p_",
+        "rating": 4.5,
+        "reviews": 53,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer",
+          "Chauffeur service"
+        ],
+        "address": "32 Mobolaji Bank Anthony Way, Opebi, Ikeja 101233, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–6 pm",
+          "friday": "8 am–6 pm",
+          "saturday": "9 am–5 pm",
+          "sunday": "Closed",
+          "monday": "8 am–6 pm",
+          "tuesday": "8 am–6 pm",
+          "wednesday": "8 am–6 pm"
+        },
+        "phone": "0704 278 3726",
+        "website": "http://skymitmotorsltd.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLfos5eN2UNNZfWq2IKmZgedqh7JPCO2a1F4YUNhHzTE_nXt7YJh7rqehi0ojvEG21-QsThcS8KuD68grDxhTI3rjtJH5qdouCK2PmeYizAYq5CCIo_-vooPzRZ8GT5x1ftIpA6T=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/EA1w1XicHcRbboJAFADQFY3AKEKa-EHxBTRI65AKP8aMw1wfcJ0H1rBB1-Bumng-zusJ1t7Mh-NcYTySiPIqeiM0x86Kzo44to7UB2MIN04UfV7arwaNL3Ja5nnd_CqaZG0txVFBkBbxhh685aQqc1gPbLHvdjaoUgi0EnBy8XxfrKhHvg0Dvg2zfj4NpZ4_gCVjfbbp2ldH7OOMFq2oTkNUKT-OE9yTO2Ix_NThivkPr7HJLZqy2Z_nui6B95x0_3fxRLk"
+      },
+      {
+        "position": 6,
+        "title": "Hartx Automobile",
+        "place_id": "ChIJ0c5100qTOxAR_TmiddLr_oo",
+        "data_id": "0x103b934ad375ced1:0x8afeebd275a239fd",
+        "data_cid": "10015701910467787261",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b934ad375ced1%3A0x8afeebd275a239fd&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b934ad375ced1%3A0x8afeebd275a239fd&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.6066987,
+          "longitude": 3.3532664999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ0c5100qTOxAR_TmiddLr_oo",
+        "provider_id": "/g/11z652ddqy",
+        "rating": 5,
+        "reviews": 1,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "Alade off, 6 Cocosheen Cl, Allen, Ikeja 100271, Lagos, Nigeria Abc,bustop Adeniyi jones ikeja Ikejal, Lagos 100213, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open 24 hours",
+        "hours": "Open 24 hours",
+        "operating_hours": {
+          "thursday": "Open 24 hours",
+          "friday": "Open 24 hours",
+          "saturday": "Open 24 hours",
+          "sunday": "Closed",
+          "monday": "Open 24 hours",
+          "tuesday": "Open 24 hours",
+          "wednesday": "Open 24 hours"
+        },
+        "phone": "0816 701 5982",
+        "website": "http://www.hartxautos.com/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLeY176QLe4XH8BkLLPsewPOREL9JFuTI9HKWS5zSuMn-w-lOh70CwyRnIEbvN1tWdJQQdgJJqbHblA2v1655oDufo1sGiVal_JmxRwtFCXXFRDXCHCne7b5wFYmGDZK0nYKz45x=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/OmUQqXicHcTvEoEwAADwJ5o2TLjzISVZ86c4yhenTDlrw5bRC3oGb-PO78Pv-ym1vqmhZfGy0yqkLDirFXvkUmgmdCuXlVU8jkqBXFmOM75WlKXI7kWUdZOgP75SulLMrJbxhA6IX29mgyDcrXGzrucCGMCXpQ1d847FbJI9F0jvTiSKTgUh9yzIuNN-oh7G0qvPEqnpZXvkB1K9YqN9N0n82EvcwBXMzrDx02rq7UMo0rDp4tfIIAghKP_nQPwA_9JDsg"
+      },
+      {
+        "position": 7,
+        "title": "Naija Car Shop Ltd.",
+        "place_id": "ChIJYRuppzGSOxARZgmBQ83sZ4Y",
+        "data_id": "0x103b9231a7a91b61:0x8667eccd43810966",
+        "data_cid": "9684969890028521830",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b9231a7a91b61%3A0x8667eccd43810966&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b9231a7a91b61%3A0x8667eccd43810966&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5936869,
+          "longitude": 3.3454325999999996
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJYRuppzGSOxARZgmBQ83sZ4Y",
+        "provider_id": "/g/11dx8kwrs1",
+        "rating": 5,
+        "reviews": 45,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer",
+          "Auto parts store",
+          "Corporate office",
+          "Lexus dealer",
+          "Mercedes-Benz dealer",
+          "Toyota dealer"
+        ],
+        "address": "745 Mobolaji Bank Anthony Way, beside AfriGlobal Medicare by Unity B/Stop, Ikeja, Lagos 101233, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–7 pm",
+          "friday": "8 am–7 pm",
+          "saturday": "9 am–6 pm",
+          "sunday": "Closed",
+          "monday": "8 am–7 pm",
+          "tuesday": "8 am–7 pm",
+          "wednesday": "8 am–7 pm"
+        },
+        "phone": "0909 971 0000",
+        "website": "https://www.facebook.com/share/17XLugdPND/?mibextid=wwXIfr",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLdyzqxoLAtgszCm4dc7ncVG3d_DYWwhNkLRGJ_i646mrrFgB12zfE3Jq-Pbls4mG2heHmq-i97wGu3ByNdt7ipy5anpUtE75UGnZHaDm8XhZ8eK02fyTFuKyBO_HdUhTuA-wuyt=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/0cBRE3icHcTbDoIgAADQLyJNLautB-2CK1etZbcXZ0DgElCBGf5g39DftHUezvfDtK7VzHEq5g-olLQiRpEWSaGJ0AMkuUPbQimAlBNF8Yun2PbNW6aRpqpf8ACjUKAz9HG-vF06tnulR7jJy3Ew5m27pvHQ658rf9OAw6NSAYceIwlvQDkNO2j82O6wDsvajgpRZ3oVjjIo7kmx5JMru0_I1vWe9rQ2Wxvv8wRn7GQi0Bmr593QdV3A_iMgfuvnRcs"
+      },
+      {
+        "position": 8,
+        "title": "Tripz Automobiles Car Shop Ltd",
+        "place_id": "ChIJXYrtpMOTOxARLhqsS2tgBVQ",
+        "data_id": "0x103b93c3a4ed8a5d:0x5405606b4bac1a2e",
+        "data_cid": "6054351288016837166",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b93c3a4ed8a5d%3A0x5405606b4bac1a2e&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b93c3a4ed8a5d%3A0x5405606b4bac1a2e&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5924876,
+          "longitude": 3.3606882
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJXYrtpMOTOxARLhqsS2tgBVQ",
+        "provider_id": "/g/11ghpm_xbn",
+        "rating": 4.5,
+        "reviews": 116,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "13 Osho St, Opebi, Ikeja 100281, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 9 am Fri",
+        "hours": "Closed · Opens 9 am Fri",
+        "operating_hours": {
+          "thursday": "9 am–7 pm",
+          "friday": "9 am–7 pm",
+          "saturday": "9 am–7 pm",
+          "sunday": "Closed",
+          "monday": "9 am–7 pm",
+          "tuesday": "9 am–7 pm",
+          "wednesday": "9 am–7 pm"
+        },
+        "phone": "0809 278 8378",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcjj4XSykBdiC-ypjzIAPkS7eyJynOB9B4Q4TueiNTxABtxRgtXa8QxWndM-lKupT9jqZ1ly7F3uw5aNQJMEIvKZ-2vpoxnuyGohiRn7B3MhAw1uqNuf4Cg127YnxydGcg9FbI=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/ao2_F3icHcTbDoIgAADQLyI1bWZbD9CqWWlZbl3eDAm8BBaQ0Af2D_1NW-fhfD9MqU5OHKdl_oAKQVuiJXliwRXhaoDF3aHPQkqApQMhau4bXNfB6WAbVFYzYLv6HcNdcwiJXVm-RREKsiDXpEpzA5Eye6pOxTgzR14moF3rLo_qx8VrbbjwdT8q0myVzOPX-gKGr04Yru1SsGrPQ-QnDPaefqT6FsyoNwzP3NhyiWm0uMbT3nNdF7D_GPAftxpFsg"
+      },
+      {
+        "position": 9,
+        "title": "Cheki Car Centre Ltd",
+        "place_id": "ChIJxfXfv8uTOxARLWDJylZvlUo",
+        "data_id": "0x103b93cbbfdff5c5:0x4a956f56cac9602d",
+        "data_cid": "5374324148896620589",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b93cbbfdff5c5%3A0x4a956f56cac9602d&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b93cbbfdff5c5%3A0x4a956f56cac9602d&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.6127154,
+          "longitude": 3.3547669
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJxfXfv8uTOxARLWDJylZvlUo",
+        "provider_id": "/g/11bbrg6xj0",
+        "rating": 3.9,
+        "reviews": 20,
+        "unclaimed_listing": true,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "4 Obafemi Awolowo Wy, Oregun, Ikeja 101233, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 9 am Fri",
+        "hours": "Closed · Opens 9 am Fri",
+        "operating_hours": {
+          "thursday": "9 am–5 pm",
+          "friday": "9 am–5 pm",
+          "saturday": "9 am–5 pm",
+          "sunday": "9 am–5 pm",
+          "monday": "9 am–5 pm",
+          "tuesday": "9 am–5 pm",
+          "wednesday": "9 am–5 pm"
+        },
+        "phone": "0813 985 9971",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLdzEf72MJG5z0guMel4pKjYBJKtSfMB4dFXVOebtY-8MoS0ug_OtO_vxbhC9FGeDpjeBYMXS6ztbbiVKmA_u_cGSMC-HgyO9hc4gAGuobh3Xrw3U0Fr_RPm5AOQ2qtzvCb1AUOiDQ=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/FBkGS3icHcRRToMwGADgE3WUwXQz8aEwwYw1dRIWeGps17VDoEj_bsoNPcJuY-L38N1_DcDonoKgM9FCW6s75Z2apB1ADbCQtg_09OEcki4gJPns96f55fy4pLt8NWPtqerisWibZFdAeaZJfMrqI1MCGrSmtsRecwaMX7-FSTdZrrZjq5KG1uXDDEJcjkVPuOcyL2mKXvUP2xgZa5J7K0xUT7eowtnE39_6FWGH5RfM11SEpGKX7eH5FmKMkflfouEPFqNFkA"
+      },
+      {
+        "position": 10,
+        "title": "Motors palace Ltd Ikeja - buy nigerian registered cars and tokubo cars.",
+        "place_id": "ChIJRVV9qTmTOxARXnoHQz6tMn4",
+        "data_id": "0x103b9339a97d5545:0x7e32ad3e43077a5e",
+        "data_cid": "9093521080538593886",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b9339a97d5545%3A0x7e32ad3e43077a5e&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b9339a97d5545%3A0x7e32ad3e43077a5e&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.6239086,
+          "longitude": 3.5247778999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJRVV9qTmTOxARXnoHQz6tMn4",
+        "provider_id": "/g/11jv455sl3",
+        "rating": 4.3,
+        "reviews": 4,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "64 Obafemi Awolowo Rd, Ikeja, 100212, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 9 am Fri",
+        "hours": "Closed · Opens 9 am Fri",
+        "operating_hours": {
+          "thursday": "9 am–5 pm",
+          "friday": "9 am–5 pm",
+          "saturday": "9 am–5 pm",
+          "sunday": "Closed",
+          "monday": "9 am–5 pm",
+          "tuesday": "9 am–5 pm",
+          "wednesday": "9 am–5 pm"
+        },
+        "phone": "0708 341 2276",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLdmqTjzssSz063kjYDwFY070pYTGE_Y-pHNkc1GZMIFHZPiGvhOWblW6-vtnCMv2S0lGjoWO2xXjx7AKMf4orKUjjDto8dKX__00KnlU4eYXAKHML71e7POnXl3HIiR3UZMuxc=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/2M9m_HicHcRNjoIwGADQE1U-xIgxmQXjD5haMaMEyoZorWApLdKKxAPOHbyNiW_x3v-Vta2ZO46svFGpdSn5w_COaWW5siOmG6fsTsYgZpwg-K2b7aW5H8XLmMMLpl4t6PK5puBDS4_hqqCojXY1c8OcbNZRvr-FfRWnZ5lOUW_VgvTjA8hQ6DQeD5kY_ACT60R3OBFiafXsgrOiAMBKJhNOswBHZOu73N_HKpNetLn9eUlOHgP7eboAgKrvDKkPMOhD9g"
+      },
+      {
+        "position": 11,
+        "title": "Qarzonline.ng – Verified Tokunbo & Nigerian Used Cars for Sale",
+        "place_id": "ChIJT2LMpQ-ROxARYW7rjZFvLSg",
+        "data_id": "0x103b910fa5cc624f:0x282d6f918deb6e61",
+        "data_cid": "2895092806411054689",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b910fa5cc624f%3A0x282d6f918deb6e61&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b910fa5cc624f%3A0x282d6f918deb6e61&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.656720099999999,
+          "longitude": 3.323438
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJT2LMpQ-ROxARYW7rjZFvLSg",
+        "provider_id": "/g/11py6sjmfp",
+        "rating": 4.8,
+        "reviews": 13,
+        "type": "Used car dealer",
+        "types": [
+          "Used car dealer",
+          "Auto market",
+          "Car dealer",
+          "Importer"
+        ],
+        "address": "150 Iju Rd, Fagba St, Ojodu, Lagos 100216, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open 24 hours",
+        "hours": "Open 24 hours",
+        "operating_hours": {
+          "thursday": "Open 24 hours",
+          "friday": "Open 24 hours",
+          "saturday": "Open 24 hours",
+          "sunday": "Closed",
+          "monday": "Open 24 hours",
+          "tuesday": "Open 24 hours",
+          "wednesday": "Open 24 hours"
+        },
+        "phone": "0803 837 0811",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcwwEza-UzQZsrH1o6ENfsNfhXSjLaMPxePTk71OmSDIHobjnGzIj0DEBUSZChG9q2U_BoURYOGy7N_K1_UWf-cPOUPa0RW6xhbAESJC0fE0ZTkLkLLqySNQhaH7MUOPfHiCyCR=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/Uyv0TXicHcRRDoIgAADQE5FYW662PtSYVqQkscofR0wkTSmxmV6wM3Sbtt7H-35U1z3M0rLuajYptC7u-cvkrdBNlzfdROjaKlpuDBDGcl2vqrHoezRywMZDatrQ1nMUSRNJdaYl5nvyzsmxcuy4putNqK9lE4ybEq6Rx2jqq2DxnLLM0yy5xMHgRNnOzthJAkFiRjhMTvO3urqIbn0oEUyPFa4wfg40OigeOnsWExne_MFPVr0NIQTqvwDND4f1RDc"
+      },
+      {
+        "position": 12,
+        "title": "Wonderwheels Automobile",
+        "place_id": "ChIJGa9RgGmSOxARpXVr_L7sSa4",
+        "data_id": "0x103b92698051af19:0xae49ecbefc6b75a5",
+        "data_cid": "12558829340922181029",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b92698051af19%3A0xae49ecbefc6b75a5&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b92698051af19%3A0xae49ecbefc6b75a5&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5851174,
+          "longitude": 3.3646838
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJGa9RgGmSOxARpXVr_L7sSa4",
+        "provider_id": "/g/119x4dpj8",
+        "rating": 4.2,
+        "reviews": 62,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer",
+          "BMW dealer",
+          "Car inspection station",
+          "Car repair and maintenance service",
+          "Ford dealer",
+          "Honda dealer",
+          "Jaguar dealer",
+          "Land Rover dealer",
+          "Mercedes-Benz dealer",
+          "Toyota dealer"
+        ],
+        "address": "90B Opebi Rd, Maryland, Ikeja 101233, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 9 am Fri",
+        "hours": "Closed · Opens 9 am Fri",
+        "operating_hours": {
+          "thursday": "9 am–5 pm",
+          "friday": "9 am–5 pm",
+          "saturday": "10 am–5 pm",
+          "sunday": "Closed",
+          "monday": "9 am–5 pm",
+          "tuesday": "9 am–5 pm",
+          "wednesday": "9 am–5 pm"
+        },
+        "phone": "0806 602 2639",
+        "website": "https://wonderwheelsng.com/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcn4ptrlbEUwjbrGyk6EzNnOttNBjkjl60_iTXd85KV7kxJ42v96xA0Et9UW5GVIkg3lRba8lwFS5lbafCFbGAm_cIfZj1oCzPGTnTb-7kpgddFkjEsCYgMqOhDtgaxcsLeR_0=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/3XyGpHicHcRJDoIwFADQEyF1AIfEBSIQZ6M4bggtWGxLi_QryAG9g7cx8S3e95MBFHpkmiLrtqhSVKRPnZZESUgltIjKTVrGWhtEm44z4fmSyF4BpcDeoWK4DN7c9pq13ACsJ4wzYaPoHp6TgbU49nk973VeQ7t2kAfDw8kKjjNOu2KH44Go_L0lcHxzfRw4eURmtytrK7fZBqEMsdHnBU0SnzNPuxe6emyyKdC4JnqZ7iI0rtoIISP7Twz5A6JYRaQ"
+      },
+      {
+        "position": 13,
+        "title": "Today's Cars Limited",
+        "place_id": "ChIJy61IfhWSOxARZ3KS_VeUgRM",
+        "data_id": "0x103b92157e48adcb:0x13819457fd927267",
+        "data_cid": "1405567664353604199",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b92157e48adcb%3A0x13819457fd927267&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b92157e48adcb%3A0x13819457fd927267&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5884453999999995,
+          "longitude": 3.3564034
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJy61IfhWSOxARZ3KS_VeUgRM",
+        "provider_id": "/g/1q5bkrnfw",
+        "rating": 4,
+        "reviews": 13,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "35 Mobolaji Bank Anthony Way, Opebi, Ikeja 101233, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–6 pm",
+          "friday": "8 am–6 pm",
+          "saturday": "8 am–6 pm",
+          "sunday": "Closed",
+          "monday": "8 am–6 pm",
+          "tuesday": "8 am–6 pm",
+          "wednesday": "8 am–6 pm"
+        },
+        "phone": "0803 304 4414",
+        "website": "https://www.instagram.com/todayscarsltdng?igsh=OHJuemxmYnRmczVv",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcSDGeHU10LvwoJTXnHQ-8sISPmgYHkvdkUAuCuQQ2dP7LlN2bd9kceAddJe_0q6GeT0q0zZXUkSAOsJkD27zshK5TRDUw-DNrjTzNylQE26GvgX2ZjrI0VVaamfPvZqyQSq9rSdg=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/QjNbaXicHcTbboIwAADQL6rUmnlZsocqBkSCdAXCeDGs7UosUGm5RP7QT9jfmHgezv-z6vu7_XSculotpNayFoMVhum2F22_YLpxpCmtBcw6GO9VEzLqesJPlzAcJx0keesTsLUnGjfyx1cjVykeDgMhiMebsI7QL98pJjDngbjCbu2JBHZwLvJUUXyxgXLRZrbV-SP5dtMJuJG5JXP0qMkRrb1R5qi4mRPMsrJs_uKx6B6EdjtDufyalhBCUL1noH0B_uJF0g"
+      },
+      {
+        "position": 14,
+        "title": "UG-CARS",
+        "place_id": "ChIJbxvZWdOTOxAR_cOvnUpDk90",
+        "data_id": "0x103b93d359d91b6f:0xdd93434a9dafc3fd",
+        "data_cid": "15966179091710723069",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b93d359d91b6f%3A0xdd93434a9dafc3fd&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b93d359d91b6f%3A0xdd93434a9dafc3fd&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.596069,
+          "longitude": 3.3509715
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJbxvZWdOTOxAR_cOvnUpDk90",
+        "provider_id": "/g/11zjjzlqlx",
+        "rating": 4.5,
+        "reviews": 2,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "Toyin Street Custom way Ikeja, Ikeja, Lagos 100213, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open 24 hours",
+        "hours": "Open 24 hours",
+        "operating_hours": {
+          "thursday": "Open 24 hours",
+          "friday": "Open 24 hours",
+          "saturday": "Open 24 hours",
+          "sunday": "Closed",
+          "monday": "Open 24 hours",
+          "tuesday": "Open 24 hours",
+          "wednesday": "Open 24 hours"
+        },
+        "phone": "0816 794 6125",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLdGKZyF_2g2ChDGQ5IvUkjU_qr9NvAmOPrvm5H-su_3ZTrt9_KFfgIof5m0oQlbAfUDUfDHHO2OVYGaFEhpw7c2MB22sfRZ2c2pEs9mE7SVWevMiOw03CyJZ0xoqVLLWg3nqgx2lt_wxWww=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/HucCv3icHcTbboIwGADgJ0K6nxDDkl2gnJwoHgZk3DRaabtJKbSV4lPuem-zZN_F9_vDjRn0q-t23FswKVnXPnSriOxN25sFkcJl6qK1Q7Qbhqu7yG_ptnkmGBiseZQe_c1U3r9LPKpgP4WiOKhJ-JmjH9hrPpQJ8DahbCOpL5A8dteQllFJoywroKg-00sS88EuCexWAJqeGiAwxDoQ8fJc1e20-yos8tbP9wbNcqzyvGZeP7IZOoPtXFv7Zl8QQg7_nzj9H7n_R_U"
+      },
+      {
+        "position": 15,
+        "title": "Kings autos cars",
+        "place_id": "ChIJ1_JeO-OTOxARK2ytn7vIAuc",
+        "data_id": "0x103b93e33b5ef2d7:0xe702c8bb9fad6c2b",
+        "data_cid": "16646087880878156843",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b93e33b5ef2d7%3A0xe702c8bb9fad6c2b&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b93e33b5ef2d7%3A0xe702c8bb9fad6c2b&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5941133,
+          "longitude": 3.3635132
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ1_JeO-OTOxARK2ytn7vIAuc",
+        "provider_id": "/g/11g_zklvwd",
+        "rating": 5,
+        "reviews": 1,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer",
+          "Baking supply store",
+          "Car finance and loan company",
+          "Car manufacturer",
+          "Car rental agency",
+          "Car sharing location",
+          "Car wash",
+          "American football field",
+          "Mechanical contractor",
+          "Mobile phone repair shop"
+        ],
+        "address": "21 Tunde osilaja by salvation road opebi Ogudu bus stop round about judt along the road, Opebi, Ikeja 100281, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open · Closes 6 am Fri",
+        "hours": "Open · Closes 6 am Fri",
+        "operating_hours": {
+          "thursday": "12–6 am, 8:30 am–12 am",
+          "friday": "12–6 am, 7 am–12 am",
+          "saturday": "Open 24 hours",
+          "sunday": "12–1:30 am",
+          "monday": "8:30 am–12 am",
+          "tuesday": "12–6 am, 8 am–12 am",
+          "wednesday": "12–6 am, 8 am–12 am"
+        },
+        "phone": "0703 245 1263",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLfisGLDGHX9kdzNcMOP_ollfHB7rqCENGXM9HiT_mwTFF1LeL6E27KbD-tTBLTc5bj1ZYb2LPUaUW3Xs4EzSigHjd1lzDswgYJuOub7F-wC5RFjKZDBaB6pgd9Sq-vbSTSz8zs=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/uTamx3icHcTbboIwGADgJ6qAJ2TJLqycovWQUSNyQ2jBAhaq_GUkfcC9w95myb6L7_en1voFH5Yl68VMKCVkNUI1cNXrqtczrjpLDAUA4mBtt_jZkUcDEfGjOPWepTnx4_mSKykfMXaH9y44RenRixuadxMNQ4dUZB3M3QPzkaaYUL5irZPd2ZxcrsX1tkhhGZikEXFbOtL4MIn7fjyPzA3RtFt9he0h83GB1y9ReskbfbOEJmZj4HNybNtG9f8c9X_0KkPS"
+      },
+      {
+        "position": 16,
+        "title": "Cars Dealership in Berger mile 2",
+        "place_id": "ChIJybdsiB2JOxARRdoXMecn5Hk",
+        "data_id": "0x103b891d886cb7c9:0x79e427e73117da45",
+        "data_cid": "8783189047193885253",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b891d886cb7c9%3A0x79e427e73117da45&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b891d886cb7c9%3A0x79e427e73117da45&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4497474,
+          "longitude": 3.3180560999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJybdsiB2JOxARRdoXMecn5Hk",
+        "provider_id": "/g/11h10pjycc",
+        "rating": 4.3,
+        "reviews": 63,
+        "unclaimed_listing": true,
+        "type": "Used car dealer",
+        "types": [
+          "Used car dealer"
+        ],
+        "address": "C8X9+V6V, Shola Park United Berger Motors, Julius Berger Rd, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open · Closes 5:30 am Fri",
+        "hours": "Open · Closes 5:30 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–5:30 am",
+          "friday": "8 am–5:30 am",
+          "saturday": "8 am–5:30 am",
+          "sunday": "Closed",
+          "monday": "8 am–5:30 am",
+          "tuesday": "8 am–5:30 am",
+          "wednesday": "8 am–5:30 am"
+        },
+        "phone": "0813 002 0280",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLeC8NcnRlwW4MPdGxsHim4VHA7hnj1jOFlkhCtug-1Psi32tVi9vqbmuAUbLnphYVM0Reli4diP2aWGOPmTfJ2V5KYZ4t3qUoXIQRQkTBr7M1oOQdG8Rza0t7qyrRih5fDnILc=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/LF4BvnicHcRJDoIwAADAFyFlMaiJB9QIKgg0issNSqWVLkKL2wP9g78xcQ7z_RCtb2pimow4g1rKmuFe4Q5JobHQAyS5WXeFUgZSpu_PGh7h-WiLBGSPgxunVfBUIeVuHvoeEVfrmixZQ-a6rw0rVdSxdU7H97bkvb8vI3EjpzwGEDPqVjS1i0OQpHx3Wdv5cHM6u9pp9_K4ymDW7GadF1syyapgBN8F0F776iAlw8tCrCI0fVgAAIP8R4b4AWtTRN8"
+      },
+      {
+        "position": 17,
+        "title": "Carz motors limited",
+        "place_id": "ChIJdc836xKTOxARFzPRC0CFQeY",
+        "data_id": "0x103b9312eb37cf75:0xe64185400bd13317",
+        "data_cid": "16591689012332278551",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b9312eb37cf75%3A0xe64185400bd13317&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b9312eb37cf75%3A0xe64185400bd13317&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.620173299999999,
+          "longitude": 3.3511713999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJdc836xKTOxARFzPRC0CFQeY",
+        "provider_id": "/g/11zg67kfcs",
+        "rating": 5,
+        "reviews": 2,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "Daily times premises, lateef jakande road, ikeja, Ikeja, Lagos 100001, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 9 am Fri",
+        "hours": "Closed · Opens 9 am Fri",
+        "operating_hours": {
+          "thursday": "9 am–6 pm",
+          "friday": "9 am–6 pm",
+          "saturday": "9 am–6 pm",
+          "sunday": "Closed",
+          "monday": "9 am–6 pm",
+          "tuesday": "9 am–6 pm",
+          "wednesday": "9 am–6 pm"
+        },
+        "phone": "0911 018 6666",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLeRJfpJHG0cm2Yn7ORGZKZ8zHLGD11OW5DkZCPNIePXVR0aJhluVn7kiL6ro82ShnAKZENhUMR4vZTFtr_IqBOpJ0GqsMxc3YWKH4JSitTrEK4tMawemFag0sBPXTtPUMTT8cuB8apSjhc=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/aur263icHcTbDoIgAADQLzKxrFxbD9pFQ02ndOOlMUZSKhhgtT6y9_6mrfNwvh9uTKdntt3w0aCSsmpYr5miUhgmzIDK1q4U0dqi2vb9oG4TVsBLB6MQ0HZ4EtOsCHGMvXeUhEvHyQ7jZY0X-XbD8uO-AATypt-LaX1NJkp6w5ILP8arLd-lhfvAaG3UeXMPsg6C8K7TFx2dDnHkwvJqkFrFrknJk7VrUgEd5Edk8l2KkEf7wCNdeeN0_nQAABb_Ty3xAwDHRoo"
+      },
+      {
+        "position": 18,
+        "title": "Ladipo Auto Market",
+        "place_id": "ChIJC14ITuSTOxARxXMhcAm21tU",
+        "data_id": "0x103b93e44e085e0b:0xd5d6b609702173c5",
+        "data_cid": "15408703326746932165",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b93e44e085e0b%3A0xd5d6b609702173c5&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b93e44e085e0b%3A0xd5d6b609702173c5&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.6327397,
+          "longitude": 3.3391176
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJC14ITuSTOxARxXMhcAm21tU",
+        "provider_id": "/g/11bt_b54x5",
+        "rating": 4.1,
+        "reviews": 546,
+        "type": "Auto parts market",
+        "types": [
+          "Auto parts market",
+          "Delivery service"
+        ],
+        "address": "46 Kayode St, behind De Tastee Fried Chicken, Ogba, Ikeja 100218, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closes soon · 9 pm · Opens 7 am Fri",
+        "hours": "Closes soon · 9 pm · Opens 7 am Fri",
+        "operating_hours": {
+          "thursday": "7 am–9 pm",
+          "friday": "7 am–9 pm",
+          "saturday": "7 am–9 pm",
+          "sunday": "7 am–9 pm",
+          "monday": "7 am–9 pm",
+          "tuesday": "7 am–9 pm",
+          "wednesday": "7 am–9 pm"
+        },
+        "website": "https://www.ladipoautomarket.com.ng/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcR1vEhexzeXMe2rDcKmLJNtANV424o1jWa0WHwo3cS8r3zsrcmtezkOhVy8GY23t_epTUntTT9Tw1vVWgVn1HMpuI3MlnpRCsCN5X7LCDJDui2Yab1muMs5erARmeS2jSfZde3uw=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/hrvED3icHcRbjoIwFADQFSG01fhI_GDAjA_ABBB0fgxTr1SlLelDlB26BHdj4vk47xczptUz120YGdRS1g1YDYpKYUCYAZXcrVWltUO16_s_Nx7RFN0XDB497GPAKqQbHq0T4yfFEA8lupaVVy47SWg2UaTXinID_W3Liufk94CJOUKb74TJ82neoXtR1oVAy7i1KxI3ok0DHSSj_TgKwnVoL_hQ_SNuYz0C5accMnzNzn8nILabd8jzPId9p474AGGSRnA"
+      },
+      {
+        "position": 19,
+        "title": "OLOWORAY AUTOMOBILE AFRICA",
+        "place_id": "ChIJbz9vQEOROxARajgpZeQnSRE",
+        "data_id": "0x103b9143406f3f6f:0x114927e46529386a",
+        "data_cid": "1245570633847879786",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b9143406f3f6f%3A0x114927e46529386a&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b9143406f3f6f%3A0x114927e46529386a&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.635392599999999,
+          "longitude": 3.3276722
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJbz9vQEOROxARajgpZeQnSRE",
+        "provider_id": "/g/11fmr3z08s",
+        "rating": 4.3,
+        "reviews": 76,
+        "type": "Used car dealer",
+        "types": [
+          "Used car dealer",
+          "Auto auction",
+          "Auto market",
+          "Auto painting",
+          "Car accessories store",
+          "Car dealer",
+          "Car leasing service",
+          "Car rental agency",
+          "Mechanic",
+          "Motor vehicle dealer"
+        ],
+        "address": "NO; 16 Oyemekun Street, Off College Rd, Ogba, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8:30 am Fri",
+        "hours": "Closed · Opens 8:30 am Fri",
+        "operating_hours": {
+          "thursday": "8:30 am–4 pm",
+          "friday": "8:30 am–4 pm",
+          "saturday": "8:30 am–4 pm",
+          "sunday": "12–5:30 pm",
+          "monday": "8:30 am–4 pm",
+          "tuesday": "8:30 am–4 pm",
+          "wednesday": "8:30 am–4 pm"
+        },
+        "phone": "0913 232 6097",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLfJIapF2W0-DyWE4F82zqgyo04m6vZMK5UnXlppi_oEo2n6v_wc-m-I8XSEDCBT-vTzr_yzqzhdRZ_OU0uZTCikOfOjeeD7nof9pv-Zu2S6ks8vDsNV265mrgYiR204mtIiNQxh=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/mYjSpXicHc1LUoMwAADQEwViLIidcVEKzKBtGVv6Y8MwMSQI-ZSEULhgz-BtdNy87ft5MGOUXrpux54dKiXtyKBJj6UwRBgHS-7SvtIaYO2uVmHLN_V7WqkEnSGIpnO8SAI03-gk4YL7tth-eEdx6ZRqShlLJHxbjhhwkAaXQxytwxzYfO7Lab7N7GtflNkRDkW-btqszr4JiV6ErF-VBcWADn6rAxvp3Qn5Hu_ptdmjv8Skze7zzt7GJwghYP9iIH4Bg_lFOA"
+      },
+      {
+        "position": 20,
+        "title": "Flingit Autos - The best Car dealer in Nigeria; Automobile, Luxury, Foreign and Used Car",
+        "place_id": "ChIJX1GkdTONOxARydTuKOlIbtQ",
+        "data_id": "0x103b8d3375a4515f:0xd46e48e928eed4c9",
+        "data_cid": "15307252349730215113",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103b8d3375a4515f%3A0xd46e48e928eed4c9&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103b8d3375a4515f%3A0xd46e48e928eed4c9&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.5294373,
+          "longitude": 3.3886065
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJX1GkdTONOxARydTuKOlIbtQ",
+        "provider_id": "/g/11w1cqv9cr",
+        "rating": 4.7,
+        "reviews": 13,
+        "type": "Car dealer",
+        "types": [
+          "Car dealer"
+        ],
+        "address": "21 Olanrewaju St, Akoka, Yaba 102216, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open 24 hours",
+        "hours": "Open 24 hours",
+        "operating_hours": {
+          "thursday": "Open 24 hours",
+          "friday": "Open 24 hours",
+          "saturday": "Open 24 hours",
+          "sunday": "Open 24 hours",
+          "monday": "Open 24 hours",
+          "tuesday": "Open 24 hours",
+          "wednesday": "Open 24 hours"
+        },
+        "phone": "0808 502 5188",
+        "website": "https://flingit-autos-5dfj.vercel.app/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcddzk3Ge9Qj8JUpWi14p_XrtGgMpA3n7qcKiRxtyxSIViu2VWxFPcwnt0t1hdE6kyYMcQnIu8Qdbj5CqqH9tRmRIYnuadFrkqZCF3AKCdKwPaR98O2gzJTFAjKqWttYO0idm-8=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/SBHC63icHcRJDoIwFADQEyFFHMDERSWiiIbBAXFjsCVlkELpJ6AX9AzexsS3eN9PBtDIhao-M33E6po9006mLak5pBxGpK5U1iZSKkSqGK_Kak8ofZf6JjWDwtidmyjXJs392sKGHRqs87kgbh4O8BqOziXvxpdosH3Sc0CgZXQ9K1_xgQTc6YyAPoqpJcTWhLAKnZh3CbXbUtwsW8euRd3eT0LT8MbsvTvZuHBFBBB7KKeVYix7DSGkZP-Jwn8U7UYT"
+      }
+    ],
+    "serpapi_pagination": {
+      "next": "https://serpapi.com/search.json?engine=google_maps&gl=ng&google_domain=google.com&hl=en&ll=%406.5244%2C3.3792%2C11z&q=car+seller+in+ikeja&start=20&type=search"
+    }
+  }
+}

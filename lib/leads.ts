@@ -18,7 +18,8 @@ export type Business = {
   website: string | null;
   // Business email published on its own website (mailto: or contact page). Never guessed.
   email: string | null;
-  score: number;
+  // 1–5 once audited (step 5); null for fresh search results.
+  score: number | null;
   topReason: string;
   evidence: Evidence[];
 };
@@ -101,7 +102,7 @@ export const BUSINESSES: Business[] = RAW.map(({ checks, email, ...b }) => ({
 
 // --- Contact: WhatsApp confirmed → likely WhatsApp → email from website → call only ---
 
-const NG_MOBILE = /^234[789][01]\d{8}$/;
+export const NG_MOBILE = /^234[789][01]\d{8}$/;
 
 // "0803 412 7781" / "+234 803…" → "2348034127781".
 export function normalisePhone(phone: string): string {
@@ -118,13 +119,14 @@ export function whatsappNumber(b: Business): string | null {
   return NG_MOBILE.test(n) ? n : null;
 }
 
-export type ContactKind = "confirmed" | "likely" | "email" | "call";
+export type ContactKind = "confirmed" | "likely" | "email" | "call" | "none";
 
 export function contactKind(b: Business): ContactKind {
   const wa = whatsappNumber(b);
   if (wa && b.whatsapp === "confirmed") return "confirmed";
   if (wa) return "likely";
-  return b.email ? "email" : "call";
+  if (b.email) return "email";
+  return b.phone ? "call" : "none";
 }
 
 export function whatsappLink(number: string, pitch: string) {
@@ -142,11 +144,6 @@ export function telLink(b: Business) {
 }
 
 const byId = (id: string) => BUSINESSES.find((b) => b.id === id)!;
-
-// Fake search: same 14 businesses for every query, until SerpApi in step 4.
-export function fakeSearch(): Business[] {
-  return BUSINESSES;
-}
 
 // Fake audit: a URL or name maps to Smile Dental's evidence, renamed to what you typed.
 export function fakeAudit(name: string | null, url: string | null): Business {

@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { leads, OFFERS, users } from "@/lib/db/schema";
 import { requireUser } from "@/lib/dal";
 import type { Column, Lead } from "@/lib/leads";
+import { getSerpUsage, searchGoogleMaps, SerpApiError, type SearchResult, type SerpUsage } from "@/lib/serpapi";
 
 // Every action re-reads the session; the client never says whose data it is.
 
@@ -22,9 +23,9 @@ const business = z.object({
   whatsapp: z.enum(["confirmed", "likely", "call"]),
   rating: z.number().min(0).max(5),
   reviews: z.number().int().min(0),
-  website: z.string().max(300).nullable(),
+  website: z.string().max(500).nullable(),
   email: z.string().email().max(200).nullable(),
-  score: z.number().int().min(1).max(5),
+  score: z.number().int().min(1).max(5).nullable(),
   topReason: z.string().max(500),
   evidence: z.array(z.object({ label: z.string().max(100), ok: z.boolean(), detail: z.string().max(300) })).max(30),
 });
@@ -136,4 +137,30 @@ export async function signInWithGoogle() {
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/signin" });
+}
+
+// --- Search (SerpApi) ---
+
+export type SearchResponse =
+  | ({ ok: true; usage: SerpUsage } & SearchResult)
+  | { ok: false; error: string; usage: SerpUsage };
+
+export async function searchMapsAction(input: string): Promise<SearchResponse> {
+  const user = await requireUser();
+  const query = z.string().trim().min(2).max(120).parse(input);
+  try {
+    const result = await searchGoogleMaps(query, user.id);
+    const usage = await getSerpUsage({ refreshAccount: result.source === "live" });
+    return { ok: true, ...result, usage };
+  } catch (err) {
+    const usage = await getSerpUsage();
+    if (err instanceof SerpApiError) return { ok: false, error: err.message, usage };
+    console.error("[search]", err);
+    return { ok: false, error: "Search failed. Try again in a moment.", usage };
+  }
+}
+
+export async function getSerpUsageAction(): Promise<SerpUsage> {
+  await requireUser();
+  return getSerpUsage();
 }

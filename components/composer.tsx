@@ -5,6 +5,8 @@ import { AnimatePresence, motion, type Transition } from "motion/react";
 import { CornerDownLeft, ScanSearch, Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CARD_TYPES, classify, fakeCard, type CardData, type Intent } from "@/lib/cards";
+import { getSerpUsageAction } from "@/lib/actions";
+import type { SerpUsage } from "@/lib/serpapi";
 import { SearchCard } from "./cards/search-card";
 import { AuditCard } from "./cards/audit-card";
 
@@ -35,10 +37,27 @@ function useMeasuredHeight<T extends HTMLElement>() {
   return [ref, height] as const;
 }
 
-function CardBody({ card }: { card: CardData }) {
+function CardBody({
+  card,
+  submitted,
+  onUsage,
+}: {
+  card: CardData;
+  submitted: string | null;
+  onUsage: (u: SerpUsage) => void;
+}) {
   switch (card.intent) {
-    case "search":
-      return <SearchCard key={card.data.query} data={card.data} />;
+    case "search": {
+      const isSubmitted = submitted === card.data.query;
+      return (
+        <SearchCard
+          key={`${card.data.query}:${isSubmitted}`}
+          query={card.data.query}
+          submitted={isSubmitted}
+          onUsage={onUsage}
+        />
+      );
+    }
     case "audit":
       return <AuditCard data={card.data} />;
   }
@@ -48,8 +67,21 @@ export function Composer() {
   const [text, setText] = useState("");
   const [settled, setSettled] = useState("");
   const [active, setActive] = useState(0);
+  // The query the user pressed Enter on. Only a submitted search calls SerpApi.
+  const [submitted, setSubmitted] = useState<string | null>(null);
+  const [usage, setUsage] = useState<SerpUsage | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [contentRef, height] = useMeasuredHeight<HTMLDivElement>();
+
+  useEffect(() => {
+    let live = true;
+    getSerpUsageAction()
+      .then((u) => live && setUsage(u))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setSettled(text), DEBOUNCE_MS);
@@ -82,6 +114,13 @@ export function Composer() {
     if (e.key === "Escape") {
       setText("");
       setSettled("");
+      return;
+    }
+    if (!slash && e.key === "Enter") {
+      e.preventDefault();
+      // Enter skips the typing pause and runs the search.
+      setSettled(text);
+      if (classify(text) === "search") setSubmitted(text.trim().replace(/\s+/g, " "));
       return;
     }
     if (!slash || menu.length === 0) return;
@@ -228,7 +267,7 @@ export function Composer() {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="border-t p-4"
               >
-                <CardBody card={card} />
+                <CardBody card={card} submitted={submitted} onUsage={setUsage} />
               </motion.div>
             ) : null}
           </AnimatePresence>
@@ -239,6 +278,28 @@ export function Composer() {
         Type a request, or press <kbd className="rounded border px-1 font-mono">/</kbd> to see every card.
         <span className="hidden sm:inline"> Esc clears.</span>
       </p>
+      <UsageCounter usage={usage} />
     </div>
+  );
+}
+
+function UsageCounter({ usage }: { usage: SerpUsage | null }) {
+  if (!usage) return <p className="h-4" aria-hidden />;
+  const parts = [
+    `${usage.callsThisMonth} ${usage.callsThisMonth === 1 ? "call" : "calls"} this month`,
+    `${usage.callsToday} today`,
+  ];
+  if (usage.planLeft !== null) {
+    parts.push(
+      usage.planPerMonth !== null
+        ? `${usage.planLeft} of ${usage.planPerMonth} left on plan`
+        : `${usage.planLeft} left on plan`,
+    );
+  }
+  return (
+    <p className="text-center text-xs text-muted-foreground tabular-nums" aria-live="polite">
+      <span className="font-medium">SerpApi</span> · {parts.join(" · ")}
+      {usage.fixtures && <span className="ml-1 rounded bg-amber-500/15 px-1 text-amber-800">fixtures mode</span>}
+    </p>
   );
 }

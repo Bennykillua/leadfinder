@@ -1,0 +1,857 @@
+{
+  "query": "banks in lekki",
+  "savedAt": "2026-10-15T19:39:30.646Z",
+  "response": {
+    "search_metadata": {
+      "id": "6ad12bf1054e5f19bc56b465",
+      "status": "Success",
+      "json_endpoint": "https://serpapi.com/searches/wM8FaseMK6bVLTo4Azjhbk46J6b1s5Bngzx8MdIKe00/6ad12bf1054e5f19bc56b465.json",
+      "markdown_endpoint": "https://serpapi.com/searches/wM8FaseMK6bVLTo4Azjhbk46J6b1s5Bngzx8MdIKe00/6ad12bf1054e5f19bc56b465.md",
+      "created_at": "2026-10-15 19:39:29 UTC",
+      "processed_at": "2026-10-15 19:39:29 UTC",
+      "google_maps_url": "https://www.google.com/maps/search/banks+in+lekki/@6.5244,3.3792,11z/data=!3m1!4b1!4m2!2m1!6e5?hl=en&gl=ng",
+      "raw_html_file": "https://serpapi.com/searches/wM8FaseMK6bVLTo4Azjhbk46J6b1s5Bngzx8MdIKe00/6ad12bf1054e5f19bc56b465.html",
+      "prettify_html_file": "https://serpapi.com/searches/wM8FaseMK6bVLTo4Azjhbk46J6b1s5Bngzx8MdIKe00/6ad12bf1054e5f19bc56b465.prettify",
+      "total_time_taken": 0.76
+    },
+    "search_parameters": {
+      "engine": "google_maps",
+      "type": "search",
+      "q": "banks in lekki",
+      "ll": "@6.5244,3.3792,11z",
+      "google_domain": "google.com",
+      "hl": "en",
+      "gl": "ng"
+    },
+    "search_information": {
+      "local_results_state": "Results for exact spelling",
+      "query_displayed": "banks in lekki"
+    },
+    "local_results": [
+      {
+        "position": 1,
+        "title": "Access Bank Plc Lekki Phase I, Admiralty Way",
+        "place_id": "ChIJz439TEX0OxARp9ZyEgKfBGE",
+        "data_id": "0x103bf4454cfd8dcf:0x61049f021272d6a7",
+        "data_cid": "6990887352834119335",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf4454cfd8dcf%3A0x61049f021272d6a7&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf4454cfd8dcf%3A0x61049f021272d6a7&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4460282,
+          "longitude": 3.4598728999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJz439TEX0OxARp9ZyEgKfBGE",
+        "provider_id": "/g/11fzbw37vl",
+        "rating": 3.9,
+        "reviews": 47,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "Central bank",
+          "Financial institution",
+          "Financial planner",
+          "Investment bank",
+          "Loan agency",
+          "Money transfer service",
+          "Savings bank",
+          "Trust bank"
+        ],
+        "address": "Block 36, Plot 1 Admiralty Wy, Eti-Osa, Lekki 105102, Lagos",
+        "country": "Nigeria",
+        "phone": "27120057",
+        "website": "http://www.accessbankplc.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh5.googleusercontent.com/55ReaCvxINUxMjDa8_viJbMw6Zwg0rb1JJofQ2fCCCz9ScodEOw4PFhYX9vlxoLJ=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/g901f3icu1mUUVJSUGylr5-TYaqXnp-fnpNaWpxalJyfV5KaV6KXnJ-rb2oalJroXFbh6Rda4ZvlkmgRX5bpleRbbhZVnm5QlGTo5ZWfFmiU5uzsXGUZnJyf4upfbhLglhEZYVmWU5Hv42VbbmhgYKCbASaTdfMAuAgn8A"
+      },
+      {
+        "position": 2,
+        "title": "Access Bank Plc Lekki Chevron Branch",
+        "place_id": "ChIJlUy3sor2OxAR-jeQD2k9MAA",
+        "data_id": "0x103bf68ab2b74c95:0x303d690f9037fa",
+        "data_cid": "13578320324081658",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf68ab2b74c95%3A0x303d690f9037fa&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf68ab2b74c95%3A0x303d690f9037fa&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4411995,
+          "longitude": 3.5287138
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJlUy3sor2OxAR-jeQD2k9MAA",
+        "provider_id": "/g/1v9d4l87",
+        "rating": 3.3,
+        "reviews": 63,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "Central bank",
+          "Financial institution",
+          "Financial planner",
+          "Investment bank",
+          "Loan agency",
+          "Money transfer service",
+          "Savings bank",
+          "Trust bank"
+        ],
+        "address": "Lekki - Epe Expy, Lekki Penninsula II, Lagos 101003, Lagos",
+        "country": "Nigeria",
+        "phone": "27120057",
+        "website": "http://www.accessbankplc.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh6.googleusercontent.com/2n1IhORhi83BI4OC4KZv3gd_qFeqZvspObBGN5BUO5eHvrjYraClQG7Kkq6ZlGUMRA=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/xm4C3Xicu1mSUVJSUGylr5-TYaaXnp-fnpNaWpxalJyfV5KaV6KXnJ-rb5Rn6JnhH5SRaWHs5Gni72ziHVVmnJ4SX-iWWhhVVlzgn-Tk7mfqFOpvmupRVpQVWZTonBPobu6dXWgWleMe6hvkaFtuaGBgoJsBJpN18wDepifW"
+      },
+      {
+        "position": 3,
+        "title": "Fidelity Bank - Lekki",
+        "place_id": "ChIJ_____7_5OxARrjIKXrTfsKo",
+        "data_id": "0x103bf9bfffffffff:0xaab0dfb45e0a32ae",
+        "data_cid": "12299576548113658542",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf9bfffffffff%3A0xaab0dfb45e0a32ae&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf9bfffffffff%3A0xaab0dfb45e0a32ae&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4356767999999995,
+          "longitude": 3.4232945999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ_____7_5OxARrjIKXrTfsKo",
+        "provider_id": "/g/1hm1_ndn_",
+        "rating": 5,
+        "reviews": 1,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "2 Kofo Abayomi Rd, Lekki Phase 1, Lagos 101245, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "phone": "14485252",
+        "thumbnail": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=w4aEYaXtx7CwO0eCD6deTg&cb_client=search.gws-prod.grass&w=80&h=92&yaw=59.444603&pitch=0&thumbfov=100",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/K2w39HicHc1LDsIgEADQ27ATqGL9JMRFde3Gha7MlI5AQgspY6nX8VbeRuMF3vu8HVHKeyEyjYg0eSzJzxjyIgG3MdqAkHzmJvZiqgS5Z98O4MMhwRB9p4uC0w2uNG-acpbYHOsOL5aZ9m6Cx4F0RhiN47b8xDF23I6QMyt6K5nTuyV7QdHrHVdK1XLFkifjtGT_5xEnXUn5BfLSOkg"
+      },
+      {
+        "position": 4,
+        "title": "Access Bank Plc Admiralty Way Branch",
+        "place_id": "ChIJfy5M23n1OxAR8FBegfXSYqk",
+        "data_id": "0x103bf579db4c2e7f:0xa962d2f5815e50f0",
+        "data_cid": "12205549892006727920",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf579db4c2e7f%3A0xa962d2f5815e50f0&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf579db4c2e7f%3A0xa962d2f5815e50f0&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4509281,
+          "longitude": 3.4704006
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJfy5M23n1OxAR8FBegfXSYqk",
+        "provider_id": "/g/11j6qw5hr0",
+        "rating": 3.4,
+        "reviews": 15,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "Central bank",
+          "Financial institution",
+          "Financial planner",
+          "Investment bank",
+          "Loan agency",
+          "Money transfer service",
+          "Savings bank",
+          "Trust bank"
+        ],
+        "address": "10 Admiralty Rd, Eti-Osa, Lagos 105102, Lagos",
+        "country": "Nigeria",
+        "phone": "27120057",
+        "website": "http://www.accessbankplc.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLfi7NOnMdxENoU34UkB2fDalWek0oUF2SWyIVPcjvVWzrD-D2RA8-3uvoBnZ5rAz2t9CqPrzbJECQVjVSwavNEp5F_ihD7kIgVsj7qk_Ctrj3vmQH63B5X2BtJHsKZ5rnVwVB1L=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/mqSdwnicHcxLEoIgAADQE5EGmdVMC1GbvvYbsWnjGJkmCgWk5QU7Q7epafOW7_POtb6pkWGUOepkQmRl-lCppILrlOsOFZWRyUQpQJXhOJhVy8vVDtZ8dX76gQhRL2QYXrykjFJminAC99FrRja0qEnUSg94cOcMAHrUAvOjJZ0W6qF738j2NPfdLSnIvknqwL9Zk_iaezabZUQV9p3FrpYFqqvttI-wdYBYz6dq8Rs4aQjuLsdN1zRNkP-lgH8BdXxElw"
+      },
+      {
+        "position": 5,
+        "title": "First Bank - Mayfair Gardens Branch",
+        "place_id": "ChIJP-o3N671OxARk-uqfSp661Q",
+        "data_id": "0x103bf5ae3737ea3f:0x54eb7a2a7daaeb93",
+        "data_cid": "6119118841628519315",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf5ae3737ea3f%3A0x54eb7a2a7daaeb93&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf5ae3737ea3f%3A0x54eb7a2a7daaeb93&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4318507,
+          "longitude": 3.4691251999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJP-o3N671OxARk-uqfSp661Q",
+        "provider_id": "/g/1yj4k3cx0",
+        "rating": 2.6,
+        "reviews": 11,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "2nd roundabout Marwa bus stop, Lekki - Epe Expy, Lekki Phase I, Lagos 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Open · Closes 2 am",
+        "hours": "Open · Closes 2 am",
+        "operating_hours": {
+          "thursday": "10 am–2 am",
+          "friday": "10 am–2 am",
+          "saturday": "10 am–2 pm",
+          "sunday": "10 am–2 pm",
+          "monday": "10 am–2 am",
+          "tuesday": "10 am–2 am",
+          "wednesday": "10 am–2 am"
+        },
+        "phone": "0708 062 5000",
+        "website": "http://www.firstbanknigeria.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=FjE7R4TNxer-qO57fTDExA&cb_client=search.gws-prod.grass&w=80&h=92&yaw=111.60688&pitch=0&thumbfov=100",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/MpgeQHicHc1fCsIgHADg2_g2_0RtK5AIWo8Fsfdw7jc13DS1ua7TrbpN0QW-7_PWKfm4IySmAJBmA9mbBWwsvMDKOWVBeBOxdCOZGUn6OXaTMHbvxeRMz0_3prqu2_MCoXhcNtXQHpvlgGR3k9bAlHgEEaTGKv_E4HqsgogRZV5TpPl2hV4ic8YYLmlZ18ibJDWn6P8MbuaM0i_K8TnX"
+      },
+      {
+        "position": 6,
+        "title": "Access Bank Plc Lekki 1 Branch",
+        "place_id": "ChIJ_____782ORAR6hHek-g8ScQ",
+        "data_id": "0x103936bfffffffff:0xc4493ce893de11ea",
+        "data_cid": "14143903074344636906",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103936bfffffffff%3A0xc4493ce893de11ea&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103936bfffffffff%3A0xc4493ce893de11ea&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.434806099999999,
+          "longitude": 3.4455180999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ_____782ORAR6hHek-g8ScQ",
+        "provider_id": "/g/1hdzybqpk",
+        "rating": 4.4,
+        "reviews": 27,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "ATM"
+        ],
+        "address": "Plot 7, Block 2,landbrigde way Oniru Private Estate, Lekki, Lagos",
+        "country": "Nigeria",
+        "website": "http://www.accessbankplc.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcf2qg1eQxJ8j7bpQRaB7HWDf7qN9pJHIIKDNnfmQsKd38IWE73YeS3ktdxF4VsdsgMYyh_SNcq2CUoTKjQ2AAmYGXZ5FOCSMiZB-NWVB2JY0-BrlYa1ZhLjkU3B1uviNQvn0iFeA=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/ULlAZ3icHcRdToMwAADgE3UUqmGa-NBu4oCtBnHD8mKwlJa_Fmg3tyN6BG9j4vfw_f4o5yb76HmDQitpjBzE2YqFG-2EdituRk8ulbWAWw9j0o973gSz9EV2TdZd-DVlbxUJd8W2CWf6MCW7OE63VDdjZtMarePiOURM5Kh39TW6O9naygO7qc-c8jnYHM172mUBxiN7-Sjvo9dNfmhLAmhxIkHCICDLwCq_VPuuPyLiny8tzS4atpHAT98-hBCo_znQf6QxRBU"
+      },
+      {
+        "position": 7,
+        "title": "First Bank",
+        "place_id": "ChIJ_____782ORARVScJvAd1gpY",
+        "data_id": "0x103936bfffffffff:0x96827507bc092755",
+        "data_cid": "10845359528741513045",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103936bfffffffff%3A0x96827507bc092755&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103936bfffffffff%3A0x96827507bc092755&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.441487899999999,
+          "longitude": 3.5299454999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ_____782ORARVScJvAd1gpY",
+        "provider_id": "/g/1tml7j27",
+        "rating": 3.1,
+        "reviews": 32,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "Along Chevron Drive, Chevron Complex, Lekki, Lagos 100272, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "phone": "14616640",
+        "website": "http://www.firstbanknigeria.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh5.googleusercontent.com/Apwye8qAddgefEaT4W2Ay2lrMgL8zqMZ6MWQfVLz0KVeWryKPxX1W2NiLMXPKDlw=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/oN0nI3icu1mUUVJSUGylr5-TYaqXnp-fnpNaWpxalJyfV5KaV6KXnJ-r71hQXplqUeiYkpKemuaaGGISbuRYaZRT5JvuY1FV6Btl5hsemBbmU2XgHZYaXlTpHVARYRhu5Jfp4xsR4O2SU25bbmhgYKCbASaTdfMAyH4oAA"
+      },
+      {
+        "position": 8,
+        "title": "First Bank Nigeria plc",
+        "place_id": "ChIJ3S8djvj0OxAR8f10-mh3hz4",
+        "data_id": "0x103bf4f88e1d2fdd:0x3e877768fa74fdf1",
+        "data_cid": "4505701244969745905",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf4f88e1d2fdd%3A0x3e877768fa74fdf1&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf4f88e1d2fdd%3A0x3e877768fa74fdf1&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.445711999999999,
+          "longitude": 3.4591683
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ3S8djvj0OxAR8f10-mh3hz4",
+        "provider_id": "/g/11c2pfjdrt",
+        "rating": 3,
+        "reviews": 25,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "ATM"
+        ],
+        "address": "Admiralty Wy, Lekki Phase I, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "website": "https://www.firstbanknigeria.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLft34G9BH3SLpLifEX3IbZ-hcaq5jtyxbeWceur8L_f7RBQIXDDKR6H5REk9dI17uvYZnqhgJoV9a-bUvCnq3Qo1fQYn3DzRZLPmME63vBb0eMUn2b7FAQ3VLb5uSr_Izu1uHu1=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/FUWot3icHcRdboIwAADgE1WoFRGTPYCwgZZEMCjyYmgt1B9aoS2bXtAz7DZL9j18v2-u9UMtLevO0aSVsr0zo9hApdBM6AmVndUOtVKAKsv3g1uHG41mX14Qox1-4EsTlSghFeC07p2rfv4QdqDMDAt8atw8yJIyDDf5PHby6OadE-ia8ViJnrdrufdqQIpxJXqUSdhkR4HCV17hbZdGczQGxGZpIabE_fQztMfEMbvhlLwMNLGBH9_Qtm3A_6dA_AEujEPR"
+      },
+      {
+        "position": 9,
+        "title": "PROVIDUS BANK",
+        "place_id": "ChIJuaCNXjT1OxARcZyqhfqoMag",
+        "data_id": "0x103bf5345e8da0b9:0xa831a8fa85aa9c71",
+        "data_cid": "12119653866168556657",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf5345e8da0b9%3A0xa831a8fa85aa9c71&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf5345e8da0b9%3A0xa831a8fa85aa9c71&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.447288599999999,
+          "longitude": 3.4672413
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJuaCNXjT1OxARcZyqhfqoMag",
+        "provider_id": "/g/11s9gqv8t3",
+        "rating": 4.5,
+        "reviews": 35,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "Admiralty Wy, Lekki Phase I, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLfTZbvr89TFLqmhBBFj33OrdHdAQGQQR1gZyIJ1IEY_oQIlwA8a5GpgpRFnUK2tYseK7dNOC-PMwaB6wKDl2_UPKfHLDy61cSxUGH1tKbiv7r0UwgiTPDfL_IaaKPXGqGC63fA=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/TnJm5HicHcRdDoIgAADgE5mSy362HjATDSst3aoXR6hYqRhQ1AW7Q7dp63v4vp9aqV7OTLOp7QHjnDXlQ5aC8k6VnRpQ3ppMECkNKk0I3VsbVenp_BSTaepH97Z2Xf9q21tRBAVMUJLsADu9wxUIl8ecJ2Gj4YSMUM_6nd9leKiOssTjYrNdGPFaE9fR2GuGeRbjKoi8twPo_pWhACh8vjzHwso0u6SxV0V5SAiOD-iOFo5dwbkGlmUZ9X9qdD_kf0ND"
+      },
+      {
+        "position": 10,
+        "title": "Zenith Bank Lekki Expressway 2",
+        "place_id": "ChIJxxV7IV71OxARFPv5bUr9oXM",
+        "data_id": "0x103bf55e217b15c7:0x73a1fd4a6df9fb14",
+        "data_cid": "8332219281726634772",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf55e217b15c7%3A0x73a1fd4a6df9fb14&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf55e217b15c7%3A0x73a1fd4a6df9fb14&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4325116,
+          "longitude": 3.4743182
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJxxV7IV71OxARFPv5bUr9oXM",
+        "provider_id": "/g/11j341m8rx",
+        "rating": 4,
+        "reviews": 74,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "19 Hakeem Dickson Link Rd, Lekki Phase I, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLf-cvVV63cOWwCjWHLCJ0d4mJHvVrO2dnqvL8nizG1XCARvCvyCZnNSE1fn2ujfqrrZQKTZ-tvbmaG5jqrI0ZbED6XfBbeYLZIGl9rhjyKIAF1_q0X6Cg5QMB1r3QMf7HLSn7J1=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/8nz3QHicHcRdboIwAADgE1VaEdyW7AEq8mOZYRrEvhioFMagjLbUsAvuDLvNkn0P3-9Pq_WXerGsvrVXzTg2fT2rWrJR6FroFRsHq5GlUoApy_P8z4FwwEyeuzY7Xh64u0QEJ_C-GZLI5PK4vovJkCfx8R2iAnvvBpsFU_F2ChAX67njk5Q0O5wp0KYaytDpJhlDWgU7t-B-VV8JjcP-Wbbdcoi9PbpNsHBx42Spj6SdpXwbkZPYJuj1gSCEoP2fAfEHeWhD_w"
+      },
+      {
+        "position": 11,
+        "title": "Sterling Bank",
+        "place_id": "ChIJrxDgRvP5OxAReSZuRRHKiXI",
+        "data_id": "0x103bf9f346e010af:0x7289ca11456e2679",
+        "data_cid": "8253349967661246073",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf9f346e010af%3A0x7289ca11456e2679&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf9f346e010af%3A0x7289ca11456e2679&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4384764,
+          "longitude": 3.5169235999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJrxDgRvP5OxAReSZuRRHKiXI",
+        "provider_id": "/g/12jlm_63j",
+        "rating": 4.2,
+        "reviews": 19,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "ATM"
+        ],
+        "address": "Bakky Plaza, by Agungi Bus Stop, Lekki - Epe Expy, Lekki, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "phone": "14484481",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLeo7e2kOaEjMNi5rsWmEUiBZXn9PYB40RL9X_YNGp2WpJh4mf-w5rBWLjPBszEhUA5cAOHdBEgSSekoRgkFfDRipSORpdkQSk_rvrKJznRuwDdRWcDr2MiWPgA7fKFAa-zNwG8N=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/TPevg3icHcRdDoIgAADgE5FmuX62HmBarUwN56hemkMEI4GB5eYFO0O3aet7-L4f0ffGrT3vKWYTrjV_spdjlmrVM9VPqO48bivnAHUehEh2CdMLFsisih-ntA2tI11ctuh2Uav8iuY-TlaX-zXdmYCYg5h3DRhCi0jyyJEbY1HCkMJsX6OYFwWTGnO5bSLcmiLDppbnQt7t2x4Po8KvIaoxoZENTi3JOVw0xy2swJgOu2W6Gaa-7wPxnwL1A4VBRR8"
+      },
+      {
+        "position": 12,
+        "title": "First Bank Nigeria Plc",
+        "place_id": "ChIJ_____782ORAR3kMkHVClOng",
+        "data_id": "0x103936bfffffffff:0x783aa5501d2443de",
+        "data_cid": "8663418596705453022",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103936bfffffffff%3A0x783aa5501d2443de&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103936bfffffffff%3A0x783aa5501d2443de&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4341722,
+          "longitude": 3.4588001999999998
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ_____782ORAR3kMkHVClOng",
+        "provider_id": "/g/11z6xl7gc",
+        "rating": 3.8,
+        "reviews": 38,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "ATM"
+        ],
+        "address": "Plot 3, Chris Efunyemi, Chris Efuyemi Onanuga St, Lekki Phase 1, Lagos 100272, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "website": "http://www.firstbanknigeria.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLdCjZKSDmlw3abbWceiXnmrme230-tWbKPtXfnjIhHr3NIMti7I-m0A27FHMqCvNL00sDe8JTEm-D19MTDG--0vT2MKr6wDSxxbNCGCu78ABscZTWLhbUQgZK6fBzC7jvnSTxRq=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/9GZ5rXicHcTbDoIgAADQLyJJt6y2HhS6mJdV0my-BZFkggWkrh_sG_qbts7D-X6EtQ8zd5xGeKOqbauGvwzXrFWWKztirXQqfTYGMOMEQXiXyQXVZZxj2fTemdKC8dtJSS2560FgCxrv7Omq6khstJdFqb35EZAwcP3VJn2iLksgNJhPt2QpAR7PUoLXAMCOuGmsJz3Oh4FmaI1e_jQIDStJkQh63FdlPLmGb-TXncrJcHgu-jGEEIj_DKgfJFxDdg"
+      },
+      {
+        "position": 13,
+        "title": "Fidelity Bank Plc, Admiralty Way",
+        "place_id": "ChIJFXbn4_j0OxARu9Fqw7HFQBI",
+        "data_id": "0x103bf4f8e3e77615:0x1240c5b1c36ad1bb",
+        "data_cid": "1315268458470625723",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf4f8e3e77615%3A0x1240c5b1c36ad1bb&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf4f8e3e77615%3A0x1240c5b1c36ad1bb&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4456897,
+          "longitude": 3.4576331999999996
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJFXbn4_j0OxARu9Fqw7HFQBI",
+        "provider_id": "/g/11cr_xhhsb",
+        "rating": 4.4,
+        "reviews": 38,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "ATM"
+        ],
+        "address": "CFW5+73C, Lekki Phase I, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "phone": "12770352",
+        "website": "http://www.fidelitybank.ng/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLf3BO4C2_8QhSPLdb31ssvvja41c01KJfCWtIS7nB9YRGlAKV5B9Yby4WnpYhZVNW1gjS9xHCqqcBMh8vzUdltdCxxLthF6gnDPR9pn4GAXAL4Ivlxqi6ce9VNo6l6CRAwzYNuL=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/bUZLanicHcZRboIwAADQEyF0VJQl-yhdRGfHHESQ_Rgo0OpqC7YickHPsNvM-PPy_u7cmFa_2rbg7oQpxUR90fWZKmlqaSZUnWx2LrS2qLYRCn5PpHGDL4hf9vNvnmxIVbpA674_FhBQB6w_GpyZVTKTgZ_HoUDrdPpYeYOZbHP-k0YZYMfEH5a462jwyef9uK2EqfAwEMMXHpPvm9hvJQzRDhG46sXQHTxa-2mkPOHhGF3HPLqQtytwHMfiT6kl_wET8ERM"
+      },
+      {
+        "position": 14,
+        "title": "Fidelity Bank",
+        "place_id": "ChIJPwmqZRL6OxARRlmxF9gm7is",
+        "data_id": "0x103bfa1265aa093f:0x2bee26d817b15946",
+        "data_cid": "3165510297640327494",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bfa1265aa093f%3A0x2bee26d817b15946&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bfa1265aa093f%3A0x2bee26d817b15946&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.499604,
+          "longitude": 3.59293
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJPwmqZRL6OxARRlmxF9gm7is",
+        "provider_id": "/g/11bzq39qy8",
+        "rating": 3.5,
+        "reviews": 11,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "FHXV+R5V, Jim Unah Way, Lambasa, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLebiysThemZ3-xGmJwfMYOMZmML06iQWmLIxqoMqQBXqtlEkfRMiGhQVknG_4YHbMD2TDaqS4rAjkICU14b-0ETwdYDrybQ5z4614dBli95HaAtwXzODKYSMIh8njkGBfitOmjyuQ=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/ALvR2XicHcRRboIwAADQE1WKVuNM_AAxiKMhVbaJPwaw0FLaCq1BvKFH8DYmex_v_WLW3szKcVo2m9Ra1y29G9qXWlmq7KTU0qn73BhQGsfzfCFjWvDRpIzK8ww8QrkfKpwl-CxxDBec_Mk4enQad8Q_dbbdiuqAecjIr1DhBWW7AgfTNMi7I-q9RkSbHxcVAG7T4ZoF_ViQ-RMtXHT1W_413-WeHU7PJPjOjjhiS9WI0K-4TWQz3sl6cCGEgP1fAvUBYYdGJg"
+      },
+      {
+        "position": 15,
+        "title": "Stanbic Ibtc Bank",
+        "place_id": "ChIJx9ayBVf0OxARJyHKRSSUawI",
+        "data_id": "0x103bf45705b2d6c7:0x26b942445ca2127",
+        "data_cid": "174395894094504231",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf45705b2d6c7%3A0x26b942445ca2127&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf45705b2d6c7%3A0x26b942445ca2127&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4453553,
+          "longitude": 3.4569805
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJx9ayBVf0OxARJyHKRSSUawI",
+        "provider_id": "/g/11h6g1208f",
+        "rating": 4.2,
+        "reviews": 32,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "1 Babatunde Masha St, Lekki Phase I, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLcR-2rUFX8fJAV_riBlTMlIqGZtt9NEY0pLfuwxlQFlcuvwBEipgtjX34-LTbO2MuCBN3gIRTSU7ODfOxtp49bjCGs0UMLBJahjbw7xLjndf2pJ8fNhrIHlPRWEenaV7URFhJg=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/LfNZNXicHcRRboIwAADQE1UqmKBL_KAKDlJAGTj1x0BHW7GW2pbBCXcHb2Oy9_Fef9xaZT4cR3BvxvqeiXYwrSa9tK20M9I_HKZrYwAxThCg-wOTAri6ik5LmgTHq74hUaYifu4u1q6y8AwVpsM4iUMkyPA7ovCmmO1O3gLgssnddNigzGNxUX5Vfr6l-WTVYtV0m52BVYpRUvOuGf0Jd_KHuipZ0ozr-FPsi--wlfXRr4qIJ2w9ziGEgP9PgHwDWaFE1A"
+      },
+      {
+        "position": 16,
+        "title": "Richway Microfinance Bank",
+        "place_id": "ChIJ2RWF3Df0OxARfw9pz4KbOGA",
+        "data_id": "0x103bf437dc8515d9:0x60389b82cf690f7f",
+        "data_cid": "6933462612464701311",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf437dc8515d9%3A0x60389b82cf690f7f&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf437dc8515d9%3A0x60389b82cf690f7f&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4427484999999995,
+          "longitude": 3.4568423999999998
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ2RWF3Df0OxARfw9pz4KbOGA",
+        "provider_id": "/g/11fzb1trqn",
+        "rating": 4.6,
+        "reviews": 12,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "plot 22a Prince Adelowo Adedeji St, Lekki Phase 1, Lekki 105102, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "phone": "0817 598 9299",
+        "website": "http://www.richwaymfb.com/",
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLe7DJpX2VLLClY4dxRxqHC-NWSG2kkXZ2ihks3YgYCjdZpiVU98iaIFcYRmqrSokBHKGXoIjecaBACwEC28rN187X7S3GswNh_PKB7vCnGFGjte76-NdTdCAUc2lMxBY0onk6LssQ=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/HDwzgnicHcRRboIwGADgE1WwLJaZ7IF2szoZcTId9WUhpaFQaJG_Dq64I3gbk30P3_1Pez_AOgg6HS1q5-pO3UCN0lmvrF9I1wf1WAIgCUGSUNOniry-DwU-pynrxFM1H-frlqHsO-fYmOKCG20gErVgbXUZmvPpOW7K3UaKY38dc2fods8Lt2uVLGnCpjeG4zFbxqQgecRhyvTPYU_JL7N8w1uvyApl1VfFkpPE3cdMReisWaUAny_TMgxDpP-XyD4Az6pElw"
+      },
+      {
+        "position": 17,
+        "title": "GT Bank, Chevron Branch",
+        "place_id": "ChIJ19Uabff2OxARtzCpKcsO7HA",
+        "data_id": "0x103bf6f76d1ad5d7:0x70ec0ecb29a930b7",
+        "data_cid": "8136894892491747511",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf6f76d1ad5d7%3A0x70ec0ecb29a930b7&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf6f76d1ad5d7%3A0x70ec0ecb29a930b7&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4409646,
+          "longitude": 3.5285987999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ19Uabff2OxARtzCpKcsO7HA",
+        "provider_id": "/g/11xlbst6t",
+        "rating": 3.8,
+        "reviews": 80,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank",
+          "ATM"
+        ],
+        "address": "Ste C20/C21, New Road Bus Stop, KM 18 Lekki - Epe Expy, Lekki Penninsula II, Lekki 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "website": "http://www.gtbank.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLd8N07-XTeWaY1lq1CGfAi6TrDf_K6P-K1nWMdiv8tHKxUrUWfLemnu07vHgFx-Em-hQplHJwuPZVAhSCXpzwrS5XbZdOW2P0yOnPcwbYhoEAOGcl9xTrBbekMmG8tVcyKcs24=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/-c24hHicHcRJDoIwAADAF1WKK5p4qBtEVDAioBcjpVBjF2yLoA_0D_7GxDnM90ONqfTEshjtdUopS0ZqTRSWwhBhOlhyq1RXrQHWFkKzO9_kzg6OQBqR5Hqy2cOeuwW6DSO1KC7-MAS-LZJtfns6xvPbozomxYZwUcPR0ytXLVhyQPcV89ZNHZ5jRA_ztHo36jBIs3MeJN0QvgIR4iY7UblEgYvZuI3ULCP3LXcdE-OXj3W3P21sCCGg_zEQPxfhRNo"
+      },
+      {
+        "position": 18,
+        "title": "Zenith Bank",
+        "place_id": "ChIJAc90S-r3OxAR9imsoh1U4yI",
+        "data_id": "0x103bf7ea4b74cf01:0x22e3541da2ac29f6",
+        "data_cid": "2513945503262845430",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf7ea4b74cf01%3A0x22e3541da2ac29f6&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf7ea4b74cf01%3A0x22e3541da2ac29f6&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.441779299999999,
+          "longitude": 3.513585
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJAc90S-r3OxAR9imsoh1U4yI",
+        "provider_id": "/g/11jl_c835l",
+        "rating": 3,
+        "reviews": 4,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "No. 1 Truddy Ebhodagbe Crescent Osapa Lekki, Lagos",
+        "country": "Nigeria",
+        "phone": "12620727",
+        "website": "http://www.zenithbank.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-cs/AABkmLeJXcILSk48kjy4LawQwOKeH0qCMd50TgmM6C6eVQL6EsxCSE_EVv4kG5jp8rIe3JbM9C6fc4VKGAYnRpxjt_qQ8Vl-SFR-7cBSrohHp6uSqgBTthrUt1xsh3gAbuBxJDlStdg7=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/_AowCXicHcTbDoIgAADQLyJxGllbD2p2MV0zytVTUySYNxQw7Qv7hv6mrfNwvh-udadWhlFza8aEYDUdFJVEtJq2ekZEYzCZKQWIMlzXq5qIhjdyiHBlO1X5tqNsTMbTke5h78fFHF5YEyMf0TSJUKAmHwePIH3Z1W5edo48UCvM46WPnsROjzv33p67qdSPPnHSGuDtGSyIh6Xg-w4NuGfeRXN51eakuMXcfPCmcFNjXbDFejQhhID_J6D9ATf-RJ8"
+      },
+      {
+        "position": 19,
+        "title": "Zenith Bank",
+        "place_id": "ChIJ23CF42P1OxARWscGOswVDik",
+        "data_id": "0x103bf563e38570db:0x290e15cc3a06c75a",
+        "data_cid": "2958325972120029018",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf563e38570db%3A0x290e15cc3a06c75a&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf563e38570db%3A0x290e15cc3a06c75a&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4374256999999995,
+          "longitude": 3.4557094999999998
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ23CF42P1OxARWscGOswVDik",
+        "provider_id": "/g/11jk7p2k8g",
+        "rating": 4.1,
+        "reviews": 27,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "Plot 6 Layi Yusuf Cresent, off Adiralty Road, Lekki Phase 1, Lagos 106104, Lagos",
+        "country": "Nigeria",
+        "open_state": "Closed · Opens 8 am Fri",
+        "hours": "Closed · Opens 8 am Fri",
+        "operating_hours": {
+          "thursday": "8 am–4 pm",
+          "friday": "8 am–4 pm",
+          "saturday": "Closed",
+          "sunday": "Closed",
+          "monday": "8 am–4 pm",
+          "tuesday": "8 am–4 pm",
+          "wednesday": "8 am–4 pm"
+        },
+        "phone": "0201 278 7000",
+        "website": "https://www.zenithbank.com/",
+        "extensions": [
+          {
+            "accessibility": [
+              "Wheelchair-accessible car park",
+              "Wheelchair-accessible entrance"
+            ]
+          }
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/grass-proxy/AIM7gW11wt7uhhttD3y-dm0MNLA7NVrPj_zj1irBf2vMdL4zWsxU803-bNFzXxCt8YnEaqCw-7yq-zZQyXK7vhBO86Zf8wkMNOyyJ6dzzC0eyp5Rt4DDOJS4tQb4iktBCjFaBba11QAJC0nMJWDdtQwZOOB8zZRtnsfcaI37EWJ_IlFL0rbnOKUK9AQ1MXv3Y3mUuu3ExSnX=w1000-h1000-c-n",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/xd6bDXicHcvNboIwAADg7Lp3qbQrs8xkB34kAQWGxoFcDH-CCkXbIrSPuqfZsst3-35eXlsh7nylaV2LF80wNF098pqVAxU1FYty6LWG5ZyDOxtmqZleQJoEoUmQsf2rDpag6mEQbk0SfrOv60ld0YVZ57dnUG11lfD5YEAMitBV6WwL40jX-cOeAJEPoLJYphvybK3IWGZnY7oFYSSlv6yUsmEt7-87oTtO5O91ERf65SYs--rmVpEjFJu-DWngJ04l4imLIstQ2U5Qfi5zD5N14p-8zt1CVtBoc9h8mDEK0ic-4v4wjng972n6OSEIIWj_LQH9BUujWlk"
+      },
+      {
+        "position": 20,
+        "title": "First Bank",
+        "place_id": "ChIJNVYkRBH3OxARY-SrQdF9-dQ",
+        "data_id": "0x103bf71144245635:0xd4f97dd141abe463",
+        "data_cid": "15346435542945096803",
+        "reviews_link": "https://serpapi.com/search.json?data_id=0x103bf71144245635%3A0xd4f97dd141abe463&engine=google_maps_reviews&hl=en",
+        "photos_link": "https://serpapi.com/search.json?data_id=0x103bf71144245635%3A0xd4f97dd141abe463&engine=google_maps_photos&hl=en",
+        "gps_coordinates": {
+          "latitude": 6.4531054999999995,
+          "longitude": 3.5550471999999997
+        },
+        "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJNVYkRBH3OxARY-SrQdF9-dQ",
+        "provider_id": "/g/11fxc29145",
+        "rating": 4.8,
+        "reviews": 4,
+        "unclaimed_listing": true,
+        "type": "Bank",
+        "types": [
+          "Bank"
+        ],
+        "address": "FH34+62V, Lekki - Epe Expy, Ajah, Lagos 106104, Lagos",
+        "country": "Nigeria",
+        "thumbnail": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=5UJOiOQIji-Nz7WQUGdE3w&cb_client=search.gws-prod.grass&w=80&h=92&yaw=7.13209&pitch=0&thumbfov=100",
+        "serpapi_thumbnail": "https://serpapi.com/images/url/tGjME3icHc3BDcIgFADQbbgVaBtTa0I8GaMHmx4aj4ZShG9oIYCgTuNabqNxgfc-bx2jCxtCQvRSxgQyO3hIEwrHsbJWGckdBCzsTFJJor7P48LBbB1fLExsNRw76PrDDYrTqzn3w37a1RmJ8SIMyCWyILkXGqv8E72dsPI8BJTZmiLN2go9eWYNLuuKtshBFJpR9F-uNrGS0i9huzl_"
+      }
+    ],
+    "serpapi_pagination": {
+      "next": "https://serpapi.com/search.json?engine=google_maps&gl=ng&google_domain=google.com&hl=en&ll=%406.5244%2C3.3792%2C11z&q=banks+in+lekki&start=20&type=search"
+    }
+  }
+}

@@ -1,11 +1,12 @@
 // Find-box intents. Keyword rules stand in for Gemma's intent prompt until step 6.
+// Search results come from SerpApi (lib/serpapi.ts); the Audit card is fake until step 5.
 
-import { fakeAudit, fakeSearch, type Business } from "./leads";
+import { fakeAudit, type Business } from "./leads";
 
 export type Intent = "search" | "audit";
 
 export type CardData =
-  | { intent: "search"; data: { query: string; results: Business[] } }
+  | { intent: "search"; data: { query: string } }
   | { intent: "audit"; data: Business };
 
 // What "/" shows: exactly one row per card type, with one example inside the row.
@@ -35,7 +36,7 @@ function titleCase(s: string) {
 
 export function fakeCard(intent: Intent, text: string): CardData {
   if (intent === "search") {
-    return { intent, data: { query: text.trim(), results: fakeSearch() } };
+    return { intent, data: { query: text.trim().replace(/\s+/g, " ") } };
   }
   const url = text.match(URL_RE)?.[0] ?? null;
   const name = url ? null : titleCase(text.replace(AUDIT_RE, "").trim());

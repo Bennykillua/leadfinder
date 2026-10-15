@@ -59,7 +59,7 @@ function ContactButtons({ lead }: { lead: Lead }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center justify-end gap-2">
-        {nothing && (
+        {nothing && lead.phone && (
           <Button variant="outline" nativeButton={false} render={<a href={telLink(lead)} />}>
             <Phone />
             Call {lead.phone}
@@ -90,7 +90,7 @@ function ContactButtons({ lead }: { lead: Lead }) {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              {lead.whatsapp === "call"
+              {lead.whatsapp === "call" && lead.phone
                 ? `${lead.phone} is a landline, so it can't receive WhatsApp.`
                 : "No WhatsApp-capable number found for this business."}
             </TooltipContent>
@@ -261,8 +261,7 @@ export function LeadDrawer({
                 <ContactBadge business={lead} />
               </div>
               <div className="text-xs text-muted-foreground">
-                {lead.phone}
-                {lead.website ? ` · ${lead.website}` : " · No website"}
+                {lead.phone || "No phone"} · {lead.website ?? "No website"}
               </div>
             </SheetHeader>
 
@@ -279,11 +278,17 @@ export function LeadDrawer({
                 </Button>
               }
             >
-              <div className="rounded-lg bg-muted/60 p-3">
-                <div className="mb-0.5 text-xs font-medium text-muted-foreground">Top reason to pitch</div>
-                <div className="font-medium">{lead.topReason}</div>
-              </div>
-              <EvidenceList evidence={lead.evidence} />
+              {lead.topReason && (
+                <div className="rounded-lg bg-muted/60 p-3">
+                  <div className="mb-0.5 text-xs font-medium text-muted-foreground">Top reason to pitch</div>
+                  <div className="font-medium">{lead.topReason}</div>
+                </div>
+              )}
+              {lead.evidence.length > 0 ? (
+                <EvidenceList evidence={lead.evidence} />
+              ) : (
+                <p className="text-sm text-muted-foreground">Not audited yet. Website checks arrive in step 5.</p>
+              )}
             </Section>
 
             <Section

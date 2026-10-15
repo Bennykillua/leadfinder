@@ -38,7 +38,7 @@ export function LeadCardView({
         <ScoreDots score={lead.score} className="mt-1.5 shrink-0" />
         {menu}
       </div>
-      <p className="line-clamp-2 text-muted-foreground">{lead.topReason}</p>
+      {lead.topReason && <p className="line-clamp-2 text-muted-foreground">{lead.topReason}</p>}
       <div className="flex flex-wrap items-center gap-1.5">
         <ContactBadge business={lead} />
         {lead.reminder && (
