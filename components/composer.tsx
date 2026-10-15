@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, type Transition } from "motion/react";
-import {
-  ArrowRightLeft,
-  BellRing,
-  CornerDownLeft,
-  MessageCircle,
-  ScanSearch,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { CornerDownLeft, ScanSearch, Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CARD_TYPES, classify, fakeCard, type CardData, type Intent } from "@/lib/cards";
 import { SearchCard } from "./cards/search-card";
 import { AuditCard } from "./cards/audit-card";
-import { PitchCard } from "./cards/pitch-card";
-import { StatusCard } from "./cards/status-card";
-import { ReminderCard } from "./cards/reminder-card";
 
 // Same pause the spec gives Gemma; keyword rules stand in for it in step 1.
 const DEBOUNCE_MS = 300;
@@ -27,9 +16,6 @@ const SPRING: Transition = { type: "spring", bounce: 0.18, duration: 0.55 };
 const ICONS: Record<Intent, React.ComponentType<{ className?: string }>> = {
   search: Search,
   audit: ScanSearch,
-  pitch: MessageCircle,
-  update: ArrowRightLeft,
-  remind: BellRing,
 };
 
 const LABELS: Record<Intent, string> = Object.fromEntries(
@@ -55,12 +41,6 @@ function CardBody({ card }: { card: CardData }) {
       return <SearchCard key={card.data.query} data={card.data} />;
     case "audit":
       return <AuditCard data={card.data} />;
-    case "pitch":
-      return <PitchCard key={card.data.business} data={card.data} />;
-    case "update":
-      return <StatusCard key={`${card.data.business}-${card.data.to}`} data={card.data} />;
-    case "remind":
-      return <ReminderCard data={card.data} />;
   }
 }
 
@@ -80,13 +60,13 @@ export function Composer() {
   const filter = text.slice(1).trim().toLowerCase();
   const menu = slash
     ? CARD_TYPES.filter(
-        (c) => c.label.toLowerCase().includes(filter) || c.intent.includes(filter),
+        (c) => c.label.toLowerCase().includes(filter) || c.example.toLowerCase().includes(filter),
       )
     : [];
   const activeIndex = Math.min(active, Math.max(menu.length - 1, 0));
 
   const intent = slash ? null : classify(settled);
-  const card = intent ? fakeCard(intent, settled) : null;
+  const card = useMemo(() => (intent ? fakeCard(intent, settled) : null), [intent, settled]);
   const open = slash || card !== null;
   const Icon = intent ? ICONS[intent] : slash ? Sparkles : Search;
 
@@ -155,7 +135,7 @@ export function Composer() {
                 setActive(0);
               }}
               onKeyDown={onKeyDown}
-              placeholder="dental clinics in Lekki…"
+              placeholder="event centres in Lekki…"
               aria-label="Tell Lead Finder what you need"
               autoFocus
               spellCheck={false}
@@ -200,7 +180,7 @@ export function Composer() {
                 className="border-t p-1.5"
               >
                 {menu.length === 0 && (
-                  <li className="px-3 py-2.5 text-sm text-muted-foreground">No card called “{filter}”</li>
+                  <li className="px-3 py-2.5 text-sm text-muted-foreground">Nothing matches “{filter}”</li>
                 )}
                 {menu.map((c, i) => {
                   const ItemIcon = ICONS[c.intent];
