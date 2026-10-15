@@ -36,6 +36,48 @@
       "when": 1792099902079,
       "tag": "0004_password_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1792102381831,
+      "tag": "0005_multiple_notes",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1792104169231,
+      "tag": "0006_gemma",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1792104497636,
+      "tag": "0007_llm_grounded",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1792104815299,
+      "tag": "0008_sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1792105448008,
+      "tag": "0009_llm_debug",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1792106808898,
+      "tag": "0010_evidence_reviews_country",
+      "breakpoints": true
     }
   ]
 }

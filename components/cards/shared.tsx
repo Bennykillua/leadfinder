@@ -91,28 +91,50 @@ export function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function EvidenceList({ evidence, className }: { evidence: Evidence[]; className?: string }) {
+export function EvidenceList({
+  evidence,
+  className,
+  highlight,
+}: {
+  evidence: Evidence[];
+  className?: string;
+  // Ids of evidence the current pitch cites: shown highlighted, so it can be checked.
+  highlight?: Set<string>;
+}) {
   return (
     <ul className={cn("grid gap-x-4 gap-y-1.5", className)}>
-      {evidence.map((e) => (
-        <li key={e.label} className="flex items-start gap-2 text-sm">
-          <span
+      {evidence.map((e) => {
+        const used = highlight?.has(e.id);
+        return (
+          <li
+            key={e.id}
             className={cn(
-              "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full [&_svg]:size-3",
-              e.ok === true && "bg-emerald-500/15 text-emerald-700",
-              e.ok === false && "bg-rose-500/15 text-rose-700",
-              e.ok === null && "bg-muted text-muted-foreground",
+              "flex items-start gap-2 rounded-md text-sm",
+              used && "-mx-1.5 bg-amber-500/10 px-1.5 py-1 ring-1 ring-amber-500/40",
             )}
-            aria-label={e.ok === true ? "Passed" : e.ok === false ? "Weak spot" : "Couldn't check"}
           >
-            {e.ok === true ? <Check /> : e.ok === false ? <X /> : <Minus />}
-          </span>
-          <span className="min-w-0">
-            <span className="font-medium">{e.label}</span>{" "}
-            <span className="text-muted-foreground">{e.detail}</span>
-          </span>
-        </li>
-      ))}
+            <span
+              className={cn(
+                "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full [&_svg]:size-3",
+                e.ok === true && "bg-emerald-500/15 text-emerald-700",
+                e.ok === false && "bg-rose-500/15 text-rose-700",
+                e.ok === null && "bg-muted text-muted-foreground",
+              )}
+              aria-label={e.ok === true ? "Passed" : e.ok === false ? "Weak spot" : "Couldn't check"}
+            >
+              {e.ok === true ? <Check /> : e.ok === false ? <X /> : <Minus />}
+            </span>
+            <span className="min-w-0">
+              <span className="font-medium">{e.label}</span>{" "}
+              <span className="text-muted-foreground">{e.detail}</span>
+              {used && (
+                <span className="ml-1.5 rounded bg-amber-500/20 px-1 text-[0.7rem] font-medium text-amber-900">In pitch</span>
+              )}
+              {e.check && e.ok !== true && <span className="mt-0.5 block text-xs text-muted-foreground">Check: {e.check}</span>}
+            </span>
+          </li>
+        );
+      })}
     </ul>
   );
 }

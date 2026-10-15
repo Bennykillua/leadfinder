@@ -5,19 +5,20 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { headers } from "next/headers";
 import { createSession, deleteSession } from "@/lib/session";
-import { hashPassword, verifyPassword, PASSWORD_MAX, PASSWORD_MIN } from "@/lib/password";
-import { clearAttempts, tooManyAttempts } from "@/lib/rate-limit";import { db } from "@/lib/db";
-import { leads, OFFERS, users } from "@/lib/db/schema";
+import { hashPassword, needsRehash, verifyPassword, PASSWORD_MAX, PASSWORD_MIN } from "@/lib/password";
+import { backoffRemaining, clearFailures, recordFailure, tooManyAttempts } from "@/lib/rate-limit";
+import { db } from "@/lib/db";
+import { leads, notes, OFFERS, users } from "@/lib/db/schema";
 import { requireUser } from "@/lib/dal";
 import type { Business, Lead } from "@/lib/leads";
 import { getSerpUsage, searchGoogleMaps, SerpApiError, type SearchResult, type SerpUsage } from "@/lib/serpapi";
 import { auditByName, auditWebsite } from "@/lib/audit";
 import { rerunAuditForUser, type AuditFields } from "@/lib/audit/service";
-import { business, column, lead, patch, reminder } from "@/lib/schemas";
+import { business, column, lead, note, noteBody, patch, reminder } from "@/lib/schemas";
 
 // Every action re-reads the session; the client never says whose data it is.
 
-export type LeadPatch = Partial<Pick<Lead, "status" | "pitch" | "notes" | "reminder">>;
+export type LeadPatch = Partial<Pick<Lead, "status" | "pitch" | "reminder" | "pitchEvidence">>;
 
 function reminderColumns(r: z.infer<typeof reminder> | undefined) {
   if (r === undefined) return {};
@@ -69,23 +70,82 @@ export async function reorderLeadsAction(input: unknown) {
 
 export async function deleteLeadAction(id: string) {
   const user = await requireUser();
-  await db.delete(leads).where(and(eq(leads.userId, user.id), eq(leads.id, z.string().parse(id))));
+  const leadId = z.string().parse(id);
+  // Notes go with the lead (explicitly, not relying on SQLite foreign-key settings).
+  await db.batch([
+    db.delete(notes).where(and(eq(notes.userId, user.id), eq(notes.leadId, leadId))),
+    db.delete(leads).where(and(eq(leads.userId, user.id), eq(leads.id, leadId))),
+  ]);
 }
 
 // Undo after delete: put the lead back exactly as it was.
 export async function restoreLeadAction(input: unknown, position: number) {
   const user = await requireUser();
-  const { reminder: r, auditedAt, ...l } = lead.parse(input);
+  const { reminder: r, auditedAt, notes: leadNotes, ai, reviewSamples, pitchEvidence, ...l } = lead.parse(input);
   await db
     .insert(leads)
     .values({
       ...l,
       ...reminderColumns(r),
+      aiScore: ai?.score ?? null,
+      aiTopReason: ai?.topReason ?? null,
+      aiFindings: ai?.findings ?? null,
+      aiTiming: ai?.timing ?? null,
+      reviewSamples,
+      pitchEvidence,
+      aiModel: ai?.model ?? null,
+      aiAt: ai ? new Date(ai.at) : null,
       auditedAt: auditedAt ? new Date(auditedAt) : null,
       userId: user.id,
       position: z.number().int().parse(position),
     })
     .onConflictDoNothing();
+  if (leadNotes.length > 0) {
+    await db
+      .insert(notes)
+      .values(
+        leadNotes.map((n) => ({
+          id: n.id,
+          userId: user.id,
+          leadId: l.id,
+          body: n.body,
+          createdAt: new Date(n.createdAt),
+          updatedAt: new Date(n.updatedAt),
+        })),
+      )
+      .onConflictDoNothing();
+  }
+}
+
+// --- Notes (many per lead) ---
+
+// The client makes the id so the note shows instantly; the server checks the lead
+// belongs to this user before storing it.
+export async function addNoteAction(leadId: string, input: unknown) {
+  const user = await requireUser();
+  const n = note.parse(input);
+  const owned = await db.query.leads.findFirst({
+    where: and(eq(leads.userId, user.id), eq(leads.id, z.string().parse(leadId))),
+    columns: { id: true },
+  });
+  if (!owned) throw new Error("Lead not found");
+  await db
+    .insert(notes)
+    .values({ ...n, userId: user.id, leadId, createdAt: new Date(n.createdAt), updatedAt: new Date(n.updatedAt) })
+    .onConflictDoNothing();
+}
+
+export async function updateNoteAction(id: string, body: string) {
+  const user = await requireUser();
+  await db
+    .update(notes)
+    .set({ body: noteBody.parse(body), updatedAt: new Date() })
+    .where(and(eq(notes.userId, user.id), eq(notes.id, z.uuid().parse(id))));
+}
+
+export async function deleteNoteAction(id: string) {
+  const user = await requireUser();
+  await db.delete(notes).where(and(eq(notes.userId, user.id), eq(notes.id, z.uuid().parse(id))));
 }
 
 const offerForm = z
@@ -151,6 +211,9 @@ export async function signUpAction(_prev: AuthState, form: FormData): Promise<Au
   redirect("/welcome");
 }
 
+const SIGNIN_MAX_FAILURES = 5;
+const SIGNIN_BACKOFF_MS = 15 * 60 * 1000;
+
 export async function signInAction(_prev: AuthState, form: FormData): Promise<AuthState> {
   const raw = { email: String(form.get("email") ?? "") };
   const parsed = z.object({ email, password: z.string().min(1).max(PASSWORD_MAX) }).safeParse({
@@ -160,15 +223,32 @@ export async function signInAction(_prev: AuthState, form: FormData): Promise<Au
   const wrong = { error: "Email or password is incorrect.", ...raw };
   if (!parsed.success) return wrong;
 
-  const limitKey = `signin:${parsed.data.email}:${await clientIp()}`;
-  if (tooManyAttempts(limitKey, 10, 15 * 60 * 1000)) {
-    return { error: "Too many attempts. Wait 15 minutes and try again.", ...raw };
+  // Short backoff on failed passwords, never a permanent lock:
+  // - per account (regardless of IP, so a changed or spoofed IP can't buy more
+  //   guesses): 5 failures in 15 minutes → wait 15 minutes;
+  // - per IP (one client spraying many accounts): 50 failures → wait 15 minutes.
+  const accountKey = `signin:email:${parsed.data.email}`;
+  const ipKey = `signin:ip:${await clientIp()}`;
+  const waitMs = Math.max(backoffRemaining(accountKey), backoffRemaining(ipKey));
+  if (waitMs > 0) {
+    const minutes = Math.ceil(waitMs / 60_000);
+    return {
+      error: `Too many wrong passwords. Try again in ${minutes} minute${minutes === 1 ? "" : "s"}.`,
+      ...raw,
+    };
   }
   const user = await db.query.users.findFirst({ where: eq(users.email, parsed.data.email) });
   const ok = await verifyPassword(parsed.data.password, user?.passwordHash ?? (await DUMMY_HASH));
-  if (!user || !user.passwordHash || !ok) return wrong;
+  if (!user || !user.passwordHash || !ok) {
+    recordFailure(accountKey, SIGNIN_MAX_FAILURES, SIGNIN_BACKOFF_MS);
+    recordFailure(ipKey, 50, SIGNIN_BACKOFF_MS);
+    return wrong;
+  }
 
-  clearAttempts(limitKey);
+  clearFailures(accountKey);
+  if (needsRehash(user.passwordHash)) {
+    await db.update(users).set({ passwordHash: await hashPassword(parsed.data.password) }).where(eq(users.id, user.id));
+  }
   await createSession(user.id);
   redirect(user.offer ? "/" : "/welcome");
 }
@@ -219,7 +299,7 @@ export async function auditTargetAction(input: { kind: "url" | "name"; target: s
   const offer = user.offer ?? "other";
   try {
     if (kind === "url") {
-      return { ok: true, business: await auditWebsite(target, offer), usage: null };
+      return { ok: true, business: (await auditWebsite(target, offer)).business, usage: null };
     }
     const found = await auditByName(target, offer, user.id);
     const usage = await getSerpUsage({ refreshAccount: true });

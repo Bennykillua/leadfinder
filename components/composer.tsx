@@ -75,6 +75,8 @@ export function Composer() {
   const [text, setText] = useState("");
   const [settled, setSettled] = useState("");
   const [active, setActive] = useState(0);
+  // Card menu opened by focusing the empty box (not by typing "/").
+  const [focusMenu, setFocusMenu] = useState(false);
   // The text the user pressed Enter on. Only submitted cards call SerpApi or crawl.
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [usage, setUsage] = useState<SerpUsage | null>(null);
@@ -97,8 +99,10 @@ export function Composer() {
   }, [text]);
 
   const slash = text.startsWith("/");
-  const filter = text.slice(1).trim().toLowerCase();
-  const menu = slash
+  // The card menu: typed "/" (with an optional filter after it), or focus on an empty box.
+  const menuOpen = slash || (focusMenu && text === "");
+  const filter = slash ? text.slice(1).trim().toLowerCase() : "";
+  const menu = menuOpen
     ? CARD_TYPES.filter(
         (c) => c.label.toLowerCase().includes(filter) || c.example.toLowerCase().includes(filter),
       )
@@ -107,8 +111,22 @@ export function Composer() {
 
   const intent = slash ? null : classify(settled);
   const card = useMemo(() => (intent ? cardFor(intent, settled) : null), [intent, settled]);
-  const open = slash || card !== null;
-  const Icon = intent ? ICONS[intent] : slash ? Sparkles : Search;
+  const open = menuOpen || card !== null;
+  const Icon = intent && !menuOpen ? ICONS[intent] : menuOpen ? Sparkles : Search;
+
+  // Focusing (or clicking/tapping into) the empty box opens the card menu, the same
+  // as pressing "/", without putting a "/" in the box. Typing closes it.
+  function openMenuIfEmpty() {
+    if (text) return;
+    setFocusMenu(true);
+    setActive(0);
+  }
+
+  // Focus on arrival (instead of autoFocus, which can focus before React is
+  // listening, so the menu wouldn't open on first load).
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   function choose(i: number) {
     const pick = menu[i];
@@ -122,9 +140,10 @@ export function Composer() {
     if (e.key === "Escape") {
       setText("");
       setSettled("");
+      setFocusMenu(false);
       return;
     }
-    if (!slash && e.key === "Enter") {
+    if (!menuOpen && e.key === "Enter") {
       e.preventDefault();
       // Enter skips the typing pause and runs the search or audit.
       setSettled(text);
@@ -132,7 +151,7 @@ export function Composer() {
       if (now) setSubmitted(cardKey(cardFor(now, text)));
       return;
     }
-    if (!slash || menu.length === 0) return;
+    if (!menuOpen || menu.length === 0) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActive((activeIndex + 1) % menu.length);
@@ -165,7 +184,7 @@ export function Composer() {
           <div className="flex h-14 items-center gap-3 px-4">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
-                key={intent ?? (slash ? "slash" : "idle")}
+                key={menuOpen ? "menu" : (intent ?? "idle")}
                 initial={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
@@ -180,17 +199,20 @@ export function Composer() {
               value={text}
               onChange={(e) => {
                 setText(e.target.value);
+                setFocusMenu(false);
                 setActive(0);
               }}
               onKeyDown={onKeyDown}
+              onFocus={openMenuIfEmpty}
+              onPointerDown={openMenuIfEmpty}
+              onBlur={() => setFocusMenu(false)}
               placeholder="event centres in Lekki…"
               aria-label="Tell Lead Finder what you need"
-              autoFocus
               spellCheck={false}
               className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground/70"
             />
             <AnimatePresence mode="popLayout" initial={false}>
-              {intent ? (
+              {intent && !menuOpen ? (
                 <motion.span
                   key={intent}
                   initial={{ opacity: 0, y: 6 }}
@@ -216,7 +238,7 @@ export function Composer() {
           </div>
 
           <AnimatePresence mode="popLayout" initial={false}>
-            {slash ? (
+            {menuOpen ? (
               <motion.ul
                 key="menu"
                 role="listbox"

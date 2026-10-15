@@ -29,8 +29,40 @@ export type CrawlFacts = {
   sitePhone: string | null;
   siteName: string | null;
   contactPage: { url: string; status: number | null } | null;
+  // Trimmed visible text per crawled page, for Gemma's deep read. Includes image
+  // file names / alt text ("[image: menu.jpg]") so it can spot stock photos or a
+  // menu that's only an image. Missing on crawls cached before step 6.
+  pages?: { url: string; text: string }[];
+  pagesVersion?: number;
+  signals?: SiteSignal[];
   crawledAt: string;
 };
+
+const MAX_IMAGE_NOTES = 8;
+// Bump when the shape of `pages` text changes, so old cached crawls are redone.
+export const PAGES_VERSION = 3;
+
+// Timing signals for "Why now?": hiring, or a new branch/location. The sentence is
+// kept so the pitch can point at it.
+export type SiteSignal = { kind: "hiring" | "new_location"; quote: string; url: string };
+const SIGNALS: [SiteSignal["kind"], RegExp][] = [
+  ["hiring", /\b(we('| a)re hiring|now hiring|we are recruiting|job (openings|vacancies)|vacanc(y|ies)|join our team)\b/i],
+  ["new_location", /\b(new (branch|location|outlet|store|office|showroom)|now open(ed)? (in|at)|grand opening|opening soon|just opened|newly opened)\b/i],
+];
+
+function signalsIn(text: string): Omit<SiteSignal, "url">[] {
+  const out: Omit<SiteSignal, "url">[] = [];
+  for (const [kind, re] of SIGNALS) {
+    const m = re.exec(text);
+    if (!m) continue;
+    // The sentence around the match, trimmed.
+    const start = Math.max(0, text.lastIndexOf(".", m.index) + 1, m.index - 100);
+    const endDot = text.indexOf(".", m.index + m[0].length);
+    const end = Math.min(text.length, endDot === -1 ? m.index + 140 : endDot + 1, m.index + 160);
+    out.push({ kind, quote: text.slice(start, end).trim() });
+  }
+  return out;
+}
 
 const CACHE_MS = 24 * 60 * 60 * 1000;
 const MAX_CONCURRENT = 4;
@@ -91,7 +123,7 @@ export function isPlaceholderNumber(n: string) {
   return /(\d)\1{5,}/.test(n) || /0123456789|1234567890/.test(n);
 }
 
-// wa.me/2348031234567, api.whatsapp.com/send?phone=…, whatsapp://send?phone=…
+// wa.me/447911123456, api.whatsapp.com/send?phone=…, whatsapp://send?phone=…
 export function whatsappFromHref(href: string): string | null {
   let digits: string | undefined;
   const wa = href.match(/wa\.me\/\+?(\d[\d\s-]{6,})/i);
@@ -100,9 +132,10 @@ export function whatsappFromHref(href: string): string | null {
     digits = href.match(/[?&]phone=\+?([\d\s%-]+)/i)?.[1];
   }
   if (!digits) return null;
+  // Raw digits: wa.me numbers are international already; a local "0…" one is
+  // resolved with the business's country in the audit (lib/phone.ts).
   const n = decodeURIComponent(digits).replace(/\D/g, "");
-  const normalised = n.startsWith("0") && n.length === 11 ? `234${n.slice(1)}` : n;
-  return normalised.length >= 10 && normalised.length <= 15 ? normalised : null;
+  return n.length >= 8 && n.length <= 15 ? n : null;
 }
 
 type PageFacts = {
@@ -118,7 +151,78 @@ type PageFacts = {
   telPhone: string | null;
   siteName: string | null;
   contactLink: string | null;
+  readable: string;
+  signals: Omit<SiteSignal, "url">[];
 };
+
+// Page text for the model: the parts most worth reading, in priority order, so a
+// tight character budget keeps the useful bits. Title and description, headings,
+// the first real paragraphs, price lines, contact lines, then a few image notes
+// (file names / alt text help spot stock photos or a menu that's only an image).
+const PRICE_RE = /₦|\bNGN\b|\bnaira\b|\bN\s?\d[\d,]{2,}|\bprices?\b|\bpricing\b|\brates?\b|per night|\/night|per person|\bpackages?\b|\bfrom \d/i;
+const CONTACT_RE = /\+?\d[\d\s().-]{7,}\d|\b[\w.+-]+@[\w-]+\.[\w.]+|\baddress\b|\bcall us\b|\bwhatsapp\b|\blocated\b|\bopening hours\b|\bopen (daily|mon)/i;
+
+function clip(s: string, n: number) {
+  const t = s.replace(/\s+/g, " ").trim();
+  return t.length > n ? `${t.slice(0, n - 1)}…` : t;
+}
+
+function readableText($: cheerio.CheerioAPI): string {
+  const seen = new Set<string>();
+  const take = (items: string[], max: number, len: number) => {
+    const out: string[] = [];
+    for (const item of items) {
+      const t = clip(item, len);
+      const key = t.toLowerCase();
+      if (t.length < 3 || seen.has(key)) continue;
+      seen.add(key);
+      out.push(t);
+      if (out.length >= max) break;
+    }
+    return out;
+  };
+  const texts = (selector: string) =>
+    $(selector)
+      .toArray()
+      .map((el) => $(el).text());
+  // Short text blocks (list items, cells, small paragraphs) for price/contact lines.
+  const blocks = texts("p, li, td, dd, address, h4, h5, h6, span, small").filter((t) => {
+    const n = t.replace(/\s+/g, " ").trim().length;
+    return n >= 6 && n <= 240;
+  });
+
+  const title = clip($("title").first().text(), 120);
+  const description = clip($('meta[name="description" i]').attr("content") ?? "", 200);
+  const headings = take(texts("h1, h2, h3"), 10, 80);
+  const paragraphs = take(
+    texts("p").filter((t) => t.replace(/\s+/g, " ").trim().length >= 40),
+    3,
+    260,
+  );
+  const prices = take(blocks.filter((t) => PRICE_RE.test(t)), 4, 160);
+  const contact = take(blocks.filter((t) => CONTACT_RE.test(t)), 3, 160);
+  const images = $("img")
+    .toArray()
+    .map((el) => {
+      const src = ($(el).attr("src") ?? $(el).attr("data-src") ?? "").split("?")[0].split("/").pop() ?? "";
+      const alt = ($(el).attr("alt") ?? "").trim();
+      return src || alt ? `[image: ${src}${alt ? ` alt="${clip(alt, 60)}"` : ""}]` : "";
+    })
+    .filter(Boolean)
+    .slice(0, MAX_IMAGE_NOTES);
+
+  return [
+    title && `Title: ${title}`,
+    description && `Description: ${description}`,
+    headings.length > 0 && `Headings: ${headings.join(" | ")}`,
+    ...paragraphs.map((p) => `Text: ${p}`),
+    prices.length > 0 ? `Prices: ${prices.join(" | ")}` : "Prices: (no price lines found)",
+    contact.length > 0 && `Contact: ${contact.join(" | ")}`,
+    images.length > 0 && `Images: ${images.join(" ")}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
 
 function extract(page: Page): PageFacts {
   const $ = cheerio.load(page.html);
@@ -233,6 +337,8 @@ function extract(page: Page): PageFacts {
     telPhone,
     siteName,
     contactLink,
+    readable: readableText($),
+    signals: signalsIn(text),
   };
 }
 
@@ -352,6 +458,7 @@ async function crawl(website: string): Promise<CrawlFacts> {
   }
 
   const pages = [extract(home)];
+  const pageUrls = [home.finalUrl];
 
   // Contact page: the site's own contact link if it has one, otherwise /contact.
   const finalOrigin = new URL(home.finalUrl).origin;
@@ -362,7 +469,10 @@ async function crawl(website: string): Promise<CrawlFacts> {
       if (contactRobots.allowed(contactUrl)) {
         const contact = await fetchPage(contactUrl);
         facts.contactPage = { url: contact.finalUrl, status: contact.status };
-        if (contact.status < 400 && contact.html) pages.push(extract(contact));
+        if (contact.status < 400 && contact.html) {
+          pages.push(extract(contact));
+          pageUrls.push(contact.finalUrl);
+        }
       }
     } catch (err) {
       facts.contactPage = { url: contactUrl, status: null };
@@ -384,5 +494,8 @@ async function crawl(website: string): Promise<CrawlFacts> {
   facts.email = pickEmail(home.finalUrl, pages);
   facts.sitePhone = pages.map((p) => p.telPhone).find(Boolean) ?? null;
   facts.siteName = h.siteName;
+  facts.pages = pages.map((p, i) => ({ url: pageUrls[i], text: p.readable }));
+  facts.pagesVersion = PAGES_VERSION;
+  facts.signals = pages.flatMap((p, i) => p.signals.map((sig) => ({ ...sig, url: pageUrls[i] })));
   return facts;
 }

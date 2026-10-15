@@ -1,0 +1,1 @@
+ALTER TABLE `llm_call` ADD `grounded_first_try` integer DEFAULT false NOT NULL;

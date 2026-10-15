@@ -12,7 +12,8 @@ const MIN_RATING = 4.0;
 
 type CheckId = "website" | "up" | "https" | "mobile" | "speed" | "fresh" | "contact" | "whatsapp" | "video" | "maps";
 
-type Check = Evidence & { id: CheckId; reason?: string };
+// Internal shape; toEvidence() adds the evidence id, kind and "what they can check".
+type Check = { id: CheckId; label: string; ok: boolean | null; detail: string; reason?: string };
 
 // How much each weak spot matters for the user's offer. Higher = better pitch angle.
 const WEIGHTS: Record<Offer, Partial<Record<CheckId, number>>> = {
@@ -235,6 +236,77 @@ export function provisionalScore(checks: Check[], offer: Offer): { score: number
   return { score, topReason: top?.reason ?? "No obvious weak spot found" };
 }
 
-export function toEvidence(checks: Check[]): Evidence[] {
-  return checks.map(({ label, ok, detail }) => ({ label, ok, detail }));
+// Plain English: how the business owner can see this for themselves.
+function checkLine(c: Check, host: string | null): string | undefined {
+  const site = host ?? "their website";
+  if (c.ok === null) return undefined;
+  if (c.ok) {
+    if (c.id === "maps") return `Open their Google Maps listing: ${c.detail}.`;
+    return undefined;
+  }
+  switch (c.id) {
+    case "website":
+      return /not a website|only a/i.test(c.detail)
+        ? `Tap "Website" on their Google Maps listing: it opens a social page, not a site of their own.`
+        : `Search their name on Google Maps: the listing has no website.`;
+    case "up":
+      return /SSL|certificate/i.test(c.detail)
+        ? `Open ${site}: the browser shows a security warning before the page.`
+        : `Open ${site}: it doesn't load (${c.detail}).`;
+    case "https":
+      return `Open ${site} in Chrome: the address bar says "Not secure".`;
+    case "mobile":
+      return `Open ${site} on a phone: the page doesn't fit the screen and needs zooming.`;
+    case "speed":
+      return `Open ${site} on mobile data: it's slow to show.`;
+    case "fresh":
+      return /footer/i.test(c.detail)
+        ? `Scroll to the bottom of ${site}: ${c.detail.replace(/^Footer says/, "the footer says")}.`
+        : `Look at the dates on ${site}'s posts: the newest is old (${c.detail.replace(/^Latest dated post: /, "")}).`;
+    case "contact":
+      return `Look on ${site} for a phone link, WhatsApp link, booking link or form: there isn't one.`;
+    case "whatsapp":
+      return `Tap the WhatsApp button on ${site}: it opens a chat with a placeholder number, not theirs.`;
+    case "video":
+      return `Look through ${site}'s homepage and contact page: there's no video.`;
+    case "maps":
+      return `Open their Google Maps listing: ${c.detail}.`;
+  }
+}
+
+export function toEvidence(checks: Check[], host: string | null = null): Evidence[] {
+  return checks.map((c) => ({
+    id: `check:${c.id}`,
+    kind: "check" as const,
+    label: c.label,
+    ok: c.ok,
+    detail: c.detail,
+    check: checkLine(c, host),
+  }));
+}
+
+// Evidence saved before ids existed: give it the same ids by label.
+const LABEL_IDS: Record<string, CheckId> = {
+  Website: "website",
+  "Site up": "up",
+  "Site checks": "up",
+  HTTPS: "https",
+  "Mobile-friendly": "mobile",
+  Speed: "speed",
+  "Fresh content": "fresh",
+  "Contact path": "contact",
+  "WhatsApp button": "whatsapp",
+  Video: "video",
+  "Maps presence": "maps",
+};
+
+export function upgradeEvidence(items: Partial<Evidence>[]): Evidence[] {
+  return items.map((e, i) => ({
+    id: e.id ?? `check:${LABEL_IDS[e.label ?? ""] ?? `item${i}`}`,
+    kind: e.kind ?? "check",
+    label: e.label ?? "",
+    ok: e.ok ?? null,
+    detail: e.detail ?? "",
+    check: e.check,
+  }));
 }

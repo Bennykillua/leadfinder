@@ -4,7 +4,8 @@ import path from "node:path";
 import { count, eq, gte } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { serpCache, serpUsage } from "@/lib/db/schema";
-import { NG_MOBILE, normalisePhone, slug, type Business } from "@/lib/leads";
+import { slug, type Business } from "@/lib/leads";
+import { countryFromPoint, countryFromText, likelyWhatsApp, phoneInfo } from "@/lib/phone";
 
 // SerpApi Google Maps search, following the free-plan quota rule in SPEC.md:
 // one call per search, first page only, no paging, 24-hour cache, every call counted.
@@ -12,8 +13,6 @@ import { NG_MOBILE, normalisePhone, slug, type Business } from "@/lib/leads";
 const ENDPOINT = "https://serpapi.com/search.json";
 const ACCOUNT_ENDPOINT = "https://serpapi.com/account.json";
 const CACHE_MS = 24 * 60 * 60 * 1000;
-// Centre of Lagos, so "salons in Yaba" means Yaba, Lagos.
-const LAGOS_LL = "@6.5244,3.3792,11z";
 const FIXTURES_DIR = path.join(process.cwd(), "fixtures", "serpapi");
 const FIXTURES_TO_KEEP = 2;
 
@@ -45,21 +44,27 @@ type LocalResult = {
   website?: string;
   rating?: number;
   reviews?: number;
+  gps_coordinates?: { latitude?: number; longitude?: number };
 };
 
 type MapsResponse = {
   error?: string;
+  search_parameters?: { q?: string };
   local_results?: LocalResult[];
   // A query that matches one exact place returns this instead of a list.
   place_results?: LocalResult;
 };
 
-function toBusiness(r: LocalResult): Business | null {
+function toBusiness(r: LocalResult, queryCountry: ReturnType<typeof countryFromText>): Business | null {
   if (!r.title) return null;
   const phone = r.phone?.trim() ?? "";
-  // Until the website crawl (step 5) can confirm a wa.me link, a Nigerian
-  // mobile number is "likely WhatsApp" and anything else is call-only.
-  const whatsapp = phone && NG_MOBILE.test(normalisePhone(phone)) ? "likely" : "call";
+  // Country, best first: named in the search, then the result's map coordinates.
+  // (A number already in +format carries its own country; phoneInfo handles that.)
+  const country = queryCountry ?? countryFromPoint(r.gps_coordinates?.latitude, r.gps_coordinates?.longitude);
+  const info = phoneInfo(phone, country);
+  // Until the website crawl can confirm a wa.me link, a mobile number for its
+  // country is "likely WhatsApp" and anything else is call-only.
+  const whatsapp = likelyWhatsApp(info) ? "likely" : "call";
   return {
     id: r.place_id ?? r.data_id ?? slug(`${r.title} ${r.address ?? ""}`),
     name: r.title,
@@ -72,6 +77,8 @@ function toBusiness(r: LocalResult): Business | null {
     website: r.website ?? null,
     email: null,
     whatsappPhone: null,
+    country: info.country,
+    phoneIntl: info.intl,
     score: null,
     topReason: "",
     evidence: [],
@@ -81,9 +88,10 @@ function toBusiness(r: LocalResult): Business | null {
 
 export function parseMapsResponse(json: MapsResponse): Business[] {
   const raw = json.local_results ?? (json.place_results ? [json.place_results] : []);
+  const queryCountry = countryFromText(json.search_parameters?.q);
   const seen = new Set<string>();
   return raw.flatMap((r) => {
-    const b = toBusiness(r);
+    const b = toBusiness(r, queryCountry);
     if (!b || seen.has(b.id)) return [];
     seen.add(b.id);
     return [b];
@@ -92,7 +100,7 @@ export function parseMapsResponse(json: MapsResponse): Business[] {
 
 // --- Fixtures: the first real responses, saved so the UI can be tested for free ---
 
-function stripKeys(value: unknown): unknown {
+export function stripKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(stripKeys);
   if (value && typeof value === "object") {
     return Object.fromEntries(
@@ -143,8 +151,8 @@ async function searchFixtures(query: string): Promise<SearchResult> {
 
 // --- Search ---
 
-async function logCall(userId: string, query: string, ok: boolean) {
-  await db.insert(serpUsage).values({ userId, engine: "google_maps", query, ok });
+export async function logCall(userId: string, query: string, ok: boolean, engine = "google_maps") {
+  await db.insert(serpUsage).values({ userId, engine, query, ok });
 }
 
 // Identical searches already in flight share one call (e.g. a double Enter).
@@ -182,10 +190,10 @@ async function search(rawQuery: string, key: string, userId: string): Promise<Se
   url.search = new URLSearchParams({
     engine: "google_maps",
     type: "search",
+    // No forced location: the search text says where ("salons in Accra"). Google
+    // resolves the place; each result's country is read from its coordinates.
     q: query,
-    ll: LAGOS_LL,
     hl: "en",
-    gl: "ng",
     api_key: apiKey,
   }).toString();
 

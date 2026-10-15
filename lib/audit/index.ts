@@ -1,6 +1,7 @@
 import "server-only";
 import type { Offer } from "@/lib/db/schema";
-import { NG_MOBILE, normalisePhone, type Business } from "@/lib/leads";
+import type { Business } from "@/lib/leads";
+import { countryFromHost, likelyWhatsApp, phoneInfo, whatsappIntl } from "@/lib/phone";
 import { searchGoogleMaps } from "@/lib/serpapi";
 import { provisionalScore, runChecks, socialPage, toEvidence } from "./checks";
 import { crawlSite, normaliseWebsite, type CrawlFacts } from "./crawl";
@@ -8,7 +9,7 @@ import { crawlSite, normaliseWebsite, type CrawlFacts } from "./crawl";
 // The fields an audit fills in on a business (and on a saved lead).
 export type AuditFields = Pick<
   Business,
-  "score" | "topReason" | "evidence" | "whatsapp" | "whatsappPhone" | "email" | "phone" | "auditedAt"
+  "score" | "topReason" | "evidence" | "whatsapp" | "whatsappPhone" | "email" | "phone" | "phoneIntl" | "country" | "auditedAt"
 >;
 
 // Businesses audited from a typed URL (no Maps listing) get ids like "site:example.ng".
@@ -24,28 +25,42 @@ export async function auditBusiness(
   const website = b.website && !socialPage(b.website) ? normaliseWebsite(b.website) : null;
   const facts = website ? await crawlSite(website, { force: opts.force }) : null;
 
+  // Country: from the search/Maps result if known, else the site's domain (.ng, .co.uk).
+  const country = (b.country as Parameters<typeof phoneInfo>[1]) ?? countryFromHost(facts?.finalUrl ?? website);
   // A number the site itself links to wa.me is the best contact there is.
   const phone = b.phone || facts?.sitePhone || "";
-  const whatsappPhone = facts?.whatsappPhone ?? null;
-  const whatsapp: Business["whatsapp"] = whatsappPhone
-    ? "confirmed"
-    : phone && NG_MOBILE.test(normalisePhone(phone))
-      ? "likely"
-      : "call";
+  const info = phoneInfo(phone, country);
+  const whatsappPhone = facts?.whatsappPhone ? whatsappIntl(facts.whatsappPhone, info.country) : null;
+  const whatsapp: Business["whatsapp"] = whatsappPhone ? "confirmed" : likelyWhatsApp(info) ? "likely" : "call";
 
-  const withContact: Business = { ...b, phone, whatsapp, whatsappPhone, email: facts?.email ?? null };
+  const withContact: Business = {
+    ...b,
+    phone,
+    phoneIntl: info.intl,
+    country: info.country,
+    whatsapp,
+    whatsappPhone,
+    email: facts?.email ?? null,
+  };
   const checks = runChecks(withContact, facts, offer, fromMaps);
   const { score, topReason } = provisionalScore(checks, offer);
+  const host = facts?.finalUrl ? new URL(facts.finalUrl).hostname.replace(/^www\./, "") : null;
 
   return {
-    business: { ...withContact, score, topReason, evidence: toEvidence(checks), auditedAt: new Date().toISOString() },
+    business: {
+      ...withContact,
+      score,
+      topReason,
+      evidence: toEvidence(checks, host),
+      auditedAt: new Date().toISOString(),
+    },
     facts,
   };
 }
 
 export function auditFields(b: Business): AuditFields {
-  const { score, topReason, evidence, whatsapp, whatsappPhone, email, phone, auditedAt } = b;
-  return { score, topReason, evidence, whatsapp, whatsappPhone, email, phone, auditedAt };
+  const { score, topReason, evidence, whatsapp, whatsappPhone, email, phone, phoneIntl, country, auditedAt } = b;
+  return { score, topReason, evidence, whatsapp, whatsappPhone, email, phone, phoneIntl, country, auditedAt };
 }
 
 function blankBusiness(id: string, name: string, website: string | null): Business {
@@ -61,6 +76,8 @@ function blankBusiness(id: string, name: string, website: string | null): Busine
     website,
     email: null,
     whatsappPhone: null,
+    country: null,
+    phoneIntl: null,
     score: null,
     topReason: "",
     evidence: [],
@@ -69,7 +86,10 @@ function blankBusiness(id: string, name: string, website: string | null): Busine
 }
 
 // Audit card, URL typed: no SerpApi call, just the website.
-export async function auditWebsite(raw: string, offer: Offer): Promise<Business> {
+export async function auditWebsite(
+  raw: string,
+  offer: Offer,
+): Promise<{ business: Business; facts: CrawlFacts | null }> {
   const typedScheme = /^https?:\/\//i.test(raw.trim());
   let website = normaliseWebsite(raw);
   if (!website) throw new Error("That doesn't look like a website address.");
@@ -84,7 +104,7 @@ export async function auditWebsite(raw: string, offer: Offer): Promise<Business>
     if (!retry.facts?.error) result = retry;
   }
   const name = result.facts?.siteName?.slice(0, 120) || host;
-  return { ...result.business, name };
+  return { business: { ...result.business, name }, facts: result.facts };
 }
 
 // Audit card, business name typed: one SerpApi lookup (counted, cached), then audit

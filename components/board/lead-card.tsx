@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { BellRing, Ellipsis, PanelRightOpen, Trash2 } from "lucide-react";
+import { BellRing, Ellipsis, NotebookPen, PanelRightOpen, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ import { formatShort, isOverdue } from "@/lib/dates";
 import type { Lead } from "@/lib/leads";
 import { ScoreDots, ContactBadge } from "@/components/cards/shared";
 import { useDeleteWithUndo } from "./actions";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export function LeadCardView({
   lead,
@@ -35,12 +37,23 @@ export function LeadCardView({
     >
       <div className="flex items-start gap-2">
         <span className="min-w-0 flex-1 font-medium leading-snug">{lead.name}</span>
-        <ScoreDots score={lead.score} className="mt-1.5 shrink-0" />
+        <ScoreDots score={lead.ai?.score ?? lead.score} className="mt-1.5 shrink-0" />
         {menu}
       </div>
-      {lead.topReason && <p className="line-clamp-2 text-muted-foreground">{lead.topReason}</p>}
+      {(lead.ai?.topReason || lead.topReason) && (
+        <p className="line-clamp-2 text-muted-foreground">{lead.ai?.topReason || lead.topReason}</p>
+      )}
       <div className="flex flex-wrap items-center gap-1.5">
         <ContactBadge business={lead} />
+        {lead.notes.length > 0 && (
+          <span
+            className="inline-flex h-5 items-center gap-1 text-xs text-muted-foreground"
+            title={`${lead.notes.length} ${lead.notes.length === 1 ? "note" : "notes"}`}
+          >
+            <NotebookPen className="size-3" />
+            {lead.notes.length}
+          </span>
+        )}
         {lead.reminder && (
           <span
             className={cn(
@@ -95,6 +108,7 @@ export function SortableLeadCard({ lead, onOpen }: { lead: Lead; onOpen: (id: st
 function LeadCardMenu({ lead, onOpen }: { lead: Lead; onOpen: (id: string) => void }) {
   const stop = (e: React.SyntheticEvent) => e.stopPropagation();
   const deleteWithUndo = useDeleteWithUndo();
+  const [confirming, setConfirming] = useState(false);
   return (
     <div onPointerDown={stop} onClick={stop} onKeyDown={stop} className="-mt-1 -mr-1.5 shrink-0">
       <DropdownMenu>
@@ -109,12 +123,21 @@ function LeadCardMenu({ lead, onOpen }: { lead: Lead; onOpen: (id: string) => vo
             Open
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" onClick={() => deleteWithUndo(lead.id)}>
+          <DropdownMenuItem variant="destructive" onClick={() => setConfirming(true)}>
             <Trash2 />
             Delete lead
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {/* Inside the wrapper so its clicks don't reach the draggable card. */}
+      <ConfirmDialog
+        open={confirming}
+        onOpenChange={setConfirming}
+        title={`Delete ${lead.name}?`}
+        description="This removes the lead with its pitch, reminder and notes. You'll have 5 seconds to undo."
+        confirmLabel="Delete lead"
+        onConfirm={() => deleteWithUndo(lead.id)}
+      />
     </div>
   );
 }
