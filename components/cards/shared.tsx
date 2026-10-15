@@ -4,7 +4,7 @@ import { Check, Mail, Phone, Plus, Star, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { saveLead, useLeads } from "@/lib/lead-store";
+import { useLeadActions, useLeads } from "@/lib/lead-store";
 import { contactKind, type Business, type ContactKind, type Evidence } from "@/lib/leads";
 
 export function CardHeading({
@@ -113,6 +113,7 @@ export function EvidenceList({ evidence, className }: { evidence: Evidence[]; cl
 
 export function SaveLeadButton({ business, size = "sm" }: { business: Business; size?: "sm" | "xs" }) {
   const saved = useLeads().some((l) => l.id === business.id);
+  const { saveLead } = useLeadActions();
   return (
     <Button
       size={size}

@@ -1,5 +1,6 @@
-// Lead types and fake data for build step 2 (no AI, no API calls, no database).
-// SerpApi fills Business in step 4, the audit fills evidence in step 5.
+// Lead types, contact helpers, and the fake search/audit results.
+// Leads are stored per user in SQLite (lib/db). SerpApi replaces BUSINESSES in step 4,
+// the real audit replaces the fake evidence in step 5.
 
 export type WhatsAppLabel = "confirmed" | "likely" | "call";
 
@@ -161,44 +162,6 @@ export function fakeAudit(name: string | null, url: string | null): Business {
   return { ...base, id: slug(name), name, website: url ?? base.website };
 }
 
-// Template draft until Gemma writes pitches in step 6.
-export function fakePitch(lead: Business): string {
-  return `Hi! I found ${lead.name} on Google Maps. ${lead.rating.toFixed(1)}★ from ${lead.reviews} reviews, nice work. One thing I noticed: ${lead.topReason.charAt(0).toLowerCase()}${lead.topReason.slice(1)}. I edit short videos for local businesses and could fix that this week. Want a free 20-second sample?`;
-}
-
 export function newLead(b: Business, status: Column = "saved"): Lead {
   return { ...b, status, pitch: "", notes: "", reminder: null };
-}
-
-function daysFromNow(days: number, hour = 10) {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  d.setHours(hour, 0, 0, 0);
-  return d.toISOString();
-}
-
-export function seedLeads(): Lead[] {
-  const lead = (id: string, status: Column, extra: Partial<Lead> = {}) => ({
-    ...newLead(byId(id), status),
-    ...extra,
-  });
-  return [
-    lead("royal-halls-event-centre", "saved"),
-    lead("kemi-s-bridal-house", "saved", { notes: "Posts new dresses every Friday on IG." }),
-    // Email fallback: landline only, but the site publishes info@.
-    lead("lekki-family-dentistry", "saved", { pitch: fakePitch(byId("lekki-family-dentistry")) }),
-    // Nothing to message: landline, no email on the site.
-    lead("ikoyi-physio-centre", "saved"),
-    lead("pearl-white-dental", "pitched", {
-      pitch: fakePitch(byId("pearl-white-dental")),
-      reminder: { at: daysFromNow(0), note: "Follow up if no reply" },
-    }),
-    lead("the-grand-pavilion", "pitched", { pitch: fakePitch(byId("the-grand-pavilion")) }),
-    lead("glow-beauty-lounge", "replied", {
-      notes: "Spoke to the manager, call back after the 20th.",
-      reminder: { at: daysFromNow(3, 15), note: "Call the manager" },
-    }),
-    lead("fithub-lekki", "won", { notes: "₦150k for 4 reels. Deposit paid." }),
-    lead("mama-cass-kitchen", "lost", { notes: "Said they already have someone." }),
-  ];
 }

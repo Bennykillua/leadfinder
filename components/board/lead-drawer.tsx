@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { updateLead } from "@/lib/lead-store";
+import { useLeadActions } from "@/lib/lead-store";
 import {
   COLUMNS,
   contactKind,
@@ -29,7 +29,7 @@ import {
   ScoreDots,
   WhatsAppIcon,
 } from "@/components/cards/shared";
-import { comingSoon, deleteWithUndo } from "./actions";
+import { comingSoon, useDeleteWithUndo } from "./actions";
 
 function Section({
   title,
@@ -110,6 +110,7 @@ function ContactButtons({ lead }: { lead: Lead }) {
 // One date picker, one time picker, one note, one delete. The summary line is built
 // from the same value and formats as the pickers, so it always matches them.
 function ReminderEditor({ lead }: { lead: Lead }) {
+  const { updateLead } = useLeadActions();
   const [dateOpen, setDateOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const reminder = lead.reminder;
@@ -239,6 +240,8 @@ export function LeadDrawer({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { updateLead } = useLeadActions();
+  const deleteWithUndo = useDeleteWithUndo();
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full gap-0 overflow-y-auto sm:max-w-md data-[side=right]:sm:max-w-md">

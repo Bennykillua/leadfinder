@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { formatShort, isOverdue } from "@/lib/dates";
 import type { Lead } from "@/lib/leads";
 import { ScoreDots, ContactBadge } from "@/components/cards/shared";
-import { deleteWithUndo } from "./actions";
+import { useDeleteWithUndo } from "./actions";
 
 export function LeadCardView({
   lead,
@@ -94,6 +94,7 @@ export function SortableLeadCard({ lead, onOpen }: { lead: Lead; onOpen: (id: st
 // starting a drag or opening the drawer.
 function LeadCardMenu({ lead, onOpen }: { lead: Lead; onOpen: (id: string) => void }) {
   const stop = (e: React.SyntheticEvent) => e.stopPropagation();
+  const deleteWithUndo = useDeleteWithUndo();
   return (
     <div onPointerDown={stop} onClick={stop} onKeyDown={stop} className="-mt-1 -mr-1.5 shrink-0">
       <DropdownMenu>

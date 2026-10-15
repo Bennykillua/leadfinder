@@ -22,11 +22,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { COLUMNS, type Column, type Lead } from "@/lib/leads";
-import { resetBoard, setLeads, useLeads } from "@/lib/lead-store";
+import { useLeadActions, useLeads } from "@/lib/lead-store";
 import { LeadCardView, SortableLeadCard } from "./lead-card";
 import { LeadDrawer } from "./lead-drawer";
 
@@ -79,6 +77,7 @@ function BoardColumn({
 
 export function Board() {
   const leads = useLeads();
+  const { setLeads } = useLeadActions();
   const [draft, setDraft] = useState<Lead[] | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -154,10 +153,6 @@ export function Board() {
             Drag a lead to update its status. Click it for audit, pitch, reminder and notes.
           </p>
         </div>
-        <Button variant="ghost" size="sm" onClick={resetBoard} title="Restore the sample leads">
-          <RotateCcw />
-          Reset demo data
-        </Button>
       </div>
 
       <DndContext
