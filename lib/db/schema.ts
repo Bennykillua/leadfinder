@@ -1,8 +1,7 @@
 import { index, integer, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import type { AdapterAccountType } from "next-auth/adapters";
 import type { Column, Evidence, WhatsAppLabel } from "../leads";
 
-// --- Auth.js tables (shape required by @auth/drizzle-adapter) ---
+// --- Users (email + password; sessions are signed JWT cookies, see lib/session.ts) ---
 
 export const OFFERS = ["video", "websites", "social", "other"] as const;
 export type Offer = (typeof OFFERS)[number];
@@ -12,51 +11,16 @@ export const users = sqliteTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
+  // Stored lowercased. Nullable only because SQLite can't tighten it in place.
   email: text("email").unique(),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
-  image: text("image"),
+  // scrypt hash (lib/password.ts). Null for the old Google-created account until a
+  // password is set with `npm run user:password`.
+  passwordHash: text("password_hash"),
   // "What do you sell?" Null until the first-sign-in question is answered.
   offer: text("offer", { enum: OFFERS }),
   offerDetail: text("offer_detail").notNull().default(""),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).$defaultFn(() => new Date()),
 });
-
-export const accounts = sqliteTable(
-  "account",
-  {
-    userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
-  },
-  (t) => [primaryKey({ columns: [t.provider, t.providerAccountId] })],
-);
-
-export const sessions = sqliteTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-});
-
-export const verificationTokens = sqliteTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-  },
-  (t) => [primaryKey({ columns: [t.identifier, t.token] })],
-);
 
 // --- App data: every row belongs to one user ---
 
@@ -78,8 +42,10 @@ export const leads = sqliteTable(
     reviews: integer("reviews").notNull(),
     website: text("website"),
     email: text("email"),
-    // Null until the audit runs (step 5).
+    whatsappPhone: text("whatsapp_phone"),
+    // Null until audited.
     score: integer("score"),
+    auditedAt: integer("audited_at", { mode: "timestamp_ms" }),
     topReason: text("top_reason").notNull(),
     evidence: text("evidence", { mode: "json" }).$type<Evidence[]>().notNull(),
     status: text("status").$type<Column>().notNull().default("saved"),
@@ -121,3 +87,14 @@ export const serpUsage = sqliteTable(
   },
   (t) => [index("serp_usage_at").on(t.at)],
 );
+
+// --- Website audit ---
+
+// Raw facts from crawling a site (homepage + contact page), shared across users and
+// reused for 24 hours so a site is crawled once even if many results link to it.
+// Scores are computed from these per user, because they depend on the user's offer.
+export const crawlCache = sqliteTable("crawl_cache", {
+  siteKey: text("site_key").primaryKey(),
+  facts: text("facts", { mode: "json" }).notNull(),
+  crawledAt: integer("crawled_at", { mode: "timestamp_ms" }).notNull(),
+});

@@ -14,6 +14,7 @@ import {
   type LeadPatch,
 } from "./actions";
 import { newLead, type Business, type Lead } from "./leads";
+import type { AuditFields } from "./audit";
 
 // Typing in pitch or notes saves after a short pause instead of on every key.
 const SAVE_DELAY_MS = 400;
@@ -24,6 +25,8 @@ type Actions = {
   setLeads: (next: Lead[]) => void;
   deleteLead: (id: string) => { lead: Lead; index: number } | null;
   restoreLead: (lead: Lead, index: number) => void;
+  // Merge audit results the server already stored on the lead (no write from here).
+  applyAudit: (id: string, fields: AuditFields) => void;
 };
 
 const LeadsContext = createContext<Lead[] | null>(null);
@@ -89,6 +92,11 @@ export function LeadsProvider({ initial, children }: { initial: Lead[]; children
         commit(all.filter((l) => l.id !== id));
         enqueue(() => deleteLeadAction(id));
         return { lead: all[index], index };
+      },
+
+      applyAudit(id, fields) {
+        if (!current.current.some((l) => l.id === id)) return;
+        commit(current.current.map((l) => (l.id === id ? { ...l, ...fields } : l)));
       },
 
       restoreLead(lead, index) {

@@ -18,7 +18,7 @@ async function SignedIn({ children }: { children: React.ReactNode }) {
   const leads = await listLeads(user.id);
   return (
     <LeadsProvider initial={leads}>
-      <SiteNav user={{ name: user.name, image: user.image }} />
+      <SiteNav user={{ name: user.name }} />
       {children}
     </LeadsProvider>
   );

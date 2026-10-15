@@ -1,8 +1,7 @@
 import "server-only";
 import { asc, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
-import { auth } from "@/auth";
+import { readSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { leads, users, type Offer } from "@/lib/db/schema";
 import type { Lead } from "@/lib/leads";
@@ -14,17 +13,12 @@ export type CurrentUser = {
   id: string;
   name: string | null;
   email: string | null;
-  image: string | null;
   offer: Offer | null;
   offerDetail: string;
 };
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
-  // Auth.js makes random values before it reads the request; wait for the request first
-  // so Next doesn't try to prerender this.
-  await connection();
-  const session = await auth();
-  const id = session?.user?.id;
+  const id = await readSession();
   if (!id) return null;
   const row = await db.query.users.findFirst({ where: eq(users.id, id) });
   if (!row) return null;
@@ -32,7 +26,6 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     id: row.id,
     name: row.name,
     email: row.email,
-    image: row.image,
     offer: row.offer,
     offerDetail: row.offerDetail,
   };
@@ -66,7 +59,9 @@ export function rowToLead(r: LeadRow): Lead {
     reviews: r.reviews,
     website: r.website,
     email: r.email,
+    whatsappPhone: r.whatsappPhone,
     score: r.score,
+    auditedAt: r.auditedAt ? r.auditedAt.toISOString() : null,
     topReason: r.topReason,
     evidence: r.evidence,
     status: r.status,

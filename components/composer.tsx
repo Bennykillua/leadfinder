@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, type Transition } from "motion/react";
 import { CornerDownLeft, ScanSearch, Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CARD_TYPES, classify, fakeCard, type CardData, type Intent } from "@/lib/cards";
+import { CARD_TYPES, cardFor, cardKey, classify, type CardData, type Intent } from "@/lib/cards";
 import { getSerpUsageAction } from "@/lib/actions";
 import type { SerpUsage } from "@/lib/serpapi";
 import { SearchCard } from "./cards/search-card";
@@ -46,9 +46,9 @@ function CardBody({
   submitted: string | null;
   onUsage: (u: SerpUsage) => void;
 }) {
+  const isSubmitted = submitted === cardKey(card);
   switch (card.intent) {
     case "search": {
-      const isSubmitted = submitted === card.data.query;
       return (
         <SearchCard
           key={`${card.data.query}:${isSubmitted}`}
@@ -59,7 +59,15 @@ function CardBody({
       );
     }
     case "audit":
-      return <AuditCard data={card.data} />;
+      return (
+        <AuditCard
+          key={`${card.data.key}:${isSubmitted}`}
+          kind={card.data.kind}
+          target={card.data.target}
+          submitted={isSubmitted}
+          onUsage={onUsage}
+        />
+      );
   }
 }
 
@@ -67,7 +75,7 @@ export function Composer() {
   const [text, setText] = useState("");
   const [settled, setSettled] = useState("");
   const [active, setActive] = useState(0);
-  // The query the user pressed Enter on. Only a submitted search calls SerpApi.
+  // The text the user pressed Enter on. Only submitted cards call SerpApi or crawl.
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [usage, setUsage] = useState<SerpUsage | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -98,7 +106,7 @@ export function Composer() {
   const activeIndex = Math.min(active, Math.max(menu.length - 1, 0));
 
   const intent = slash ? null : classify(settled);
-  const card = useMemo(() => (intent ? fakeCard(intent, settled) : null), [intent, settled]);
+  const card = useMemo(() => (intent ? cardFor(intent, settled) : null), [intent, settled]);
   const open = slash || card !== null;
   const Icon = intent ? ICONS[intent] : slash ? Sparkles : Search;
 
@@ -118,9 +126,10 @@ export function Composer() {
     }
     if (!slash && e.key === "Enter") {
       e.preventDefault();
-      // Enter skips the typing pause and runs the search.
+      // Enter skips the typing pause and runs the search or audit.
       setSettled(text);
-      if (classify(text) === "search") setSubmitted(text.trim().replace(/\s+/g, " "));
+      const now = classify(text);
+      if (now) setSubmitted(cardKey(cardFor(now, text)));
       return;
     }
     if (!slash || menu.length === 0) return;

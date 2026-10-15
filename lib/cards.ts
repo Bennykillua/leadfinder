@@ -1,13 +1,11 @@
 // Find-box intents. Keyword rules stand in for Gemma's intent prompt until step 6.
-// Search results come from SerpApi (lib/serpapi.ts); the Audit card is fake until step 5.
-
-import { fakeAudit, type Business } from "./leads";
+// Search results come from SerpApi (lib/serpapi.ts); audits from lib/audit.
 
 export type Intent = "search" | "audit";
 
 export type CardData =
   | { intent: "search"; data: { query: string } }
-  | { intent: "audit"; data: Business };
+  | { intent: "audit"; data: { kind: "url" | "name"; target: string; key: string } };
 
 // What "/" shows: exactly one row per card type, with one example inside the row.
 export const CARD_TYPES: { intent: Intent; label: string; hint: string; example: string }[] = [
@@ -30,15 +28,20 @@ export function classify(text: string): Intent | null {
   return t.split(/\s+/).length <= 4 ? "audit" : "search";
 }
 
-function titleCase(s: string) {
-  return s.replace(/\b\w/g, (c) => c.toUpperCase());
+function clean(text: string) {
+  return text.trim().replace(/\s+/g, " ");
 }
 
-export function fakeCard(intent: Intent, text: string): CardData {
-  if (intent === "search") {
-    return { intent, data: { query: text.trim().replace(/\s+/g, " ") } };
-  }
-  const url = text.match(URL_RE)?.[0] ?? null;
-  const name = url ? null : titleCase(text.replace(AUDIT_RE, "").trim());
-  return { intent, data: fakeAudit(name || null, url) };
+// What a card works on. Nothing here calls SerpApi or crawls: that only happens when
+// the user presses Enter (see Composer), because a search or name lookup costs a credit.
+export function cardFor(intent: Intent, text: string): CardData {
+  if (intent === "search") return { intent, data: { query: clean(text) } };
+  const url = text.match(URL_RE)?.[0];
+  if (url) return { intent, data: { kind: "url", target: url, key: clean(text) } };
+  return { intent, data: { kind: "name", target: clean(text.replace(AUDIT_RE, "")), key: clean(text) } };
+}
+
+// The submitted-text key a card answers to, so Enter on the same text runs it.
+export function cardKey(card: CardData) {
+  return card.intent === "search" ? card.data.query : card.data.key;
 }

@@ -1,0 +1,240 @@
+import type { Offer } from "@/lib/db/schema";
+import type { Business, Evidence } from "@/lib/leads";
+import type { CrawlFacts } from "./crawl";
+
+// Deterministic checks from SPEC.md "The audit", turned into evidence, plus a
+// PROVISIONAL score and top reason from simple rules. Gemma replaces the score and
+// reason in step 6; the evidence stays code-made.
+
+const SLOW_MS = 3000;
+const MIN_REVIEWS = 20;
+const MIN_RATING = 4.0;
+
+type CheckId = "website" | "up" | "https" | "mobile" | "speed" | "fresh" | "contact" | "whatsapp" | "video" | "maps";
+
+type Check = Evidence & { id: CheckId; reason?: string };
+
+// How much each weak spot matters for the user's offer. Higher = better pitch angle.
+const WEIGHTS: Record<Offer, Partial<Record<CheckId, number>>> = {
+  websites: { https: 1.5, mobile: 2, speed: 1.5, fresh: 1.5, contact: 1.5, whatsapp: 1.5, maps: 0.5 },
+  video: { video: 2.5, fresh: 1, mobile: 0.75, speed: 0.5, https: 0.5, contact: 0.75, whatsapp: 0.75, maps: 1 },
+  social: { maps: 2, fresh: 1.5, contact: 1.5, whatsapp: 1, mobile: 1, https: 0.5, speed: 0.5 },
+  other: { maps: 1.5, fresh: 1.25, contact: 1.25, whatsapp: 1, mobile: 1.25, https: 1, speed: 1 },
+};
+
+function monthYear(iso: string) {
+  return new Date(iso).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+}
+
+function mapsCheck(b: Business, fromMaps: boolean): Check {
+  if (!fromMaps) {
+    return { id: "maps", label: "Maps presence", ok: null, detail: "Not looked up on Google Maps" };
+  }
+  if (b.reviews === 0) {
+    return { id: "maps", label: "Maps presence", ok: false, detail: "No Google reviews yet", reason: "No Google reviews yet" };
+  }
+  const detail = `${b.rating.toFixed(1)}★ from ${b.reviews} reviews`;
+  const weak = b.reviews < MIN_REVIEWS || b.rating < MIN_RATING;
+  const reason =
+    b.reviews < MIN_REVIEWS
+      ? `Only ${b.reviews} Google reviews (${b.rating.toFixed(1)}★)`
+      : `${b.rating.toFixed(1)}★ rating on Google Maps`;
+  return { id: "maps", label: "Maps presence", ok: !weak, detail, reason: weak ? reason : undefined };
+}
+
+// Maps often lists a social page as the "website". That's no website of its own,
+// and those platforms don't want to be crawled anyway.
+const SOCIAL_HOSTS: [RegExp, string][] = [
+  [/(^|\.)(facebook|fb)\.com$/, "Facebook page"],
+  [/(^|\.)instagram\.com$/, "Instagram page"],
+  [/(^|\.)tiktok\.com$/, "TikTok page"],
+  [/(^|\.)(x|twitter)\.com$/, "X (Twitter) page"],
+  [/(^|\.)linktr\.ee$/, "Linktree page"],
+  [/(^|\.)(wa\.me|whatsapp\.com)$/, "WhatsApp link"],
+  [/(^|\.)linkedin\.com$/, "LinkedIn page"],
+  [/(^|\.)youtube\.com$/, "YouTube channel"],
+];
+
+export function socialPage(website: string | null): string | null {
+  if (!website) return null;
+  try {
+    const host = new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`).hostname.replace(/^www\./, "");
+    return SOCIAL_HOSTS.find(([re]) => re.test(host))?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function runChecks(b: Business, facts: CrawlFacts | null, offer: Offer, fromMaps: boolean): Check[] {
+  const maps = mapsCheck(b, fromMaps);
+
+  const social = socialPage(b.website);
+  if (social) {
+    return [
+      {
+        id: "website",
+        label: "Website",
+        ok: false,
+        detail: `${fromMaps ? "Maps links to" : "That's"} ${/^[AEIOU]/.test(social) ? "an" : "a"} ${social}, not a website`,
+        reason: fromMaps ? `No website: Google Maps links to their ${social}` : `No website of their own, only a ${social}`,
+      },
+      maps,
+    ];
+  }
+
+  if (!b.website || !facts) {
+    return [
+      { id: "website", label: "Website", ok: false, detail: "No website listed on Google Maps", reason: "No website listed on Google Maps" },
+      maps,
+    ];
+  }
+
+  const host = new URL(facts.finalUrl ?? facts.website).hostname.replace(/^www\./, "");
+  const website: Check = { id: "website", label: "Website", ok: true, detail: host };
+
+  if (facts.robotsNote) {
+    return [website, { id: "up", label: "Site checks", ok: null, detail: facts.robotsNote }, maps];
+  }
+
+  if (facts.error) {
+    const tls = facts.errorKind === "tls";
+    return [
+      website,
+      {
+        id: "up",
+        label: "Site up",
+        ok: false,
+        detail: facts.error,
+        reason: tls ? `Site shows a security warning: ${facts.error}` : `Website is down (${facts.error})`,
+      },
+      maps,
+    ];
+  }
+
+  const checks: Check[] = [website, { id: "up", label: "Site up", ok: true, detail: `Loads (HTTP ${facts.status})` }];
+
+  const https = facts.finalUrl?.startsWith("https://") ?? false;
+  checks.push(
+    https
+      ? { id: "https", label: "HTTPS", ok: true, detail: "Served over https://" }
+      : {
+          id: "https",
+          label: "HTTPS",
+          ok: false,
+          detail: "Served over plain http://",
+          reason: "Site is on plain http://, so browsers mark it Not Secure",
+        },
+  );
+
+  checks.push(
+    facts.viewport
+      ? { id: "mobile", label: "Mobile-friendly", ok: true, detail: "Has a viewport meta tag" }
+      : {
+          id: "mobile",
+          label: "Mobile-friendly",
+          ok: false,
+          detail: "No viewport meta tag",
+          reason: "Site has no viewport tag, so it doesn't fit phone screens",
+        },
+  );
+
+  if (facts.loadMs !== null) {
+    const s = (facts.loadMs / 1000).toFixed(1);
+    checks.push(
+      facts.loadMs > SLOW_MS
+        ? { id: "speed", label: "Speed", ok: false, detail: `First load took ${s}s`, reason: `Site took ${s}s to load` }
+        : { id: "speed", label: "Speed", ok: true, detail: `First load in ${s}s` },
+    );
+  }
+
+  const thisYear = new Date().getFullYear();
+  const staleYear = facts.copyrightYear !== null && facts.copyrightYear <= thisYear - 2;
+  const stalePost =
+    facts.latestPostDate !== null && Date.now() - Date.parse(facts.latestPostDate) > 365 * 86_400_000;
+  if (staleYear) {
+    checks.push({
+      id: "fresh",
+      label: "Fresh content",
+      ok: false,
+      detail: `Footer says © ${facts.copyrightYear}`,
+      reason: `Footer still says © ${facts.copyrightYear}`,
+    });
+  } else if (stalePost) {
+    checks.push({
+      id: "fresh",
+      label: "Fresh content",
+      ok: false,
+      detail: `Latest dated post: ${monthYear(facts.latestPostDate!)}`,
+      reason: `Latest dated post is from ${monthYear(facts.latestPostDate!)}`,
+    });
+  } else if (facts.copyrightYear !== null || facts.latestPostDate !== null) {
+    checks.push({
+      id: "fresh",
+      label: "Fresh content",
+      ok: true,
+      detail: facts.copyrightYear ? `Footer says © ${facts.copyrightYear}` : `Latest dated post: ${monthYear(facts.latestPostDate!)}`,
+    });
+  } else {
+    checks.push({ id: "fresh", label: "Fresh content", ok: null, detail: "No copyright year or post dates found" });
+  }
+
+  const paths = facts.contactPaths;
+  checks.push(
+    paths.length > 0
+      ? { id: "contact", label: "Contact path", ok: true, detail: `Has ${paths.join(", ")}` }
+      : {
+          id: "contact",
+          label: "Contact path",
+          ok: false,
+          detail: "No phone link, WhatsApp link, booking link or form",
+          reason: "Site has no phone link, WhatsApp link, booking link or form",
+        },
+  );
+
+  if (facts.whatsappPlaceholder) {
+    checks.push({
+      id: "whatsapp",
+      label: "WhatsApp button",
+      ok: false,
+      detail: `Links to placeholder number ${facts.whatsappPlaceholder}`,
+      reason: `The site's WhatsApp button goes to a placeholder number (${facts.whatsappPlaceholder})`,
+    });
+  }
+
+  if (offer === "video") {
+    checks.push(
+      facts.hasVideo
+        ? { id: "video", label: "Video", ok: true, detail: "Has video on the page" }
+        : {
+            id: "video",
+            label: "Video",
+            ok: false,
+            detail: "No video on the homepage or contact page",
+            reason: "No video anywhere on the homepage or contact page",
+          },
+    );
+  }
+
+  checks.push(maps);
+  return checks;
+}
+
+// Provisional rules until Gemma (step 6). 1 = weak lead, 5 = strong pitch angle.
+export function provisionalScore(checks: Check[], offer: Offer): { score: number; topReason: string } {
+  const failed = checks.filter((c) => c.ok === false);
+  const noSite = failed.find((c) => c.id === "website");
+  const down = failed.find((c) => c.id === "up");
+  if (noSite) return { score: offer === "websites" ? 5 : 4, topReason: noSite.reason! };
+  if (down) return { score: offer === "websites" ? 5 : 4, topReason: down.reason! };
+
+  const weights = WEIGHTS[offer];
+  const weigh = (c: Check) => weights[c.id] ?? 0.5;
+  const total = failed.reduce((sum, c) => sum + weigh(c), 0);
+  const score = total === 0 ? 1 : total <= 1 ? 2 : total <= 2 ? 3 : total <= 3 ? 4 : 5;
+  const top = [...failed].sort((a, b) => weigh(b) - weigh(a))[0];
+  return { score, topReason: top?.reason ?? "No obvious weak spot found" };
+}
+
+export function toEvidence(checks: Check[]): Evidence[] {
+  return checks.map(({ label, ok, detail }) => ({ label, ok, detail }));
+}

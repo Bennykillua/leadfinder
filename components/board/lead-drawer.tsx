@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { format } from "date-fns";
+import { useState, useTransition } from "react";
+import { format, formatDistanceToNowStrict } from "date-fns";
+import { toast } from "sonner";
 import { CalendarDays, Mail, PenLine, Phone, RefreshCw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,6 +12,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLeadActions } from "@/lib/lead-store";
+import { rerunAuditAction } from "@/lib/actions";
 import {
   COLUMNS,
   contactKind,
@@ -231,6 +233,35 @@ function ReminderEditor({ lead }: { lead: Lead }) {
   );
 }
 
+function RerunAuditButton({ lead }: { lead: Lead }) {
+  const { applyAudit } = useLeadActions();
+  const [pending, start] = useTransition();
+  const run = () =>
+    start(async () => {
+      try {
+        const fields = await rerunAuditAction(lead.id);
+        if (!fields) throw new Error("not found");
+        applyAudit(lead.id, fields);
+        toast.success(`Audit updated for ${lead.name}`);
+      } catch {
+        toast.error("Couldn't re-run the audit", { description: "Try again in a moment." });
+      }
+    });
+  return (
+    <div className="flex items-center gap-2">
+      {lead.auditedAt && !pending && (
+        <span className="text-xs text-muted-foreground">
+          {formatDistanceToNowStrict(new Date(lead.auditedAt))} ago
+        </span>
+      )}
+      <Button variant="ghost" size="sm" onClick={run} disabled={pending}>
+        <RefreshCw className={cn(pending && "animate-spin")} />
+        {pending ? "Checking site…" : lead.auditedAt ? "Re-run audit" : "Run audit"}
+      </Button>
+    </div>
+  );
+}
+
 export function LeadDrawer({
   lead,
   open,
@@ -268,14 +299,7 @@ export function LeadDrawer({
             <Section
               title="Audit"
               action={
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => comingSoon("Re-run audit", "Real website checks arrive in step 5.")}
-                >
-                  <RefreshCw />
-                  Re-run audit
-                </Button>
+                <RerunAuditButton lead={lead} />
               }
             >
               {lead.topReason && (
@@ -287,7 +311,7 @@ export function LeadDrawer({
               {lead.evidence.length > 0 ? (
                 <EvidenceList evidence={lead.evidence} />
               ) : (
-                <p className="text-sm text-muted-foreground">Not audited yet. Website checks arrive in step 5.</p>
+                <p className="text-sm text-muted-foreground">Not audited yet. Run the audit to check the website.</p>
               )}
             </Section>
 

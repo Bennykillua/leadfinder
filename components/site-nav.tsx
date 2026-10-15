@@ -29,7 +29,7 @@ export function SiteNavSkeleton() {
   );
 }
 
-export function SiteNav({ user }: { user: { name: string | null; image: string | null } }) {
+export function SiteNav({ user }: { user: { name: string | null } }) {
   const pathname = usePathname();
   const count = useLeads().length;
   return (
@@ -62,15 +62,9 @@ export function SiteNav({ user }: { user: { name: string | null; image: string |
         title="Settings"
       >
         <span className="hidden sm:inline">{user.name ?? "Settings"}</span>
-        {user.image ? (
-          // Google profile photo; plain img avoids configuring remote image domains.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.image} alt="" referrerPolicy="no-referrer" className="size-7 rounded-full" />
-        ) : (
-          <span className="flex size-7 items-center justify-center rounded-full bg-muted text-xs font-medium">
-            {(user.name ?? "?").charAt(0).toUpperCase()}
-          </span>
-        )}
+        <span className="flex size-7 items-center justify-center rounded-full bg-muted text-xs font-medium">
+          {(user.name ?? "?").charAt(0).toUpperCase()}
+        </span>
       </Link>
     </Shell>
   );

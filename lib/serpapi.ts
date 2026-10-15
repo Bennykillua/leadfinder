@@ -71,9 +71,11 @@ function toBusiness(r: LocalResult): Business | null {
     reviews: r.reviews ?? 0,
     website: r.website ?? null,
     email: null,
+    whatsappPhone: null,
     score: null,
     topReason: "",
     evidence: [],
+    auditedAt: null,
   };
 }
 
