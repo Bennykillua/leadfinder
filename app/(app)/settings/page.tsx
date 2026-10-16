@@ -25,8 +25,8 @@ async function SettingsBody() {
   return (
     <>
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium">What do you sell?</h2>
-        <OfferForm offer={user.offer} offerDetail={user.offerDetail} next="settings" />
+        <h2 className="text-sm font-medium">Your profile</h2>
+        <OfferForm profile={user} next="settings" />
       </section>
       <section className="flex items-center justify-between gap-4 border-t pt-6">
         <div className="text-sm">

@@ -118,7 +118,7 @@ function timingSignals(lead: Lead, facts: CrawlFacts | null): Evidence[] {
   return out;
 }
 
-const EXAMPLE = `{"score":4,"top_reason":"No photos or prices of the hall, so couples must message before they can judge it.","findings":[{"text":"Couples can't see the hall or prices without messaging first.","check":"Open the Halls page: there are no photos and no prices."},{"text":"Guests say parking is a problem: \\"no space to park, we left early\\".","check":"Read their 2★ Google review from 3 weeks ago."}]}`;
+const EXAMPLE = `{"score":4,"top_reason":"No photos or prices of the hall, so couples must message before they can judge it.","findings":[{"text":"Couples can't see the hall or prices without messaging first.","check":"Open the Halls page: there are no photos and no prices."},{"text":"Guests say parking is a problem: “no space to park, we left early”.","check":"Read their 2★ Google review from 3 weeks ago."}]}`;
 // Only in the example: must not show up in a real answer unless the business has them.
 const EXAMPLE_ONLY = ["couples", "hall", "Halls", "parking"];
 
@@ -140,14 +140,38 @@ Rules for findings and top_reason:
 - A finding taken from a review must quote the review's own words in double quotes.
 - Never mention the freelancer or their services, and never say "opportunity" or "online presence".
   Bad: "Lack of online presence limits website design opportunities."
+  Bad: "Guests struggle to find booking information due to the absence of an online presence."
   Good: "Couples can't see the hall or prices without messaging first."
+- Never put { } [ ] or a backslash inside a sentence.
 - Use only facts given. No invented numbers, prices or names.
 - If there is no website text and no reviews, "findings" must be [].`;
 
+// Claims about what people say: only allowed when reviews were given, and must quote.
+const SAYS_TALK =
+  /\b(guests?|customers?|clients?|visitors?|people|buyers?|diners?|patients?)\s+(say|said|says|report|reported|reports|mention|mentioned|complain|complained|complaining|note|noted)\b|\breviewers?\b|\bcomplain(t|ts|s)?\b/i;
 const REVIEW_TALK = /\b(review|reviews|reviewer|rated|stars?|★|complain|complaint|guests? (say|said|mention)|customers? (say|said|mention))\b/i;
 
 function quotesIn(text: string) {
   return [...text.matchAll(/["“]([^"”]{3,})["”]/g)].map((m) => m[1]);
+}
+
+type DeepReadJson = z.infer<ReturnType<typeof schemaFor>>;
+type Finding = DeepReadJson["findings"][number];
+
+// Cut JSON that leaked into a sentence and close a quote it left open:
+// 'Read the review: "Top notch."},{"' → 'Read the review: "Top notch."'
+export function tidyText(text: string) {
+  let t = text.replace(/["”]?\s*[}\]][\s\S]*$/, "").replace(/[\s,{]+$/, "").trim();
+  if ((t.match(/["“”]/g) ?? []).length % 2 === 1) t = `${t}"`;
+  return t;
+}
+
+function tidy(v: DeepReadJson): DeepReadJson {
+  return {
+    ...v,
+    top_reason: tidyText(v.top_reason),
+    findings: v.findings.map((f) => ({ text: tidyText(f.text), check: tidyText(f.check) })),
+  };
 }
 
 export async function deepRead(user: CurrentUser, lead: Lead): Promise<AiRead> {
@@ -160,6 +184,58 @@ export async function deepRead(user: CurrentUser, lead: Lead): Promise<AiRead> {
   const businessText = businessFacts(lead);
   const corpus = [pageText, reviewText, evidence, businessText];
   const reviewCorpus = ` ${normalise(reviews.map((r) => r.text).join(" \n "))} `;
+
+  // The rubric's one hard rule: no website (or a dead one) is a real problem.
+  const noSite = lead.evidence.some((e) => (e.label === "Website" || e.label === "Site up") && e.ok === false);
+  const scoreProblem = (score: number) =>
+    noSite && score <= 2
+      ? `"score" is ${score}, but the evidence shows no working website, which is a real problem for this business. Score it 3 or higher.`
+      : null;
+
+  // Rules shared by top_reason and finding texts.
+  const textProblem = (field: "top_reason" | "finding", text: string) => {
+    if (text.length > TEXT_MAX) return `The ${field} "${text}" is ${text.length} characters; keep it under 100.`;
+    if (SAYS_TALK.test(text) && reviews.length === 0) {
+      return `The ${field} "${text}" talks about what guests or customers say, but no reviews were given. Use only the website text and evidence.`;
+    }
+    const talk = serviceTalk(text, user.offerDetail);
+    if (talk) {
+      return `The ${field} "${text}" talks about "${talk}". Say what customers can't do or find instead (e.g. "Guests can't see the rooms or prices before they call"), and don't mention the freelancer's services.`;
+    }
+    // With nothing to read, there's nothing to point at: the evidence is the point.
+    if ((pageText || reviewText) && !pointsAtFacts(text, corpus)) {
+      return `The ${field} "${text}" is too general. Point to something specific in the website text, reviews or evidence.`;
+    }
+    const numbers = unknownNumbers(text, corpus);
+    if (numbers.length) return `The ${field} "${text}" uses numbers that aren't in the facts (${numbers.join(", ")}).`;
+    const copied = copiedFromExample(text, EXAMPLE_ONLY, corpus);
+    if (copied.length) return `The ${field} "${text}" copies the example (${copied.join(", ")}). Write about this business only.`;
+    return null;
+  };
+  const topReasonProblem = (text: string) => textProblem("top_reason", text);
+
+  const findingProblem = (f: Finding) => {
+    if (f.check.length > TEXT_MAX) return `A finding's "check" is too long ("${f.check}"); keep it under 100 characters.`;
+    if (/[{}[\]]/.test(f.text) || /[{}[\]]/.test(f.check)) {
+      return `A finding has stray JSON symbols in it ("${f.check}"). Write plain sentences.`;
+    }
+    // Findings from reviews must quote the review, and the quote must be real.
+    const quotes = quotesIn(f.text);
+    if (REVIEW_TALK.test(f.text) && reviews.length > 0 && quotes.length === 0) {
+      return `The finding "${f.text}" comes from a review but doesn't quote it. Quote the review's own words in double quotes.`;
+    }
+    const fake = quotes.find((q) => !reviewCorpus.includes(` ${normalise(q)}`) && !pointsAtFacts(q, [pageText]));
+    if (fake) return `The quote "${fake}" isn't in the reviews or the website text. Quote exactly.`;
+    return textProblem("finding", f.text);
+  };
+
+  const problemIn = (v: DeepReadJson) => {
+    const problem =
+      scoreProblem(v.score) ?? topReasonProblem(v.top_reason) ?? v.findings.map(findingProblem).find(Boolean) ?? null;
+    if (problem) return problem;
+    if (new Set(v.findings.map((f) => f.text.toLowerCase())).size < v.findings.length) return "Two findings are the same.";
+    return null;
+  };
 
   const { value, model } = await generateJson({
     type: "deep_read",
@@ -183,51 +259,27 @@ ${pageText || "(no website text available)"}
 ${reviewText ? `\nGOOGLE REVIEWS (lowest-rated, newest first):\n${reviewText}\n` : ""}`,
       },
     ],
-    check: (v) => {
-      // The rubric's one hard rule: no website (or a dead one) is a real problem.
-      const noSite = lead.evidence.some((e) => (e.label === "Website" || e.label === "Site up") && e.ok === false);
-      if (noSite && v.score <= 2) {
-        return `"score" is ${v.score}, but the evidence shows no working website, which is a real problem for this business. Score it 3 or higher.`;
-      }
-      if (v.top_reason.length > TEXT_MAX) return `"top_reason" is ${v.top_reason.length} characters; keep it under 100.`;
-      for (const f of v.findings) {
-        if (f.text.length > TEXT_MAX) return `A finding is too long ("${f.text}"); keep each under 100 characters.`;
-        if (f.check.length > TEXT_MAX) return `A finding's "check" is too long ("${f.check}"); keep it under 100 characters.`;
-        // Findings from reviews must quote the review, and the quote must be real.
-        const quotes = quotesIn(f.text);
-        if (REVIEW_TALK.test(f.text) && reviews.length > 0 && quotes.length === 0) {
-          return `The finding "${f.text}" comes from a review but doesn't quote it. Quote the review's own words in double quotes.`;
-        }
-        const fake = quotes.find((q) => !reviewCorpus.includes(` ${normalise(q)}`) && !pointsAtFacts(q, [pageText]));
-        if (fake) return `The quote "${fake}" isn't in the reviews or the website text. Quote exactly.`;
-      }
-      const texts: [string, string][] = [
-        ["top_reason", v.top_reason],
-        ...v.findings.map((f): [string, string] => ["finding", f.text]),
-      ];
-      for (const [field, text] of texts) {
-        const talk = serviceTalk(text, user.offerDetail);
-        if (talk) {
-          return `The ${field} "${text}" talks about "${talk}". Describe the business's own problem as its customers feel it, and don't mention the freelancer's services.`;
-        }
-        // With nothing to read, there's nothing to point at: the evidence is the point.
-        if ((pageText || reviewText) && !pointsAtFacts(text, corpus)) {
-          return `The ${field} "${text}" is too general. Point to something specific in the website text, reviews or evidence.`;
-        }
-        const numbers = unknownNumbers(text, corpus);
-        if (numbers.length) return `The ${field} "${text}" uses numbers that aren't in the facts (${numbers.join(", ")}).`;
-        const copied = copiedFromExample(text, EXAMPLE_ONLY, corpus);
-        if (copied.length) return `The ${field} "${text}" copies the example (${copied.join(", ")}). Write about this business only.`;
-      }
-      if (new Set(v.findings.map((f) => f.text.toLowerCase())).size < v.findings.length) return "Two findings are the same.";
-      return null;
+    // Before checking: tidy JSON that spilled into a sentence (a mis-escaped quote
+    // leaves `…top notch."},{"` at the end of a field).
+    check: (v) => problemIn(tidy(v)),
+    // After the retry also fails: keep what passes instead of losing the whole read.
+    salvage: (raw) => {
+      const v = tidy(raw);
+      const findings = v.findings.filter(
+        (f, i) => !findingProblem(f) && v.findings.findIndex((g) => g.text.toLowerCase() === f.text.toLowerCase()) === i,
+      );
+      // A bad top_reason: use the best surviving finding, else the rule-based reason.
+      const fromFinding = findings.find((f) => !textProblem("top_reason", f.text));
+      const top_reason = !topReasonProblem(v.top_reason) ? v.top_reason : fromFinding?.text ?? lead.topReason;
+      return { score: scoreProblem(v.score) ? 3 : v.score, top_reason, findings };
     },
   });
 
+  const final = tidy(value);
   const read: AiRead = {
-    score: value.score,
-    topReason: value.top_reason,
-    findings: value.findings.map((f, i) => ({
+    score: final.score,
+    topReason: final.top_reason,
+    findings: final.findings.map((f, i) => ({
       id: `finding:${i + 1}`,
       kind: "finding",
       label: "Gemma noticed",

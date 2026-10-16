@@ -37,7 +37,7 @@ export type Message = { role: "system" | "user" | "assistant"; content: string }
 export class LlmError extends Error {
   constructor(
     message: string,
-    readonly kind: "unavailable" | "model_missing" | "invalid_output" | "timeout" | "config" | "too_long",
+    readonly kind: "unavailable" | "model_missing" | "invalid_output" | "timeout" | "config" | "too_long" | "no_evidence",
   ) {
     super(message);
   }
@@ -62,7 +62,11 @@ type ChatResult =
   // Ollama stopped a reply that kept repeating itself: a bad attempt, worth one retry.
   | { kind: "aborted"; message: string };
 
-async function chat(messages: Message[], format: unknown): Promise<ChatResult> {
+// The retry samples a little differently: the same prompt at the same temperature
+// tends to fall into the same loop (Ollama's "token repeat limit").
+const RETRY_TEMPERATURE = 0.6;
+
+async function chat(messages: Message[], format: unknown, retry = false): Promise<ChatResult> {
   const { url, model } = llmConfig();
   let res: Response;
   try {
@@ -71,7 +75,9 @@ async function chat(messages: Message[], format: unknown): Promise<ChatResult> {
       headers: { "content-type": "application/json" },
       // think: false: thinking models (gemma4, qwen3) otherwise spend the whole
       // num_predict budget reasoning and never write the JSON. Ignored by others.
-      body: JSON.stringify({ model, messages, format, stream: false, think: false, options: OLLAMA_OPTIONS }),
+      body: JSON.stringify({ model, messages, format, stream: false, think: false,
+        options: retry ? { ...OLLAMA_OPTIONS, temperature: RETRY_TEMPERATURE } : OLLAMA_OPTIONS,
+      }),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
   } catch (err) {
@@ -110,12 +116,13 @@ async function chat(messages: Message[], format: unknown): Promise<ChatResult> {
 // Returns an error message if the parsed value breaks a rule, or null if it's fine.
 export type Check<T> = (value: T) => string | null;
 
-// jsonOk: parsed and matched the schema. value: also passed the check.
+// jsonOk: parsed and matched the schema. value: also passed the check. parsed: the
+// schema-valid value even if the check failed (for salvage).
 function validate<T>(
   content: string,
   schema: z.ZodType<T>,
   check?: Check<T>,
-): { value?: T; error?: string; jsonOk: boolean } {
+): { value?: T; parsed?: T; error?: string; jsonOk: boolean } {
   let raw: unknown;
   try {
     raw = JSON.parse(content);
@@ -128,7 +135,9 @@ function validate<T>(
     return { error: `JSON didn't match the schema at "${issue?.path.join(".")}": ${issue?.message}`, jsonOk: false };
   }
   const problem = check?.(parsed.data);
-  return problem ? { error: problem, jsonOk: true } : { value: parsed.data, jsonOk: true };
+  return problem
+    ? { parsed: parsed.data, error: problem, jsonOk: true }
+    : { value: parsed.data, parsed: parsed.data, jsonOk: true };
 }
 
 export async function generateJson<T>(opts: {
@@ -136,6 +145,9 @@ export async function generateJson<T>(opts: {
   schema: z.ZodType<T>;
   messages: Message[];
   check?: Check<T>;
+  // Last resort after the retry also fails its check: repair the schema-valid answer
+  // (drop or replace the parts that broke a rule). Return null if nothing is usable.
+  salvage?: (value: T) => T | null;
   userId: string;
   leadId: string;
 }): Promise<{ value: T; model: string }> {
@@ -150,6 +162,7 @@ export async function generateJson<T>(opts: {
     let validFirstTry = false;
     let groundedFirstTry = false;
     let lastError = "";
+    let lastParsed: T | undefined;
     const rawOutputs: string[] = [];
     let messages = opts.messages;
 
@@ -188,11 +201,12 @@ export async function generateJson<T>(opts: {
         );
       }
       for (attempts = 1; attempts <= 2; attempts++) {
-        const reply = await chat(messages, format);
+        const reply = await chat(messages, format, attempts > 1);
         let content = "";
         let error: string | undefined;
         let value: T | undefined;
         let jsonOk = false;
+        let parsed: T | undefined;
 
         if (reply.kind === "aborted") {
           error = `Ollama aborted the reply because it kept repeating itself (${reply.message}).`;
@@ -205,7 +219,8 @@ export async function generateJson<T>(opts: {
           if (reply.inputTokens >= MAX_PROMPT_TOKENS) {
             console.warn(`[llm] prompt used ${reply.inputTokens} tokens of num_ctx ${OLLAMA_OPTIONS.num_ctx}`);
           }
-          ({ value, error, jsonOk } = validate(content, opts.schema, opts.check));
+          ({ value, parsed, error, jsonOk } = validate(content, opts.schema, opts.check));
+          if (parsed !== undefined) lastParsed = parsed;
           if (value === undefined && reply.doneReason === "length") {
             error = `The reply hit the ${OLLAMA_OPTIONS.num_predict}-token limit before the JSON finished. Keep every field short.`;
           }
@@ -221,10 +236,12 @@ export async function generateJson<T>(opts: {
         }
         lastError = error ?? "Invalid output";
         console.warn(`[llm] ${opts.type} attempt ${attempts} rejected: ${lastError}`);
-        // Retry once: show the model its reply and what was wrong with it.
+        // Retry once: show the model its reply and what was wrong with it. The reply is
+        // re-written as compact JSON: echoing a broken one (runs of whitespace, JSON
+        // spilled into a string) primes the model to repeat it until Ollama aborts.
         messages = [
           ...opts.messages,
-          ...(content ? [{ role: "assistant" as const, content }] : []),
+          ...(parsed !== undefined ? [{ role: "assistant" as const, content: JSON.stringify(parsed) }] : []),
           {
             role: "user",
             content: `That reply was rejected: ${lastError} Answer again with JSON only, in exactly the shape shown, following every rule.`,
@@ -232,6 +249,11 @@ export async function generateJson<T>(opts: {
         ];
       }
       attempts = 2;
+      const salvaged = lastParsed !== undefined ? opts.salvage?.(lastParsed) : null;
+      if (salvaged) {
+        await log(true, `salvaged after two rejections: ${lastError}`);
+        return { value: salvaged, model };
+      }
       await log(false, lastError);
       throw new LlmError(`The model's answer was invalid twice (${lastError}).`, "invalid_output");
     } catch (err) {

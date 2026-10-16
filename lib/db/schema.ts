@@ -19,6 +19,11 @@ export const users = sqliteTable("user", {
   // "What do you sell?" Null until the first-sign-in question is answered.
   offer: text("offer", { enum: OFFERS }),
   offerDetail: text("offer_detail").notNull().default(""),
+  // Profile: who they do it for, 1–3 links to their work, and an optional rate in
+  // their own words ("from ₦50k per video"). Pitches may cite these.
+  niche: text("niche").notNull().default(""),
+  portfolioLinks: text("portfolio_links", { mode: "json" }).$type<string[]>().notNull().default([]),
+  rate: text("rate").notNull().default(""),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).$defaultFn(() => new Date()),
 });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Mail, Minus, Phone, Plus, Star, X } from "lucide-react";
+import { Check, Mail, Minus, Phone, Plus, Star, UserRound, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -120,9 +120,11 @@ export function EvidenceList({
                 e.ok === false && "bg-rose-500/15 text-rose-700",
                 e.ok === null && "bg-muted text-muted-foreground",
               )}
-              aria-label={e.ok === true ? "Passed" : e.ok === false ? "Weak spot" : "Couldn't check"}
+              aria-label={
+                e.kind === "profile" ? "Your profile" : e.ok === true ? "Passed" : e.ok === false ? "Weak spot" : "Couldn't check"
+              }
             >
-              {e.ok === true ? <Check /> : e.ok === false ? <X /> : <Minus />}
+              {e.kind === "profile" ? <UserRound /> : e.ok === true ? <Check /> : e.ok === false ? <X /> : <Minus />}
             </span>
             <span className="min-w-0">
               <span className="font-medium">{e.label}</span>{" "}

@@ -6,7 +6,7 @@ export type WhatsAppLabel = "confirmed" | "likely" | "call";
 // Everything a pitch may cite. ok: true = passed, false = a weak spot, null = couldn't
 // check (or neutral, like a timing signal). `check` tells the owner, in plain English,
 // how to see it for themselves. Ids are stable per lead ("check:https", "review:2").
-export type EvidenceKind = "check" | "finding" | "review" | "timing";
+export type EvidenceKind = "check" | "finding" | "review" | "timing" | "profile";
 export type Evidence = {
   id: string;
   kind: EvidenceKind;

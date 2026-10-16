@@ -8,7 +8,7 @@ export const column = z.enum(["saved", "pitched", "replied", "won", "lost"] sati
 
 export const evidenceItem = z.object({
   id: z.string().min(1).max(60),
-  kind: z.enum(["check", "finding", "review", "timing"]),
+  kind: z.enum(["check", "finding", "review", "timing", "profile"]),
   label: z.string().max(100),
   ok: z.boolean().nullable(),
   detail: z.string().max(600),

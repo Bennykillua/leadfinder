@@ -148,13 +148,33 @@ export async function deleteNoteAction(id: string) {
   await db.delete(notes).where(and(eq(notes.userId, user.id), eq(notes.id, z.uuid().parse(id))));
 }
 
-const offerForm = z
+const MAX_PORTFOLIO_LINKS = 3;
+
+// "vimeo.com/tolu" → "https://vimeo.com/tolu". Only public http(s) web addresses.
+function portfolioLink(raw: string): string | null {
+  const text = raw.trim();
+  if (!text) return null;
+  let url: URL;
+  try {
+    url = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `https://${text}`);
+  } catch {
+    return null;
+  }
+  if (!/^https?:$/.test(url.protocol) || url.username || url.password) return null;
+  if (!/^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(url.hostname)) return null;
+  return url.toString().replace(/\/$/, "");
+}
+
+const profileForm = z
   .object({
-    offer: z.enum(OFFERS),
+    offer: z.enum(OFFERS, { error: "Pick what you do" }),
     offerDetail: z.string().trim().max(200),
+    niche: z.string().trim().min(2, "Add your niche (who or what you mostly work on)").max(120),
+    links: z.array(z.string().max(300, "That link is too long")).max(MAX_PORTFOLIO_LINKS),
+    rate: z.string().trim().max(80, "Keep the rate short"),
   })
   .refine((v) => v.offer !== "other" || v.offerDetail.length > 0, {
-    message: "Tell us what you sell",
+    message: "Tell us what you do",
     path: ["offerDetail"],
   });
 
@@ -162,12 +182,27 @@ export type OfferState = { error?: string; saved?: boolean };
 
 export async function saveOfferAction(_prev: OfferState, form: FormData): Promise<OfferState> {
   const user = await requireUser();
-  const parsed = offerForm.safeParse({
+  const parsed = profileForm.safeParse({
     offer: form.get("offer"),
     offerDetail: form.get("offerDetail") ?? "",
+    niche: form.get("niche") ?? "",
+    links: form.getAll("portfolio").map(String),
+    rate: form.get("rate") ?? "",
   });
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Pick what you sell" };
-  await db.update(users).set(parsed.data).where(eq(users.id, user.id));
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the form" };
+  const { links, ...profile } = parsed.data;
+  const filled = links.map((l) => l.trim()).filter(Boolean);
+  const portfolioLinks: string[] = [];
+  for (const raw of filled) {
+    const link = portfolioLink(raw);
+    if (!link) return { error: `"${raw}" isn't a web link. Paste the full address, e.g. https://vimeo.com/yourname` };
+    if (!portfolioLinks.includes(link)) portfolioLinks.push(link);
+  }
+  if (portfolioLinks.length === 0) return { error: "Add at least one link to your work" };
+  await db
+    .update(users)
+    .set({ ...profile, portfolioLinks })
+    .where(eq(users.id, user.id));
   if (form.get("next") === "settings") return { saved: true };
   redirect("/");
 }
@@ -250,7 +285,7 @@ export async function signInAction(_prev: AuthState, form: FormData): Promise<Au
     await db.update(users).set({ passwordHash: await hashPassword(parsed.data.password) }).where(eq(users.id, user.id));
   }
   await createSession(user.id);
-  redirect(user.offer ? "/" : "/welcome");
+  redirect(user.offer && user.portfolioLinks.length > 0 ? "/" : "/welcome");
 }
 
 export async function signOutAction() {

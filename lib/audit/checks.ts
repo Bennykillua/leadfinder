@@ -301,12 +301,15 @@ const LABEL_IDS: Record<string, CheckId> = {
 };
 
 export function upgradeEvidence(items: Partial<Evidence>[]): Evidence[] {
-  return items.map((e, i) => ({
-    id: e.id ?? `check:${LABEL_IDS[e.label ?? ""] ?? `item${i}`}`,
-    kind: e.kind ?? "check",
-    label: e.label ?? "",
-    ok: e.ok ?? null,
-    detail: e.detail ?? "",
-    check: e.check,
-  }));
+  return items.map((e, i) => {
+    const checkId = LABEL_IDS[e.label ?? ""];
+    const base = { label: e.label ?? "", ok: e.ok ?? null, detail: e.detail ?? "" };
+    return {
+      ...base,
+      id: e.id ?? `check:${checkId ?? `item${i}`}`,
+      kind: e.kind ?? "check",
+      // Older evidence had no "what they can check" line: make it now.
+      check: e.check ?? (checkId ? checkLine({ id: checkId, ...base }, null) : undefined),
+    };
+  });
 }

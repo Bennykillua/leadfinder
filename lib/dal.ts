@@ -16,6 +16,9 @@ export type CurrentUser = {
   email: string | null;
   offer: Offer | null;
   offerDetail: string;
+  niche: string;
+  portfolioLinks: string[];
+  rate: string;
 };
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
@@ -29,6 +32,9 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     email: row.email,
     offer: row.offer,
     offerDetail: row.offerDetail,
+    niche: row.niche,
+    portfolioLinks: row.portfolioLinks ?? [],
+    rate: row.rate,
   };
 }
 
@@ -39,10 +45,14 @@ export async function requireUser(): Promise<CurrentUser> {
   return user;
 }
 
-// Signed in and has answered "What do you sell?".
+// Signed in and has a profile: what they sell and at least one portfolio link.
+export function isOnboarded(user: CurrentUser) {
+  return Boolean(user.offer) && user.portfolioLinks.length > 0;
+}
+
 export async function requireOnboardedUser(): Promise<CurrentUser> {
   const user = await requireUser();
-  if (!user.offer) redirect("/welcome");
+  if (!isOnboarded(user)) redirect("/welcome");
   return user;
 }
 

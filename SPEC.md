@@ -8,17 +8,17 @@ Freelancers in Lagos who sell to local businesses (video editors, web designers,
 
 ## The product in one line
 
-Search for businesses, see what's weak about each one, save the good ones to a board, and work them from first pitch to won.
+Search for businesses, see what's weak about each one, save the good ones to a board, and work them from first pitch to won. Or find people already asking for your skills, and reply to them from the same board.
 
 ## First user
 
-My friend, a video editor who gets clients on WhatsApp. The freelancer's **offer** ("I edit videos", "I build websites") is set once in their profile and shapes what the audit looks for and how pitches read.
+My friend, a video editor who gets clients on WhatsApp. The freelancer's **profile** (what they do, their niche, 1–3 portfolio links, an optional rate) is set once and shapes what the audit looks for, which requests match, and how pitches read.
 
 ## Partner tools
 
 - **Gemma (featured):** the open-weight brain. Understands what you type, reads audit evidence, scores leads, writes pitches.
 - **DigitalOcean (featured):** hosts the app and runs Gemma via Ollama.
-- **SerpApi (partner):** finds real businesses (Google Maps engine: name, category, address, phone, website, rating, review count).
+- **SerpApi (partner):** finds real businesses (Google Maps engine: name, category, address, phone, website, rating, review count)), their reviews (Google Maps Reviews engine), and requests for the user's skills (Google Jobs and Google Search engines).
 - **.tech domain (partner):** the live URL.
 
 Be honest in the post: SerpApi is closed and paid. The open part is the thinking, which is where the cost would be at volume on a closed model.
@@ -41,7 +41,9 @@ One text box. After a ~300 ms pause, Gemma classifies the text and the box morph
   - Shows score (1–5), evidence list, top reason to pitch.
   - Has **Save lead**.
 
-`/` shows exactly two rows, one per card type (Search, Audit), each with one example inside the row. Never one row per example.
+- **Requests card** — "find people looking for me", "who needs a video editor in Lagos" (see "Find people looking for you")
+
+`/` shows exactly three rows, one per card type (Search, Audit, Requests), each with one example inside the row. Never one row per example.
 
 When the empty box gets focus (click or tap), the same card menu opens automatically, as if `/` had been pressed. No `/` character is inserted into the box. The menu closes as soon as the user types.
 
@@ -55,7 +57,7 @@ Clicking a card opens a **detail drawer**:
 
 - Audit evidence (re-run audit button)
 - **Read reviews** (saved leads found on Google Maps only): fetches reviews with SerpApi's `google_maps_reviews` engine, one call = 1 credit, cached 7 days. One call returns 8 reviews in one sort order, so it fetches the **8 lowest-rated** reviews and shows them newest first, with dates. The reviews go to Gemma's deep read as extra evidence. Any finding taken from a review must quote the review.
-- **Pitch:** "Write pitch" asks Gemma for a draft. Fully editable text. "Open in WhatsApp" button. After sending, a prompt asks "Move to Pitched?"
+- **Pitch:** "Write pitch" asks Gemma for an evidence-based draft (see "Evidence-based pitches" below). The evidence the draft used is highlighted in the drawer, with what the owner can check, so it can be verified before sending. Fully editable text. "Open in WhatsApp" button. After sending, a prompt asks "Move to Pitched?"
 - **Reminder:** when a lead is moved to **Pitched** and has no reminder, a follow-up reminder is set automatically for 3 days later (editable or removable like any reminder). One date picker, one time picker, one short note ("call the manager"), and a delete button. That's all. No separate "change it in words" box. Optional: the date field also accepts typed words ("next Tuesday 3pm"), parsed with chrono-node into the pickers. The note is never parsed as a date. The summary line must always match the pickers exactly.
 - **Notes:** as many notes per lead as needed, newest first, each with when it was written ("spoke to the manager, call back after the 20th"). Add, edit and delete each note; deleting asks for confirmation first. Notes are stored per user and go with the lead if it is deleted (and come back on Undo).
 - **Delete lead:** a delete button in the drawer (and in the card's menu). Confirm, or show an Undo toast for 5 seconds.
@@ -90,9 +92,36 @@ The top reason depends on the user's offer (from settings): for video editors, p
 
 In the UI, evidence is grouped: **Problems** first, then **Passed**, then **Couldn't check**.
 
+### Evidence-based pitches
+
+Every piece of evidence has an id and a plain-English "what they can check" line (e.g. `check:https` → "Open their site in Chrome: the address bar says Not secure"). Evidence comes from: the rule checks, Gemma's findings, Google reviews, and timing signals (Lighthouse scores will join when they're built).
+
+- The pitch output includes `evidence_ids`. A pitch with no evidence ids, an id that doesn't exist, or a claim not in the cited evidence (quotes, the opening observation, or a number about the business: ratings, review counts, scores, prices, dates, load times) is rejected and retried once. Other numbers are fine: the freelancer's own prices and offer, and ordinary phrasing like "1 quick question" or "a 30-second video".
+- **Issue or opportunity:** every lead can be pitched. The pitch opens with one piece of evidence as its way in: an issue when there is one (preferred), otherwise a real strength (a passed check or a good review: "4.7★ from 64 reviews") and how the freelancer could help more customers see it. Never an invented problem.
+- Bookkeeping slips are repaired, not rejected: ids written inside the message or with brackets, and a figure from an evidence item the model forgot to cite (that item gets cited). Facts not in the evidence are still rejected.
+- Structure: an observation they can verify → why it matters from their customer's view → one simple question. 50–125 words. No list of services, no hard sell, and no flattery beyond one true compliment from the evidence (a passed check or a good review).
+- **Why now?** shown when a timing signal exists: new reviews in the last 30 days, a recent bad review, hiring, or a new location (from the site text).
+
+- **Portfolio link:** business pitches include the user's first portfolio link ("Here's some of my work: <link>") just before the closing question. Code adds it, exactly as saved; the model writes no links (a pitch with any other link is rejected), and its text is 50–120 words to leave room. Niche and rate are not sent to the business pitch (in testing they made gemma3:4b cite the profile instead of the business's problems); they're for matching requests.
+
 Gemma takes the evidence + the user's offer and returns
 `{ score: 1–5, top_reason: string }`; pitches are a separate call returning `{ pitch: string }`.
 Every claim in a pitch must come from the evidence list. No invented facts.
+
+## Find people looking for you
+
+A second way to find leads: people and companies already asking for the user's skills. Same box, same board, same pitch writer.
+
+- **Sources** (2 SerpApi credits per search, cached 24 hours, counted like every call):
+  - `google_jobs`: "{what you do} {niche}" + the place typed (e.g. "freelance video editor", location "Lagos, Nigeria"). Full descriptions, good for Gemma. **Freelance, contract and full-time** are all shown, each tagged.
+  - `google`: a skills query, e.g. `"need someone to edit" OR "looking for a video editor" Lagos site:linkedin.com`. Mostly job listings plus some posts; only the search snippet is used. LinkedIn, Facebook and other pages are never fetched.
+- **Anything about needing the user's skills counts**, not only job titles ("need someone to cut my wedding video" is a request). Tested: plain skill phrases bring a lot of noise (software questions, rate threads, other editors' profiles), so every result goes through two filters:
+  - **Code:** drop profile pages (`/in/`), drop jobs that exclude the user's country ("available from: Europe…"), mark posts older than 30 days as stale.
+  - **Gemma:** "Is this a person or business that needs this skill done for them?" yes/no with a quoted reason; "no" results are hidden behind a count ("4 hidden: not requests").
+- **Result row:** title, who posted, where, posted date, budget if stated, type (freelance / contract / full-time / internship), source, **Save lead**.
+- **On the board:** the same columns, drawer, notes and 3-day follow-up, with a **Request** badge. Pitched means "applied / replied". The drawer has **Open post / Apply** and **Copy reply**; email only when the post itself shows one. No looking up the poster's personal contacts.
+- **Request read** (Gemma, replaces the website audit): fit score for the user's niche and portfolio, can the user take it (location, remote), freelance or full-time, and up to 3 requirements quoted from the post as evidence (`req:1`…).
+- **Reply pitch:** the same pitch writer and rules (evidence ids, 50–125 words, one question, number and quote checks), but the structure is: what they asked for (quoted) → why the user fits (citing a portfolio link or niche) → one question.
 
 ## WhatsApp
 
@@ -122,7 +151,7 @@ Contact priority on every card: WhatsApp confirmed → likely WhatsApp → email
 ## Login and data
 
 - **Email + password sign-up and sign-in.** Passwords are hashed with scrypt (N=2^17, r=8, p=1; older hashes are upgraded on the next sign-in). The session is a signed JWT (HS256, signed with `AUTH_SECRET`) in an httpOnly cookie, valid 30 days, carrying a session id that must exist in the `session` table. Sign out deletes that row and the cookie, so the token stops working immediately everywhere. Failed passwords back off, never lock: 5 failures for one email within 15 minutes → wait 15 minutes (also 50 per IP); a successful sign-in resets it. Every lead, reminder and note belongs to a user; nobody sees anyone else's board.
-- First sign-in asks one question: "What do you sell?" (video editing / websites / social media / other + free text). Editable in settings.
+- First sign-in asks for the **profile**: what you do (video editing / websites / social media / other + free text), your niche (e.g. "shortlet and real-estate tours"), 1–3 portfolio links (http/https), and an optional rate (e.g. "from ₦50k per video"). Editable in settings. Existing users without portfolio links are asked once.
 - A **demo account** with sample leads for judges, linked from the post.
 - SQLite (Drizzle) on the droplet, every table keyed by `user_id`.
 - Cache SerpApi results per query for 24 hours to save the free quota.
@@ -135,7 +164,7 @@ Contact priority on every card: WhatsApp confirmed → likely WhatsApp → email
 
 ## Model
 
-- Gemma via Ollama, structured outputs (JSON schema in `format`), validated with zod, retry once on invalid output.
+- Gemma via Ollama, structured outputs (JSON schema in `format`), validated with zod, retry once on invalid output. If the deep read's retry still breaks a rule, keep the parts that pass: drop bad findings, replace a bad top reason with the best finding (or the rule-based reason), and raise a too-low no-website score to 3. A pitch is never salvaged: it fails with the reason.
 - Three prompts: intent (search vs audit, as you type), audit scoring, pitch writing.
 - Examples include Pidgin and Lagos place names.
 - Search vs audit is decided by code (URL or "X in Y" pattern), not the model.
@@ -167,10 +196,13 @@ Next.js (App Router), TypeScript strict, Tailwind, shadcn/ui, Motion, zod, chron
 4. **Real search:** SerpApi Google Maps into the Search card, with caching.
 5. **Real audit:** code checks, then name → SerpApi lookup → audit.
 6. **Gemma in:** site reading, fit scoring for the user's offer, pitch writing. Log valid-JSON rate and tokens from day one. Then run the 20-audit model comparison.
-7. **WhatsApp links + Due today.**
-8. **Deploy** to DigitalOcean + .tech domain. Create the demo account.
-9. **First user:** sit with the video editor, run real searches, send real pitches.
-10. **Post:** demo video, numbers, first-user story.
+7. **Profile:** niche, 1–3 portfolio links, optional rate in onboarding and settings. Business pitches may use one portfolio link.
+8. **Find people looking for you, search:** Requests card, google_jobs + skills search, code and Gemma filters, result rows, Save to the board.
+9. **Find people looking for you, reply:** request read and reply pitch.
+10. **WhatsApp links + Due today.**
+11. **Deploy** to DigitalOcean + .tech domain. Create the demo account.
+12. **First user:** sit with the video editor, run real searches, send real pitches.
+13. **Post:** demo video, numbers, first-user story.
 
 ## Out of scope this week
 
