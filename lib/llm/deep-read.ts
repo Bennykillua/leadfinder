@@ -9,26 +9,28 @@ import { crawlSite, normaliseWebsite, PAGES_VERSION, type CrawlFacts } from "@/l
 import { socialPage } from "@/lib/audit/checks";
 import { businessFacts, evidenceLines, offerText } from "./context";
 import { copiedFromExample, normalise, pointsAtFacts, serviceTalk, unknownNumbers } from "./grounding";
-import { generateJson } from "./ollama";
+import { generateJson } from "./generate";
 
 // Gemma call 1: read the site (and reviews, if fetched), judge fit for THIS user's
 // offer, and add up to 3 findings the rule checks missed, written as the business's
 // problem from its customers' point of view, each with what the owner can check.
 
-const PAGE_BUDGET = 2500;
-const HOME_SHARE = 1700;
+const PAGE_BUDGET = 1800;
+const HOME_SHARE = 1200;
 const REVIEW_BUDGET = 1600;
 // The prompt asks for under 100 characters and the check allows up to 140. The schema
 // leaves room beyond that because Ollama enforces maxLength by cutting text off
 // mid-word, which a small model doesn't plan for.
 const SCHEMA_MAX = 200;
 const TEXT_MAX = 140;
+// top_reason is never rejected for length: longer ones are trimmed at a word boundary.
+const TOP_REASON_MAX = 150;
 const RECENT_DAYS = 30;
 
 function schemaFor(maxFindings: number) {
   return z.object({
     score: z.number().int().min(1).max(5),
-    top_reason: z.string().min(15).max(SCHEMA_MAX),
+    top_reason: z.string().min(15).max(400),
     findings: z
       .array(z.object({ text: z.string().min(10).max(SCHEMA_MAX), check: z.string().min(10).max(SCHEMA_MAX) }))
       .max(maxFindings),
@@ -47,7 +49,7 @@ async function crawlFor(lead: Lead): Promise<CrawlFacts | null> {
   return facts;
 }
 
-// About 2,500 characters: most of it for the homepage, the rest shared by the others.
+// About 1,800 characters: most of it for the homepage, the rest shared by the others.
 // Each page's text is already ordered most-useful-first, so cutting the end is safe.
 function pageBlock(pages: NonNullable<CrawlFacts["pages"]>) {
   const blocks: string[] = [];
@@ -129,7 +131,7 @@ ${EXAMPLE}
 
 Fields:
 - "score": integer 1-5, for THIS freelancer's service. 5 = a clear, checkable problem their service fixes and the business looks active. 4 = a problem they fix, less striking. 3 = a weak or indirect angle. 2 = little to fix. 1 = nothing to fix. No website, or a site that is down, is a real problem, not a reason for a low score.
-- "top_reason": one plain sentence, under 100 characters, naming ONE specific problem the freelancer's service fixes, as the business would feel it.
+- "top_reason": one plain sentence, under 150 characters, naming ONE specific problem the freelancer's service fixes, as the business would feel it.
 - "findings": up to 3 problems the audit evidence does NOT already list. Each has:
   - "text": one short sentence (under 100 characters).
   - "check": one short sentence telling the owner exactly where to look to see it (a page, a section, a review).
@@ -166,10 +168,18 @@ export function tidyText(text: string) {
   return t;
 }
 
+// "No prices on the menu page, so diners can't tell what a meal costs before…"
+export function trimAtWord(text: string, max: number) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > max / 2 ? cut.slice(0, space) : cut).replace(/[\s,;:–—-]+$/, "")}…`;
+}
+
 function tidy(v: DeepReadJson): DeepReadJson {
   return {
     ...v,
-    top_reason: tidyText(v.top_reason),
+    top_reason: trimAtWord(tidyText(v.top_reason), TOP_REASON_MAX),
     findings: v.findings.map((f) => ({ text: tidyText(f.text), check: tidyText(f.check) })),
   };
 }
@@ -194,7 +204,7 @@ export async function deepRead(user: CurrentUser, lead: Lead): Promise<AiRead> {
 
   // Rules shared by top_reason and finding texts.
   const textProblem = (field: "top_reason" | "finding", text: string) => {
-    if (text.length > TEXT_MAX) return `The ${field} "${text}" is ${text.length} characters; keep it under 100.`;
+    if (field === "finding" && text.length > TEXT_MAX) return `The finding "${text}" is ${text.length} characters; keep it under 100.`;
     if (SAYS_TALK.test(text) && reviews.length === 0) {
       return `The ${field} "${text}" talks about what guests or customers say, but no reviews were given. Use only the website text and evidence.`;
     }

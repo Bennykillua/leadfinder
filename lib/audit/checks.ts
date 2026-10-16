@@ -1,6 +1,7 @@
 import type { Offer } from "@/lib/db/schema";
 import type { Business, Evidence } from "@/lib/leads";
 import type { CrawlFacts } from "./crawl";
+import type { PageSpeed } from "./pagespeed";
 
 // Deterministic checks from SPEC.md "The audit", turned into evidence, plus a
 // PROVISIONAL score and top reason from simple rules. Gemma replaces the score and
@@ -9,15 +10,22 @@ import type { CrawlFacts } from "./crawl";
 const SLOW_MS = 3000;
 const MIN_REVIEWS = 20;
 const MIN_RATING = 4.0;
+// PageSpeed scores (0–100) below these are weak spots. Lighthouse calls under 50
+// "poor" for performance.
+const MIN_PERFORMANCE = 50;
+const MIN_ACCESSIBILITY = 70;
+const MIN_SEO = 80;
 
-type CheckId = "website" | "up" | "https" | "mobile" | "speed" | "fresh" | "contact" | "whatsapp" | "video" | "maps";
+type CheckId =
+  | "website" | "up" | "https" | "mobile" | "speed" | "accessibility" | "seo"
+  | "fresh" | "contact" | "whatsapp" | "video" | "maps";
 
 // Internal shape; toEvidence() adds the evidence id, kind and "what they can check".
 type Check = { id: CheckId; label: string; ok: boolean | null; detail: string; reason?: string };
 
 // How much each weak spot matters for the user's offer. Higher = better pitch angle.
 const WEIGHTS: Record<Offer, Partial<Record<CheckId, number>>> = {
-  websites: { https: 1.5, mobile: 2, speed: 1.5, fresh: 1.5, contact: 1.5, whatsapp: 1.5, maps: 0.5 },
+  websites: { https: 1.5, mobile: 2, speed: 1.5, seo: 1.5, accessibility: 0.75, fresh: 1.5, contact: 1.5, whatsapp: 1.5, maps: 0.5 },
   video: { video: 2.5, fresh: 1, mobile: 0.75, speed: 0.5, https: 0.5, contact: 0.75, whatsapp: 0.75, maps: 1 },
   social: { maps: 2, fresh: 1.5, contact: 1.5, whatsapp: 1, mobile: 1, https: 0.5, speed: 0.5 },
   other: { maps: 1.5, fresh: 1.25, contact: 1.25, whatsapp: 1, mobile: 1.25, https: 1, speed: 1 },
@@ -66,7 +74,36 @@ export function socialPage(website: string | null): string | null {
   }
 }
 
-export function runChecks(b: Business, facts: CrawlFacts | null, offer: Offer, fromMaps: boolean): Check[] {
+// PageSpeed scores as checks. On any PageSpeed failure: "Couldn't check", never an error.
+function pageSpeedChecks(ps: PageSpeed): Check[] {
+  if (!ps.ok) {
+    const detail = `Couldn't check: ${ps.reason}`;
+    return [
+      { id: "speed", label: "Speed", ok: null, detail },
+      { id: "accessibility", label: "Accessibility", ok: null, detail },
+      { id: "seo", label: "SEO", ok: null, detail },
+    ];
+  }
+  const score = (id: CheckId, label: string, value: number, min: number, reason: string): Check =>
+    value < min
+      ? { id, label, ok: false, detail: `${label} score ${value}/100 on mobile (PageSpeed)`, reason: `${reason} (${value}/100 on PageSpeed)` }
+      : { id, label, ok: true, detail: `${label} score ${value}/100 on mobile (PageSpeed)` };
+  return [
+    score("speed", "Speed", ps.performance, MIN_PERFORMANCE, "Site is slow on phones"),
+    score("accessibility", "Accessibility", ps.accessibility, MIN_ACCESSIBILITY, "Site is hard to use for some visitors"),
+    score("seo", "SEO", ps.seo, MIN_SEO, "Site has basic Google search problems"),
+  ];
+}
+
+// pageSpeed: the PageSpeed result, or null if it wasn't run (search rows): then the
+// speed check falls back to our own first-load time.
+export function runChecks(
+  b: Business,
+  facts: CrawlFacts | null,
+  offer: Offer,
+  fromMaps: boolean,
+  pageSpeed: PageSpeed | null = null,
+): Check[] {
   const maps = mapsCheck(b, fromMaps);
 
   const social = socialPage(b.website);
@@ -139,7 +176,9 @@ export function runChecks(b: Business, facts: CrawlFacts | null, offer: Offer, f
         },
   );
 
-  if (facts.loadMs !== null) {
+  if (pageSpeed) {
+    checks.push(...pageSpeedChecks(pageSpeed));
+  } else if (facts.loadMs !== null) {
     const s = (facts.loadMs / 1000).toFixed(1);
     checks.push(
       facts.loadMs > SLOW_MS
@@ -258,7 +297,12 @@ function checkLine(c: Check, host: string | null): string | undefined {
     case "mobile":
       return `Open ${site} on a phone: the page doesn't fit the screen and needs zooming.`;
     case "speed":
-      return `Open ${site} on mobile data: it's slow to show.`;
+      return /PageSpeed/.test(c.detail)
+        ? `Run ${site} through pagespeed.web.dev (Mobile): ${c.detail.replace(/ on mobile \(PageSpeed\)$/, "")}.`
+        : `Open ${site} on mobile data: it's slow to show.`;
+    case "accessibility":
+    case "seo":
+      return `Run ${site} through pagespeed.web.dev (Mobile): ${c.detail.replace(/ on mobile \(PageSpeed\)$/, "")}.`;
     case "fresh":
       return /footer/i.test(c.detail)
         ? `Scroll to the bottom of ${site}: ${c.detail.replace(/^Footer says/, "the footer says")}.`
@@ -293,6 +337,8 @@ const LABEL_IDS: Record<string, CheckId> = {
   HTTPS: "https",
   "Mobile-friendly": "mobile",
   Speed: "speed",
+  Accessibility: "accessibility",
+  SEO: "seo",
   "Fresh content": "fresh",
   "Contact path": "contact",
   "WhatsApp button": "whatsapp",

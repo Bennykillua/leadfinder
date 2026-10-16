@@ -17,11 +17,10 @@ My friend, a video editor who gets clients on WhatsApp. The freelancer's **profi
 ## Partner tools
 
 - **Gemma (featured):** the open-weight brain. Understands what you type, reads audit evidence, scores leads, writes pitches.
-- **DigitalOcean (featured):** hosts the app and runs Gemma via Ollama.
+- **Render (partner):** hosts the app: one web service with a persistent disk for the SQLite database, at the default `onrender.com` address.
 - **SerpApi (partner):** finds real businesses (Google Maps engine: name, category, address, phone, website, rating, review count)), their reviews (Google Maps Reviews engine), and requests for the user's skills (Google Jobs and Google Search engines).
-- **.tech domain (partner):** the live URL.
 
-Be honest in the post: SerpApi is closed and paid. The open part is the thinking, which is where the cost would be at volume on a closed model.
+Be honest in the post: SerpApi is closed and paid. The open part is the thinking, which is where the cost would be at volume on a closed model. The cost story uses real numbers: cost per 1,000 leads per model, from our own token logs (deep read + pitch, retries included), as billed by OpenRouter, next to what the same token volume would cost on two popular closed models (prices and where they came from stated in the post).
 
 ## Two pages
 
@@ -74,7 +73,7 @@ Deterministic checks (code):
 - Site down or erroring
 - No HTTPS
 - Not mobile-friendly (no viewport meta tag)
-- Speed and quality from the open-source **Lighthouse** npm package, run on our own server (no API key): mobile form factor, **performance, accessibility and SEO** categories only. Cached 24 hours. At most 1 Lighthouse job runs at a time. Runs in the background so the rest of the audit shows first. This replaces our own load-time measurement. Lighthouse needs Chrome/Chromium installed on the server.
+- Speed and quality from the **PageSpeed Insights API** (Google runs Lighthouse for us; Chrome never runs on our server): mobile strategy, **performance, accessibility and SEO** categories only. **Optional:** `PAGESPEED_API_KEY` raises the quota; without it the API is called keyless. Any failure (quota, rate limit, timeout, a site it can't load) marks Speed, Accessibility and SEO as **Couldn't check** and the audit carries on; PageSpeed never fails an audit. Runs alongside the crawl on the Audit card and Re-run audit (waits at most 20 s; a slower result is cached for the next run); search rows only use a cached result. Results cached 24 hours, and after a quota error it isn't called again for 10 minutes. Replaces our own load-time measurement where it ran.
 - Stale content (old copyright year, old last post)
 - No clear contact or booking path
 - Booking form
@@ -88,13 +87,13 @@ Deterministic checks (code):
 - Images over 1 MB
 - Weak Maps presence: few reviews, low rating
 
-The top reason depends on the user's offer (from settings): for video editors, prefer video and social gaps; for websites, prefer Lighthouse performance, mobile, booking and SEO gaps. Raw load time is never a top reason.
+The top reason depends on the user's offer (from settings): for video editors, prefer video and social gaps; for websites, prefer PageSpeed performance, mobile, booking and SEO gaps. Raw load time is never a top reason.
 
 In the UI, evidence is grouped: **Problems** first, then **Passed**, then **Couldn't check**.
 
 ### Evidence-based pitches
 
-Every piece of evidence has an id and a plain-English "what they can check" line (e.g. `check:https` → "Open their site in Chrome: the address bar says Not secure"). Evidence comes from: the rule checks, Gemma's findings, Google reviews, and timing signals (Lighthouse scores will join when they're built).
+Every piece of evidence has an id and a plain-English "what they can check" line (e.g. `check:https` → "Open their site in Chrome: the address bar says Not secure"). Evidence comes from: the rule checks, Gemma's findings, Google reviews, and timing signals (PageSpeed scores will join when they're built).
 
 - The pitch output includes `evidence_ids`. A pitch with no evidence ids, an id that doesn't exist, or a claim not in the cited evidence (quotes, the opening observation, or a number about the business: ratings, review counts, scores, prices, dates, load times) is rejected and retried once. Other numbers are fine: the freelancer's own prices and offer, and ordinary phrasing like "1 quick question" or "a 30-second video".
 - **Issue or opportunity:** every lead can be pitched. The pitch opens with one piece of evidence as its way in: an issue when there is one (preferred), otherwise a real strength (a passed check or a good review: "4.7★ from 64 reviews") and how the freelancer could help more customers see it. Never an invented problem.
@@ -105,7 +104,7 @@ Every piece of evidence has an id and a plain-English "what they can check" line
 - **Portfolio link:** business pitches include the user's first portfolio link ("Here's some of my work: <link>") just before the closing question. Code adds it, exactly as saved; the model writes no links (a pitch with any other link is rejected), and its text is 50–120 words to leave room. Niche and rate are not sent to the business pitch (in testing they made gemma3:4b cite the profile instead of the business's problems); they're for matching requests.
 
 Gemma takes the evidence + the user's offer and returns
-`{ score: 1–5, top_reason: string }`; pitches are a separate call returning `{ pitch: string }`.
+`{ score: 1–5, top_reason: string }` (top_reason up to 150 characters; a longer one is trimmed at a word boundary, never rejected); pitches are a separate call returning `{ pitch: string }`.
 Every claim in a pitch must come from the evidence list. No invented facts.
 
 ## Find people looking for you
@@ -153,7 +152,7 @@ Contact priority on every card: WhatsApp confirmed → likely WhatsApp → email
 - **Email + password sign-up and sign-in.** Passwords are hashed with scrypt (N=2^17, r=8, p=1; older hashes are upgraded on the next sign-in). The session is a signed JWT (HS256, signed with `AUTH_SECRET`) in an httpOnly cookie, valid 30 days, carrying a session id that must exist in the `session` table. Sign out deletes that row and the cookie, so the token stops working immediately everywhere. Failed passwords back off, never lock: 5 failures for one email within 15 minutes → wait 15 minutes (also 50 per IP); a successful sign-in resets it. Every lead, reminder and note belongs to a user; nobody sees anyone else's board.
 - First sign-in asks for the **profile**: what you do (video editing / websites / social media / other + free text), your niche (e.g. "shortlet and real-estate tours"), 1–3 portfolio links (http/https), and an optional rate (e.g. "from ₦50k per video"). Editable in settings. Existing users without portfolio links are asked once.
 - A **demo account** with sample leads for judges, linked from the post.
-- SQLite (Drizzle) on the droplet, every table keyed by `user_id`.
+- SQLite (Drizzle) on the Render persistent disk, every table keyed by `user_id`.
 - Cache SerpApi results per query for 24 hours to save the free quota.
 
 ## Ethics and limits (say this in the post)
@@ -164,29 +163,45 @@ Contact priority on every card: WhatsApp confirmed → likely WhatsApp → email
 
 ## Model
 
-- Gemma via Ollama, structured outputs (JSON schema in `format`), validated with zod, retry once on invalid output. If the deep read's retry still breaks a rule, keep the parts that pass: drop bad findings, replace a bad top reason with the best finding (or the rule-based reason), and raise a too-low no-website score to 3. A pitch is never salvaged: it fails with the reason.
+- **Two providers, one pipeline:** `LLM_PROVIDER=ollama` (local, default) or `openrouter` (production, open-weight models hosted by OpenRouter). Same prompts, zod validation, checks, repairs, retry and `llm_call` logging either way; only the transport differs, and each logged call records its provider, the options actually sent, and (OpenRouter) the billed cost.
+  - **Ollama:** structured outputs (JSON schema in `format`), temperature 0.3 (0.6 on the retry), repeat_penalty 1.1, num_ctx 8192, num_predict 400. One model call at a time.
+  - **OpenRouter:** chat completions with JSON schema structured outputs (`strict`), the same settings as Ollama (temperature 0.3, 0.6 on the retry; `max_tokens` 400; `repetition_penalty` 1.1), and `provider.require_parameters` so only hosts that honour all of them are used. Reasoning is turned off on models that have it (Qwen3). `OPENROUTER_API_KEY` in `.env.local` / Render only. Production model: `google/gemma-3-12b-it`.
+- Validated with zod, retry once on invalid output. If the deep read's retry still breaks a rule, keep the parts that pass: drop bad findings, replace a bad top reason with the best finding (or the rule-based reason), and raise a too-low no-website score to 3. A pitch is never salvaged: it fails with the reason.
 - Three prompts: intent (search vs audit, as you type), audit scoring, pitch writing.
 - Examples include Pidgin and Lagos place names.
 - Search vs audit is decided by code (URL or "X in Y" pattern), not the model.
 - Gemma's three jobs (the open-source core of the project):
-  - **Read the site, not just check it:** Gemma gets trimmed homepage text plus the check results, and spots what rules can't (no prices, generic copy, stock photos, menu only as an image, nothing about the service the user sells).
+  - **Read the site, not just check it:** Gemma gets trimmed page text (about 1,800 characters, mostly the homepage) plus the check results, and spots what rules can't (no prices, generic copy, stock photos, menu only as an image, nothing about the service the user sells).
   - **Judge fit for this user's offer:** score and top reason are for this user, e.g. "no video" matters to a video editor, not a web designer.
   - **Write the pitch:** 50–125 words. Open with the specific observation (the checkable problem), end with one simple question, no hard sell, no list of services. Every claim comes from the evidence.
-- The model name is an env var `LLM_MODEL`. Run the same 20 audits through Gemma and one other open model (e.g. Qwen) and compare valid-JSON rate, latency and pitch quality.
+- The model name is an env var `LLM_MODEL` (an Ollama tag like `gemma3:12b`, or an OpenRouter id like `google/gemma-3-12b-it`). Compare models with `npm run eval:models` (below): Gemma 3 4B/12B/27B and Qwen3 32B on OpenRouter, plus gemma3:12b on Ollama (the same model hosted vs on this machine).
 - Log input/output tokens per audit and per pitch for cost comparison.
 
 ## Stack
 
 Next.js (App Router), TypeScript strict, Tailwind, shadcn/ui, Motion, zod, chrono-node, jose (JWT sessions), SQLite (Drizzle), dnd-kit for the board. Crawl with `fetch` + cheerio.
 
+## Hosting
+
+- **Render web service** (Starter, 512 MB) at the default `onrender.com` address, defined in `render.yaml` (a Blueprint). Build `npm ci && npm run build`; start runs the database migrations (`node scripts/migrate.mjs`), then `npm start`.
+- **Persistent disk** (1 GB) at `/var/data`, `DATABASE_URL=file:/var/data/leadfinder.db`. Render snapshots it daily. A disk means one instance and a few seconds of downtime per deploy, which matches the app's in-memory rate limits and queues.
+- **Environment:** `AUTH_SECRET`, `DATABASE_URL`, `SERPAPI_API_KEY`, `LLM_PROVIDER=openrouter`, `LLM_MODEL=google/gemma-3-12b-it`, `OPENROUTER_API_KEY`, optional `PAGESPEED_API_KEY`, `STATS_EXCLUDE_EMAILS`. Secrets only in Render's environment settings and `.env.local`, never in the repo.
+- No Chrome on the server: page speed comes from the PageSpeed Insights API.
+- Budget: about $7.25/month on Render ($7 Starter + $0.25 disk) against $50 of credit; OpenRouter tokens are billed separately (prepaid credit).
+
 ## Numbers to measure for the post
 
 - Time per lead: by hand vs with the tool
 - First-try valid JSON rate per prompt (target 90%+)
 - Median latency: intent, audit, pitch
-- Cost per 100 leads: Gemma on my droplet vs a closed API
+- Cost per 1,000 leads: each open model on OpenRouter (billed cost from our logs) vs the same token volume on two closed models
 - Pitch accuracy: of 20 pitches, how many named a real, checkable problem
 - First user: leads saved, pitches sent, replies
+
+How they're measured:
+- `npm run stats:llm`: valid-JSON and grounded rates, tokens, latency from the `llm_call` log.
+- `npm run eval:models`: the same saved leads (up to 15) through each model in turn, on a copy of the database. Models are `provider=model` (default: OpenRouter `google/gemma-3-4b-it`, `google/gemma-3-12b-it`, `google/gemma-3-27b-it`, `qwen/qwen3-32b`, and Ollama `gemma3:12b`); OpenRouter models are skipped without `OPENROUTER_API_KEY`, Ollama models that aren't pulled are skipped. Prints success rate, grounded-first-try rate and latency per model for deep read and pitch, and cost per 1,000 leads per model (what OpenRouter billed; local Ollama is $0 per token). Then what the same token volume would cost on two closed models (Claude Sonnet 5.5 and GPT-5.4), with the price source and date.
+- `npm run stats:usage`: an `event` table records sign-ups, searches, audits (Audit card and Re-run), leads saved, pitches written, Open in WhatsApp / Open in email clicks, and moves to Replied or Won, each with user id and time only. Prints the number of users and each total, overall and per numbered user (no names or emails), leaving out the accounts in `STATS_EXCLUDE_EMAILS`. Tracking starts with the table; nothing earlier is backfilled.
 
 ## Build order
 
@@ -200,7 +215,7 @@ Next.js (App Router), TypeScript strict, Tailwind, shadcn/ui, Motion, zod, chron
 8. **Find people looking for you, search:** Requests card, google_jobs + skills search, code and Gemma filters, result rows, Save to the board.
 9. **Find people looking for you, reply:** request read and reply pitch.
 10. **WhatsApp links + Due today.**
-11. **Deploy** to DigitalOcean + .tech domain. Create the demo account.
+11. **Deploy** to Render (web service + persistent disk, default `onrender.com` address), with `LLM_PROVIDER=openrouter`. Create the demo account.
 12. **First user:** sit with the video editor, run real searches, send real pitches.
 13. **Post:** demo video, numbers, first-user story.
 

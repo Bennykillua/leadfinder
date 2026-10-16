@@ -68,7 +68,7 @@ console.log(
 summarise("ALL", rows);
 const groups = new Map<string, Row[]>();
 for (const r of rows) {
-  const key = `${r.promptType} · ${r.model}`;
+  const key = `${r.promptType} · ${r.provider}=${r.model}`;
   groups.set(key, [...(groups.get(key) ?? []), r]);
 }
 for (const [key, group] of [...groups].sort()) summarise(key, group);

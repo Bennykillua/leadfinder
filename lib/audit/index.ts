@@ -5,6 +5,7 @@ import { countryFromHost, likelyWhatsApp, phoneInfo, whatsappIntl } from "@/lib/
 import { searchGoogleMaps } from "@/lib/serpapi";
 import { provisionalScore, runChecks, socialPage, toEvidence } from "./checks";
 import { crawlSite, normaliseWebsite, type CrawlFacts } from "./crawl";
+import { cachedPageSpeed, pageSpeed } from "./pagespeed";
 
 // The fields an audit fills in on a business (and on a saved lead).
 export type AuditFields = Pick<
@@ -18,12 +19,20 @@ export const SITE_ID_PREFIX = "site:";
 export async function auditBusiness(
   b: Business,
   offer: Offer,
-  opts: { force?: boolean } = {},
+  // pagespeed: run PageSpeed (Audit card, Re-run). Otherwise (search rows) only a
+  // cached result is used, so a search doesn't spend the quota on every row.
+  opts: { force?: boolean; pagespeed?: boolean } = {},
 ): Promise<{ business: Business; facts: CrawlFacts | null }> {
   const fromMaps = !b.id.startsWith(SITE_ID_PREFIX);
   // Social pages (Facebook, Instagram…) aren't crawled: see socialPage().
   const website = b.website && !socialPage(b.website) ? normaliseWebsite(b.website) : null;
-  const facts = website ? await crawlSite(website, { force: opts.force }) : null;
+  // PageSpeed runs alongside the crawl and never throws.
+  const [facts, speed] = website
+    ? await Promise.all([
+        crawlSite(website, { force: opts.force }),
+        opts.pagespeed ? pageSpeed(website, { force: opts.force }) : Promise.resolve(cachedPageSpeed(website)),
+      ])
+    : [null, null];
 
   // Country: from the search/Maps result if known, else the site's domain (.ng, .co.uk).
   const country = (b.country as Parameters<typeof phoneInfo>[1]) ?? countryFromHost(facts?.finalUrl ?? website);
@@ -42,7 +51,7 @@ export async function auditBusiness(
     whatsappPhone,
     email: facts?.email ?? null,
   };
-  const checks = runChecks(withContact, facts, offer, fromMaps);
+  const checks = runChecks(withContact, facts, offer, fromMaps, speed);
   const { score, topReason } = provisionalScore(checks, offer);
   const host = facts?.finalUrl ? new URL(facts.finalUrl).hostname.replace(/^www\./, "") : null;
 
@@ -94,13 +103,13 @@ export async function auditWebsite(
   let website = normaliseWebsite(raw);
   if (!website) throw new Error("That doesn't look like a website address.");
   const host = new URL(website).hostname.replace(/^www\./, "");
-  let result = await auditBusiness(blankBusiness(`${SITE_ID_PREFIX}${host}`, host, website), offer);
+  let result = await auditBusiness(blankBusiness(`${SITE_ID_PREFIX}${host}`, host, website), offer, { pagespeed: true });
   // Typed without http(s)://: we tried https first. If it can't connect at all, the site
   // may only speak plain http, so try that once before calling it down.
   const kind = result.facts?.errorKind;
   if (!typedScheme && (kind === "network" || kind === "tls" || kind === "timeout")) {
     website = website.replace(/^https:/, "http:");
-    const retry = await auditBusiness(blankBusiness(`${SITE_ID_PREFIX}${host}`, host, website), offer);
+    const retry = await auditBusiness(blankBusiness(`${SITE_ID_PREFIX}${host}`, host, website), offer, { pagespeed: true });
     if (!retry.facts?.error) result = retry;
   }
   const name = result.facts?.siteName?.slice(0, 120) || host;
@@ -113,5 +122,5 @@ export async function auditByName(name: string, offer: Offer, userId: string): P
   const found = await searchGoogleMaps(name, userId);
   const top = found.results[0];
   if (!top) return null;
-  return (await auditBusiness(top, offer)).business;
+  return (await auditBusiness(top, offer, { pagespeed: true })).business;
 }

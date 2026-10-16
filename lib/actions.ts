@@ -10,7 +10,8 @@ import { backoffRemaining, clearFailures, recordFailure, tooManyAttempts } from 
 import { db } from "@/lib/db";
 import { leads, notes, OFFERS, users } from "@/lib/db/schema";
 import { requireUser } from "@/lib/dal";
-import type { Business, Lead } from "@/lib/leads";
+import { track } from "@/lib/events";
+import type { Business, Column, Lead } from "@/lib/leads";
 import { getSerpUsage, searchGoogleMaps, SerpApiError, type SearchResult, type SerpUsage } from "@/lib/serpapi";
 import { auditByName, auditWebsite } from "@/lib/audit";
 import { rerunAuditForUser, type AuditFields } from "@/lib/audit/service";
@@ -33,7 +34,7 @@ export async function saveLeadAction(input: unknown) {
     .select({ top: min(leads.position) })
     .from(leads)
     .where(and(eq(leads.userId, user.id), eq(leads.status, "saved")));
-  await db
+  const inserted = await db
     .insert(leads)
     .values({
       ...b,
@@ -42,22 +43,41 @@ export async function saveLeadAction(input: unknown) {
       status: "saved",
       position: (top ?? 0) - 1,
     })
-    .onConflictDoNothing();
+    .onConflictDoNothing()
+    .returning({ id: leads.id });
+  if (inserted.length) await track(user.id, "lead_saved");
+}
+
+// Moving a lead into Replied or Won is a usage event (from the drawer or a drag).
+async function trackMoves(userId: string, before: Map<string, Column>, after: { id: string; status: Column }[]) {
+  for (const { id, status } of after) {
+    if (before.get(id) === status || !before.has(id)) continue;
+    if (status === "replied") await track(userId, "moved_replied");
+    if (status === "won") await track(userId, "moved_won");
+  }
+}
+
+async function statusesOf(userId: string) {
+  const rows = await db.select({ id: leads.id, status: leads.status }).from(leads).where(eq(leads.userId, userId));
+  return new Map(rows.map((r) => [r.id, r.status]));
 }
 
 export async function updateLeadAction(id: string, input: LeadPatch) {
   const user = await requireUser();
   const { reminder: r, ...rest } = patch.parse(input);
+  const before = rest.status ? await statusesOf(user.id) : null;
   await db
     .update(leads)
     .set({ ...rest, ...reminderColumns(r) })
     .where(and(eq(leads.userId, user.id), eq(leads.id, id)));
+  if (before && rest.status) await trackMoves(user.id, before, [{ id, status: rest.status }]);
 }
 
 // The board sends its full order after a drag; positions are rewritten to match.
 export async function reorderLeadsAction(input: unknown) {
   const user = await requireUser();
   const items = z.array(z.object({ id: z.string(), status: column })).max(2000).parse(input);
+  const before = await statusesOf(user.id);
   await db.transaction(async (tx) => {
     for (const [position, item] of items.entries()) {
       await tx
@@ -66,6 +86,7 @@ export async function reorderLeadsAction(input: unknown) {
         .where(and(eq(leads.userId, user.id), eq(leads.id, item.id)));
     }
   });
+  await trackMoves(user.id, before, items);
 }
 
 export async function deleteLeadAction(id: string) {
@@ -242,6 +263,7 @@ export async function signUpAction(_prev: AuthState, form: FormData): Promise<Au
     .insert(users)
     .values({ name: parsed.data.name, email: parsed.data.email, passwordHash: await hashPassword(parsed.data.password) })
     .returning({ id: users.id });
+  await track(user.id, "signup");
   await createSession(user.id);
   redirect("/welcome");
 }
@@ -304,6 +326,7 @@ export async function searchMapsAction(input: string): Promise<SearchResponse> {
   const query = z.string().trim().min(2).max(120).parse(input);
   try {
     const result = await searchGoogleMaps(query, user.id);
+    await track(user.id, "search");
     const usage = await getSerpUsage({ refreshAccount: result.source === "live" });
     return { ok: true, ...result, usage };
   } catch (err) {
@@ -334,11 +357,14 @@ export async function auditTargetAction(input: { kind: "url" | "name"; target: s
   const offer = user.offer ?? "other";
   try {
     if (kind === "url") {
-      return { ok: true, business: (await auditWebsite(target, offer)).business, usage: null };
+      const { business: audited } = await auditWebsite(target, offer);
+      await track(user.id, "audit");
+      return { ok: true, business: audited, usage: null };
     }
     const found = await auditByName(target, offer, user.id);
     const usage = await getSerpUsage({ refreshAccount: true });
     if (!found) return { ok: false, error: `Google Maps found no business called “${target}”.`, usage };
+    await track(user.id, "audit");
     return { ok: true, business: found, usage };
   } catch (err) {
     const usage = kind === "name" ? await getSerpUsage() : null;
@@ -353,5 +379,7 @@ export async function auditTargetAction(input: { kind: "url" | "name"; target: s
 // Board drawer "Re-run audit": crawl again, ignoring the 24-hour crawl cache.
 export async function rerunAuditAction(id: string): Promise<AuditFields | null> {
   const user = await requireUser();
-  return rerunAuditForUser(user, z.string().parse(id));
+  const fields = await rerunAuditForUser(user, z.string().parse(id));
+  if (fields) await track(user.id, "audit");
+  return fields;
 }

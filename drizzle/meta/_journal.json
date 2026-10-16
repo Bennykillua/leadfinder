@@ -85,6 +85,27 @@
       "when": 1792145568283,
       "tag": "0011_user_profile",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1792150654196,
+      "tag": "0012_usage_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1792161611525,
+      "tag": "0013_llm_provider",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1792170420106,
+      "tag": "0014_llm_cost",
+      "breakpoints": true
     }
   ]
 }

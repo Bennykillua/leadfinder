@@ -1,6 +1,7 @@
 import { getCurrentUser, getLead } from "@/lib/dal";
 import { writePitch } from "@/lib/llm/pitch";
-import { LlmError } from "@/lib/llm/ollama";
+import { LlmError } from "@/lib/llm/generate";
+import { track } from "@/lib/events";
 
 // Gemma writes a pitch draft. It's returned, not saved: the browser puts it in the
 // pitch box and saves it like any edit, so it can't race with the user's typing.
@@ -11,6 +12,7 @@ export async function POST(_req: Request, ctx: RouteContext<"/api/leads/[id]/pit
   if (!lead) return Response.json({ ok: false, error: "Lead not found" }, { status: 404 });
   try {
     const { pitch, evidence } = await writePitch(user, lead);
+    await track(user.id, "pitch_written");
     return Response.json({ ok: true, pitch, evidence });
   } catch (err) {
     if (err instanceof LlmError) return Response.json({ ok: false, error: err.message, kind: err.kind }, { status: 503 });

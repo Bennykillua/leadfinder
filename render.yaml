@@ -1,0 +1,37 @@
+# Render Blueprint: one web service with a persistent disk for the SQLite database.
+# Secrets are `sync: false`: Render asks for them when the Blueprint is first created
+# (and ignores them on later syncs, so values set in the dashboard are kept).
+services:
+  - type: web
+    name: leadfinder
+    runtime: node
+    plan: 0.5c-512mb # Starter: 0.5 CPU, 512 MB
+    region: frankfurt # closest Render region to Lagos
+    buildCommand: npm ci && npm run build
+    # The disk isn't mounted during the build, so migrations run at start-up.
+    startCommand: node scripts/migrate.mjs && npm start
+    healthCheckPath: /signin
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DATABASE_URL
+        value: file:/var/data/leadfinder.db
+      - key: LLM_PROVIDER
+        value: openrouter
+      - key: LLM_MODEL
+        value: google/gemma-3-12b-it
+      # Secrets and personal values: filled in on Render.
+      - key: AUTH_SECRET # at least 32 characters: openssl rand -base64 33
+        sync: false
+      - key: SERPAPI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: PAGESPEED_API_KEY # optional: leave blank to call PageSpeed without a key
+        sync: false
+      - key: STATS_EXCLUDE_EMAILS # optional: your own email, left out of stats:usage
+        sync: false

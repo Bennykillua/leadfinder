@@ -12,7 +12,9 @@
     "db:studio": "drizzle-kit studio",
     "user:password": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/set-password.mjs",
     "eval:audit": "tsx --conditions=react-server scripts/eval-audit.mts",
-    "stats:llm": "tsx --conditions=react-server scripts/stats-llm.mts"
+    "stats:llm": "tsx --conditions=react-server scripts/stats-llm.mts",
+    "eval:models": "tsx --conditions=react-server scripts/eval-models.mts",
+    "stats:usage": "tsx --conditions=react-server scripts/stats-usage.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

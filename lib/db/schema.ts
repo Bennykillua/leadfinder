@@ -171,9 +171,15 @@ export const llmCalls = sqliteTable(
     userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
     leadId: text("lead_id"),
     promptType: text("prompt_type", { enum: ["deep_read", "pitch"] }).notNull(),
+    // LLM_PROVIDER at the time: ollama (local) or openrouter. Calls before this
+    // column existed were all Ollama.
+    provider: text("provider", { enum: ["ollama", "openrouter"] }).notNull().default("ollama"),
     model: text("model").notNull(),
     inputTokens: integer("input_tokens").notNull().default(0),
     outputTokens: integer("output_tokens").notNull().default(0),
+    // What the provider billed, all attempts (OpenRouter's usage.cost). Null for
+    // local Ollama calls.
+    costUsd: real("cost_usd"),
     latencyMs: integer("latency_ms").notNull(),
     // First reply parsed as JSON and matched the schema.
     validFirstTry: integer("valid_first_try", { mode: "boolean" }).notNull(),
@@ -182,8 +188,8 @@ export const llmCalls = sqliteTable(
     attempts: integer("attempts").notNull(),
     ok: integer("ok", { mode: "boolean" }).notNull(),
     error: text("error"),
-    // Debugging. Prompt size in characters (input_tokens is Ollama's count), the
-    // Ollama options sent, and on failures the raw model output of every attempt.
+    // Debugging. Prompt size in characters (input_tokens is the provider's count), the
+    // provider options sent, and on failures the raw model output of every attempt.
     promptChars: integer("prompt_chars"),
     options: text("options", { mode: "json" }).$type<Record<string, unknown>>(),
     rawOutput: text("raw_output"),
@@ -192,4 +198,35 @@ export const llmCalls = sqliteTable(
       .$defaultFn(() => new Date()),
   },
   (t) => [index("llm_call_at").on(t.at)],
+);
+
+// Usage events for `npm run stats:usage`: what happened, who, when. Nothing else is
+// stored (no queries, lead names or message text). Tracking starts with this table;
+// nothing earlier is backfilled.
+export const EVENT_TYPES = [
+  "signup",
+  "search",
+  "audit",
+  "lead_saved",
+  "pitch_written",
+  "open_whatsapp",
+  "open_email",
+  "moved_replied",
+  "moved_won",
+] as const;
+export type EventType = (typeof EVENT_TYPES)[number];
+
+export const events = sqliteTable(
+  "event",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type", { enum: EVENT_TYPES }).notNull(),
+    at: integer("at", { mode: "timestamp_ms" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [index("event_type_at").on(t.type, t.at), index("event_user").on(t.userId)],
 );

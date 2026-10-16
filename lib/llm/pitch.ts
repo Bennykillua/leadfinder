@@ -4,7 +4,7 @@ import type { CurrentUser } from "@/lib/dal";
 import { allEvidence, type Evidence, type Lead } from "@/lib/leads";
 import { businessFacts, offerText } from "./context";
 import { businessNumberClaims, copiedFromExample, normalise, pointsAtFacts, unsupportedClaims } from "./grounding";
-import { generateJson, LlmError } from "./ollama";
+import { generateJson, LlmError } from "./generate";
 
 // Gemma call 2: an evidence-based WhatsApp pitch.
 // Structure: an observation they can verify → why it costs them, from their customer's
@@ -19,7 +19,9 @@ const schema = z.object({
   evidence_ids: z.array(z.string().min(3).max(60)).min(1).max(5),
 });
 
-const EXAMPLE = `{"pitch":"Hi! On your website the Halls page has no photos, so couples planning a wedding can't see the space before they call. Most of them will just book the venue whose pictures they've already seen. A short walk-through video would let them picture their day there in under a minute. Would it help if I sent you a free sample made from photos you already have?","evidence_ids":["finding:1"]}`;
+// A full example with evidence_ids filled in, for an event hall whose evidence had
+// [finding:1] "The Halls page has no photos" and [check:maps] "4.6★ from 38 reviews".
+const EXAMPLE = `{"pitch":"Hi! On your website the Halls page has no photos, so couples planning a wedding can't see the space before they call. Your 4.6 stars from 38 reviews show guests enjoy their events there, but most couples will book the venue whose pictures they've already seen. A short walk-through video would let them picture their day in under a minute. Would it help if I sent you a sample made from photos you already have?","evidence_ids":["finding:1","check:maps"]}`;
 // Only in the example: must not show up in a real pitch unless the business has them.
 const EXAMPLE_ONLY = ["Halls", "couples", "wedding", "venue", "walk-through"];
 
@@ -112,9 +114,6 @@ function evidenceLine(e: Evidence) {
 
 const SYSTEM = `You write a first WhatsApp message from a freelancer to a local business. It must be based only on the evidence list, and you must say which evidence you used.
 
-Reply with JSON in exactly this shape (this example is for a different business; never copy its details, names or numbers):
-${EXAMPLE}
-
 The message:
 1. Open with ONE specific observation from the evidence that the owner can check for themselves (after a short "Hi!" at most). Prefer a PROBLEM if there is one.
 2. Then say why it matters from THEIR CUSTOMERS' point of view (what customers can't do or do instead; for a STRENGTH message, how more customers could benefit).
@@ -126,8 +125,13 @@ Rules:
 - No hard sell (no discounts, deadlines, guarantees). No list of services.
 - At most one compliment, and only if it is true from a PASSED item or a good review in the evidence. Otherwise no compliment.
 - Every fact about the business must come from the evidence you cite: no invented ratings, review counts, prices, dates or results. Don't claim you visited.
-- No links or web addresses.
-- "evidence_ids": the ids, exactly as written in brackets, of every evidence item the message uses.`;
+- No links or web addresses.`;
+
+// Right after the evidence list, so the allowed ids sit directly above the output
+// instructions (small models copy ids far more reliably when they're adjacent).
+const OUTPUT = `OUTPUT: reply with JSON only, in exactly this shape. Full example, for a different business (an event hall); never copy its details, names or numbers:
+${EXAMPLE}
+"evidence_ids": every id the message uses, copied exactly from ALLOWED EVIDENCE IDS above, without brackets. No other ids.`;
 
 export async function writePitch(user: CurrentUser, lead: Lead): Promise<{ pitch: string; evidence: Evidence[] }> {
   const items = allEvidence(lead);
@@ -197,8 +201,10 @@ ${facts}
 Best reason to pitch: ${lead.ai?.topReason ?? lead.topReason ?? "(none)"}
 ${whyNow ? `Why now: ${whyNow.detail} [${whyNow.id}]\n` : ""}
 ${strengthMode}
-EVIDENCE (cite by id):
-${items.map(evidenceLine).join("\n")}`,
+ALLOWED EVIDENCE IDS (one line each; cite only these):
+${items.map(evidenceLine).join("\n")}
+
+${OUTPUT}`,
       },
     ],
     check: (rawValue) => {

@@ -1,0 +1,1 @@
+ALTER TABLE `llm_call` ADD `provider` text DEFAULT 'ollama' NOT NULL;

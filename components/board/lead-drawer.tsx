@@ -48,6 +48,16 @@ import { useDeleteWithUndo } from "./actions";
 import { Notes } from "./notes";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
+// Usage event for a click that leaves the app (npm run stats:usage). sendBeacon
+// survives the page opening WhatsApp or the mail app; failures are ignored.
+function trackClick(type: "open_whatsapp" | "open_email") {
+  try {
+    navigator.sendBeacon("/api/events", new Blob([JSON.stringify({ type })], { type: "application/json" }));
+  } catch {
+    // not tracked
+  }
+}
+
 function Section({
   title,
   action,
@@ -83,7 +93,12 @@ function ContactButtons({ lead }: { lead: Lead }) {
           </Button>
         )}
         {showEmail && (
-          <Button variant="outline" nativeButton={false} render={<a href={mailtoLink(lead, lead.pitch)} />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<a href={mailtoLink(lead, lead.pitch)} />}
+            onClick={() => trackClick("open_email")}
+          >
             <Mail />
             Open in email
           </Button>
@@ -92,6 +107,7 @@ function ContactButtons({ lead }: { lead: Lead }) {
           <Button
             nativeButton={false}
             render={<a href={whatsappLink(wa, lead.pitch)} target="_blank" rel="noopener noreferrer" />}
+            onClick={() => trackClick("open_whatsapp")}
             className="bg-emerald-600 text-white hover:bg-emerald-600/90"
           >
             <WhatsAppIcon className="size-4" />

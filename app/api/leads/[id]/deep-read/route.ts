@@ -1,6 +1,6 @@
 import { getCurrentUser, getLead } from "@/lib/dal";
 import { deepReadOnce } from "@/lib/llm/deep-read";
-import { LlmError } from "@/lib/llm/ollama";
+import { LlmError } from "@/lib/llm/generate";
 
 // Gemma's deep read of a saved lead. A route handler, not a server action: a model
 // call can take a minute, and server actions run one at a time per page, so it would
